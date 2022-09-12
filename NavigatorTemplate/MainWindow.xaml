@@ -1,0 +1,276 @@
+﻿<Window x:Class="NavigatorTemplate.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NavigatorTemplate"
+        mc:Ignorable="d"
+        Title="Navigation Template - Written by Mitch Girard" Height="450" Width="800">
+    <DockPanel LastChildFill="True">
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Open" />
+                <MenuItem Header="_Close" />
+                <MenuItem Header="_Save" />
+            </MenuItem>
+            <MenuItem Header="_Edit">
+                <MenuItem Header="_Cut" />
+                <MenuItem Header="_Copy" />
+                <MenuItem Header="_Paste" />
+            </MenuItem>
+            <Grid HorizontalAlignment="Right">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Rectangle Grid.Row="0" Grid.Column="0" VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="Black" />
+                <!--<Separator Grid.Row="0" Grid.Column="0"></Separator>-->
+                <Label Grid.Row="0" Grid.Column="1" Content="Some Information"></Label>
+                <Rectangle Grid.Row="0" Grid.Column="2" VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="Black" />
+                <!--<Separator Grid.Row="0" Grid.Column="2"></Separator>-->
+                <Label Grid.Row="0" Grid.Column="3" Content="Other Information"></Label>
+            </Grid>
+        </Menu>
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <StackPanel>
+                    <Separator></Separator>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" Grid.Column="0" Content="Running Time:"></Label>
+                        <Label Grid.Row="0" Grid.Column="1" Content="{Binding Master.ValidatorRunningTime}"></Label>
+                        <Button Grid.Row="0" Grid.Column="2" Content="Start" Command="{Binding Master.StartTimerCommand}"></Button>
+                        <Button Grid.Row="0" Grid.Column="3" Content="Stop" Command="{Binding Master.StopTimerCommand}"></Button>
+                        <Rectangle Grid.Row="0" Grid.Column="4" VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="Black" />
+                        <Label Grid.Row="0" Grid.Column="5" Content="Status:"></Label>
+                        <Label Grid.Row="0" Grid.Column="6" Content="{Binding Master.StatusMessage}"></Label>
+                        <Rectangle Grid.Row="0" Grid.Column="7" VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="Black" />
+                        <Label Grid.Row="0" Grid.Column="8" Content="Average:"></Label>
+                        <Label Grid.Row="0" Grid.Column="9" Content="{Binding Master.AverageRunningTimePer}"></Label>
+                        <Rectangle Grid.Row="0" Grid.Column="10" VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="Black" />
+                        <Label Grid.Row="0" Grid.Column="11" Content="Per:"></Label>
+                        <Label Grid.Row="0" Grid.Column="12" Content="{Binding Master.ValidatorRunningTimePer}"></Label>
+                    </Grid>
+                </StackPanel>
+            </StatusBarItem>
+        </StatusBar>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*" />
+
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="0">
+                <GroupBox.Header>
+                    <Span FontWeight="DemiBold">Paths</Span>
+                </GroupBox.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TreeView Grid.Column="0" Grid.Row="0" Name="TreeViewMigration"  TreeViewItem.Selected="OnItemSelected"/>
+                    <Button Grid.Column="0" Grid.Row="1" Content="Refresh Folders" Click="LoadTreeView_Click"></Button>
+                </Grid>
+            </GroupBox>
+            <GridSplitter Grid.Column="1" Grid.Row="0" Width="3" HorizontalAlignment="Stretch" />
+            <TabControl Grid.Row="0" Grid.Column="2">
+                <TabItem Header="Results">
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" Grid.Column="0" Content="Creation Date:"></Label>
+                        <Label Grid.Row="0" Grid.Column="1" Content="{Binding Master.CurrentDirectory.CreationTime}"></Label>
+                        <Label Grid.Row="1" Grid.Column="0" Content="Modified Date:"></Label>
+                        <Label Grid.Row="1" Grid.Column="1" Content="{Binding Master.CurrentDirectory.LastWriteTime}"></Label>
+                        <Label Grid.Row="2" Grid.Column="0" Content="Name:"></Label>
+                        <Label Grid.Row="2" Grid.Column="1" Content="{Binding Master.CurrentDirectory.Name}"></Label>
+                        <Label Grid.Row="3" Grid.Column="0" Content="Path:"></Label>
+                        <Label Grid.Row="3" Grid.Column="1" Content="{Binding Master.CurrentDirectory.FullName}"></Label>
+                        <Label Grid.Row="4" Grid.Column="0" Content="UNC:"></Label>
+                        <Label Grid.Row="4" Grid.Column="1" Content="{Binding Master.CurrentDirectory.FullName}"></Label>
+
+
+                        <ListView Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding Master.UNCObjectLst}" VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                    <Setter Property="VerticalContentAlignment" Value="Stretch"></Setter>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Count" Width="50">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding CharacterCount}" HorizontalAlignment="Center" Foreground="{Binding HomeNameExistForeground}" FontWeight="{Binding HomeNameExistFontWeight}"></TextBlock>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="Net Path" Width="200">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock ToolTip="{Binding NameNetwork}" Text="{Binding NameNetwork}" HorizontalAlignment="Right" Foreground="{Binding MemberForeground}" FontWeight="{Binding MemberFontWeight}"></TextBlock>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="UNC Path" Width="Auto">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock ToolTip="{Binding NameUNC}" Text="{Binding NameUNC}" HorizontalAlignment="Left" Foreground="{Binding MemberExistForeground}" FontWeight="{Binding MemberExistFontWeight}"></TextBlock>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="Name" Width="200">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding NameObject}" HorizontalAlignment="Center" Foreground="{Binding HomeNameForeground}" FontWeight="{Binding HomeNameFontWeight}"></TextBlock>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                        <Label Grid.Row="6" Grid.Column="0" Content="File Count:"></Label>
+                        <Label Grid.Row="6" Grid.Column="1" Content="{Binding Master.FileCount}"></Label>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="OI">
+                    <StackPanel>
+                        <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="1">
+                            <GroupBox.Header>
+                                <Span FontWeight="DemiBold">Get Locations</Span>
+                            </GroupBox.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Folder"></Label>
+                                <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Master.FolderPath}"></TextBox>
+                                <Button Grid.Row="2" Grid.Column="0" Content="Folder..." CommandParameter="FolderPathTxt" Command="{Binding Master.SetFolderCommand}"></Button>
+                                <Button Grid.Row="2" Grid.Column="1" Content="Folder (via TreeView)..." CommandParameter="FolderPathTxt" Command="{Binding Master.SetFolderViaTVCommand}"></Button>
+                                <Separator Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"></Separator>
+                                <Label Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Content="Audit Database"></Label>
+                                <TextBox Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Master.FilePath}"></TextBox>
+                                <Button Grid.Row="6" Grid.Column="0" Content="File..." CommandParameter="FilePathTxt" Command="{Binding Master.SetFileCommand}"></Button>
+                                <Button Grid.Row="6" Grid.Column="1" Content="File (via TreeView)..." CommandParameter="FilePathTxt" Command="{Binding Master.SetFileViaTVCommand}" IsEnabled="False"></Button>
+                            </Grid>
+                        </GroupBox>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Header="DB">
+                    <GroupBox BorderThickness="3">
+                        <GroupBox.Header>
+                            <Span FontWeight="DemiBold">Audit</Span>
+                        </GroupBox.Header>
+                        <StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <CheckBox Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" ToolTip="Include Audit Database" IsChecked="{Binding Master.UseAuditDatabase}"></CheckBox>
+                                <Label Grid.Row="4" Grid.Column="1" Content="Audit Database"></Label>
+                            </Grid>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+
+                                </Grid.RowDefinitions>
+                                <TextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Master.DatabaseValLocationPath}"></TextBox>
+                                <Button Grid.Row="1" Grid.Column="0" Content="File..." CommandParameter="DatabaseValLocationPath" Command="{Binding Master.SetFileCommand}"></Button>
+                                <Button Grid.Row="1" Grid.Column="1" IsEnabled="False" Content="File (via TreeView)..." CommandParameter="DatabaseValLocationPath" Command="{Binding Master.SetFileViaTVCommand}"></Button>
+                                <Button Grid.Row="1" Grid.Column="1" IsEnabled="False" Content="Create " CommandParameter="DatabaseValLocationPath" Command="{Binding Master.SetFileViaTVCommand}"></Button>
+                            </Grid>
+                            <Separator></Separator>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Content="Create and Use a new Database"></Label>
+                                <TextBox Grid.Row="1" Grid.Column="0" Text="{Binding Master.DatabaseValName}"></TextBox>
+                                <Button Grid.Row="1" Grid.Column="1" Content="Invent Name" Command="{Binding Master.InventDatabaseNameCommand}"></Button>
+                                <TextBox Grid.Row="2" Grid.Column="0" Text="{Binding Master.DatabaseValLocation}" IsReadOnly="True"></TextBox>
+                                <Button Grid.Row="2" Grid.Column="1" Content="Select Location..." Command="{Binding Master.SetFolderCommand}" CommandParameter="DatabaseValLocation"></Button>
+                                <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Content="Create" Command="{Binding Master.CreateAuditDBCommand}"></Button>
+                            </Grid>
+                        </StackPanel>
+                    </GroupBox>
+                </TabItem>
+                <TabItem Header="Logs"></TabItem>
+            </TabControl>
+        </Grid>
+
+    </DockPanel>
+</Window>
