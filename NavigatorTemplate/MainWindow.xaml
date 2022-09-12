@@ -105,23 +105,101 @@
             </GroupBox>
             <GridSplitter Grid.Column="1" Grid.Row="0" Width="3" HorizontalAlignment="Stretch" />
             <TabControl Grid.Row="0" Grid.Column="2">
+
                 <TabItem Header="Singles">
-                    <StackPanel>
-                        <Label Content="Creation Date:"></Label>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="0">
+                            <GroupBox.Header>
+                                <Span FontWeight="DemiBold">Path</Span>
+                            </GroupBox.Header>
+                            <StackPanel>
+                                <TextBox Text="{Binding Master.CurrentUNCObject.NameUNC}"></TextBox>
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="1">
+                            <GroupBox.Header>
+                                <Span FontWeight="DemiBold">Results</Span>
+                            </GroupBox.Header>
+                            <ListView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding Master.UNCObjectLst}" VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True">
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                        <Setter Property="VerticalContentAlignment" Value="Stretch"></Setter>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn Header="Count" Width="50">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding CharacterCount}" HorizontalAlignment="Center" Foreground="{Binding HomeNameExistForeground}" FontWeight="{Binding HomeNameExistFontWeight}"></TextBlock>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Net Path" Width="200">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock ToolTip="{Binding NameNetwork}" Text="{Binding NameNetwork}" HorizontalAlignment="Right" Foreground="{Binding MemberForeground}" FontWeight="{Binding MemberFontWeight}"></TextBlock>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="UNC Path" Width="Auto">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock ToolTip="{Binding NameUNC}" Text="{Binding NameUNC}" HorizontalAlignment="Left" Foreground="{Binding MemberExistForeground}" FontWeight="{Binding MemberExistFontWeight}"></TextBlock>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Name" Width="200">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding NameObject}" HorizontalAlignment="Center" Foreground="{Binding HomeNameForeground}" FontWeight="{Binding HomeNameFontWeight}"></TextBlock>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                        </GroupBox>
+                        <Button Grid.Row="2" Grid.Column="0" Content="Execute..." Command="{Binding Master.ExecuteLPFNListCommand}"></Button>
+                        <Label Grid.Row="3" Grid.Column="0" Content="Total Count:"></Label>
+                        <Label Grid.Row="4" Grid.Column="0" Content="{Binding Master.FileCount}"></Label>
+                        <!--<Label Grid.Row="3" Grid.Column="0" Content="Folder Count:"></Label>
+                        <Label Grid.Row="4" Grid.Column="0" Content="{Binding Master.FileCount}"></Label>
+                        <Label Grid.Row="3" Grid.Column="0" Content="File Count:"></Label>
+                        <Label Grid.Row="4" Grid.Column="0" Content="{Binding Master.FileCount}"></Label>-->
+
+                        <!--<Label Content="Creation Date:"></Label>
                         <Label Content="{Binding Master.CurrentDirectory.CreationTime}"></Label>
                         <Label Content="Lenght"></Label>
-                        <Label Content="{Binding Master.CurrentUNCObject.Lenght}"></Label>
+                        <Label Content="{Binding Master.CurrentUNCObject.CharacterCount}"></Label>
+                        <Label Content="Object Name"></Label>
+                        <Label Content="{Binding Master.CurrentUNCObject.NameObject}"></Label>
                         <Label Content="Mapped Path"></Label>
-                        <Label Content="{Binding Master.CurrentUNCObject.FullName}"></Label>
+                        <Label Content="{Binding Master.CurrentUNCObject.NameNetwork}"></Label>
                         <Label Content="UNC Path"></Label>
                         <Label Content="{Binding Master.CurrentUNCObject.NameUNC}"></Label>
-                        <Label Content="Object"></Label>
-                        <Label Content="{Binding Master.CurrentUNCObject}"></Label>
                         <Label Content="Type"></Label>
                         <Label Content="Folder"></Label>
+                        <Button Content="Set UNC OBject" Command="{Binding Master.SetUNCObjectCommand}"></Button>
                         <Button Content="Add"></Button>
                         <Button Content="Count"></Button>
-                        <Label Content="Count"></Label>
+                        <Label Content="Count"></Label>-->
+                    </Grid>
+                </TabItem>
+                <TabItem Header="UserList Compare">
+                    <StackPanel>
+                        <Button Content="Compare" Command="{Binding Master.CompareUserListsCommand}"></Button>
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Results">

@@ -63,7 +63,7 @@ namespace NavigatorTemplate
             }
             //Master.CurrentSelectedNode = dir.Name;
             Master.CurrentDirectory = dir;
-            Master.SetCurrentUNCObject();
+            //Master.SetCurrentUNCObject();
             await Task.Run(() =>
             {
               //success = Master.GetDirectoryFiles();

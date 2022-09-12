@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -199,7 +200,7 @@ namespace NavigatorTemplate.Models
                     currentDirectory = value;
                     //CurrentSelectedNode = value.Name;
                     NotifyPropertyChanged("CurrentDirectory");
-                    //SetCurrentUNCObject();
+                    SetCurrentUNCObject();
                     //GetDirectoryFiles();
                 }
             }
@@ -246,16 +247,159 @@ namespace NavigatorTemplate.Models
 
         #region "************************************************************************************************* Bread & Butter"
 
-        public void SetCurrentUNCObject() 
+        private ICommand executeLPFNListCommand;
+        public ICommand ExecuteLPFNListCommand
         {
-            //CurrentUNCObject = new UNCObject();
-            CurrentUNCObject.CharacterCount = MappedDriveResolver.ResolveToUNC(CurrentDirectory.FullName).Length;
-            CurrentUNCObject.NameObject = CurrentDirectory.Name;
-            CurrentUNCObject.Folder = true;  //always a directory at this point
-            CurrentUNCObject.NameUNC = MappedDriveResolver.ResolveToUNC(CurrentDirectory.FullName);
+            get
+            {
+                return executeLPFNListCommand ?? (executeLPFNListCommand = new CommandHandler(() => ExecuteLPFNList(), _canExecute));
+            }
+        }
+        private async void ExecuteLPFNList()
+        {
+            await Task.Run(() =>
+            {
+                FileCount = 0;
+
+
+                App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+                {
+                    UNCObjectLst.Clear();
+                });
+
+                //System.Collections.ObjectModel.ObservableCollection<UNCObject> uncObjectList = new System.Collections.ObjectModel.ObservableCollection<UNCObject>();
+                foreach (System.IO.FileInfo fi in CurrentDirectory.GetFiles())
+                {
+                    if (MappedDriveResolver.ResolveToUNC(fi.FullName).Length > 50)
+                    {
+                        UNCObject uncObject = new UNCObject() { CharacterCount = MappedDriveResolver.ResolveToUNC(fi.FullName).Length, NameUNC = MappedDriveResolver.ResolveToUNC(fi.FullName) };
+                        App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+                        {
+                            UNCObjectLst.Add(uncObject);
+                            FileCount++;
+                        });
+                    }
+                }
+
+                foreach (System.IO.DirectoryInfo di in CurrentDirectory.GetDirectories())
+                {
+                    if (MappedDriveResolver.ResolveToUNC(di.FullName).Length > 50)
+                    {
+                        UNCObject uncObject = new UNCObject() { CharacterCount = MappedDriveResolver.ResolveToUNC(di.FullName).Length, NameUNC = MappedDriveResolver.ResolveToUNC(di.FullName) };
+                        App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+                        {
+                            UNCObjectLst.Add(uncObject);
+                            FileCount++;
+                        });
+                    }
+                    foreach (System.IO.FileInfo fi in di.GetFiles())
+                    {
+                        if (MappedDriveResolver.ResolveToUNC(fi.FullName).Length > 50)
+                        {
+                            UNCObject uncObject = new UNCObject() { CharacterCount = MappedDriveResolver.ResolveToUNC(fi.FullName).Length, NameUNC = MappedDriveResolver.ResolveToUNC(fi.FullName) };
+                            App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+                            {
+                                UNCObjectLst.Add(uncObject);
+                                FileCount++;
+                            });
+                        }
+                    }
+                }
+            });
+        }
+        private ICommand compareUserListsCommand;
+        public ICommand CompareUserListsCommand
+        {
+            get
+            {
+                return compareUserListsCommand ?? (compareUserListsCommand = new CommandHandler(() => CompareUserLists(), _canExecute));
+            }
+        }
+        private void CompareUserLists()
+        {
+            List<string> userList1 = new List<string>();
+            List<string> userList2 = new List<string>();
+
+            using (var reader = new System.IO.StreamReader(@"C:\Mitch\New folder\UsersHCISC\Users1.csv"))
+            {
+                while (!reader.EndOfStream)
+                {
+                    userList1.Add(reader.ReadLine());
+                }
+            }
+
+            using (var reader = new System.IO.StreamReader(@"C:\Mitch\New folder\UsersHCISC\Users2.csv"))
+            {
+                while (!reader.EndOfStream)
+                {
+                    userList2.Add(reader.ReadLine());
+                }
+            }
+
+            userList1.Sort();
+            userList2.Sort();
+
+            using (System.IO.StreamWriter writetext = new System.IO.StreamWriter(@"C:\Mitch\New folder\UsersHCISC\Users1AlphaOrder_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".txt"))
+            {
+                foreach (string item in userList1)
+                {
+                    writetext.WriteLine(item);
+                }
+
+            }
+
+            using (System.IO.StreamWriter writetext = new System.IO.StreamWriter(@"C:\Mitch\New folder\UsersHCISC\Users2AlphaOrder_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".txt"))
+            {
+                foreach (string item in userList2)
+                {
+                    writetext.WriteLine(item);
+                }
+
+            }
+
+            IEnumerable<string> inFirstOnly = userList1.Distinct().Except(userList2, StringComparer.OrdinalIgnoreCase).ToList();
+            IEnumerable<string> inSecondOnly = userList2.Distinct().Except(userList1, StringComparer.OrdinalIgnoreCase).ToList();
+
+            IEnumerable<string> alsoInFirst = userList1.Distinct().Intersect(userList2, StringComparer.OrdinalIgnoreCase).ToList();
+            IEnumerable<string> alsoInSecond = userList2.Distinct().Intersect(userList1, StringComparer.OrdinalIgnoreCase).ToList();
+
+            //Dupes?
+
+
+
+
+            int totalCntUserList1 = userList1.Count();
+            int totalCntUserList2 = userList2.Count();
+
+            int totalList1WOutDupes = userList1.Distinct().Count();
+            int totalList2WOutDupes = userList2.Distinct().Count();
+
+            //int totalList1WOutDupes = userList1.Distinct().Count();
+            //int totalList2WOutDupes = userList2.Distinct().Count();
+
+            int usersThatAreInTheFirstListButNotInTheSecondList = inFirstOnly.Count();
+            int usersThatAreInTheSecondListButNotInTheFirstList = inSecondOnly.Count();
+
+            int usersThatAreBothInTheFirstAndSecondList = totalCntUserList2 - usersThatAreInTheSecondListButNotInTheFirstList;
+            int usersThatAreBothInTheSecondAndFirstList = totalCntUserList1 - usersThatAreInTheFirstListButNotInTheSecondList;
+
+
+
+            int s = 9;
+        }
+
+        public void SetCurrentUNCObject()
+        {
+            UNCObject xUNCObject = new UNCObject();
+            xUNCObject.CharacterCount = MappedDriveResolver.ResolveToUNC(CurrentDirectory.FullName).Length;
+            xUNCObject.NameObject = CurrentDirectory.Name;
+            xUNCObject.Folder = true;  //always a directory at this point
+            xUNCObject.NameUNC = MappedDriveResolver.ResolveToUNC(CurrentDirectory.FullName);
+            xUNCObject.NameNetwork = CurrentDirectory.FullName;
+            CurrentUNCObject = xUNCObject;
         }
         public bool GetDirectoryFiles()
-        {           
+        {
             FileCount = 0;
             bool success = true;
 
@@ -276,10 +420,10 @@ namespace NavigatorTemplate.Models
                     currentUNCObject.NameNetwork = fi.DirectoryName;
                     Thread.Sleep(100);
                     App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                    {                       
+                    {
                         UNCObjectLst.Add(currentUNCObject);
                         FileCount++;
-                    });                   
+                    });
                 }
             }
             catch (UnauthorizedAccessException uae)
@@ -321,9 +465,22 @@ namespace NavigatorTemplate.Models
         {
             bool success = true;
 
-         
+
 
             return success;
+        }
+
+        private ICommand setUNCObjectCommand;
+        public ICommand SetUNCObjectCommand
+        {
+            get
+            {
+                return setUNCObjectCommand ?? (setUNCObjectCommand = new CommandHandler(() => SetUNCObject(), _canExecute));
+            }
+        }
+        private void SetUNCObject()
+        {
+            SetCurrentUNCObject();
         }
 
         private ICommand addSinglePathCommand;
@@ -338,11 +495,11 @@ namespace NavigatorTemplate.Models
         {
 
         }
-            #endregion
+        #endregion
 
-            #region "************************************************************************************************* OI Functions"
+        #region "************************************************************************************************* OI Functions"
 
-            private void SaveProperties()
+        private void SaveProperties()
         {
             StatusMessage = "Saving...";
             PathLenghtCrawl.Properties.Settings.Default.Save();
