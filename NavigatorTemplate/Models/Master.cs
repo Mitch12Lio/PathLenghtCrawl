@@ -281,7 +281,7 @@ namespace NavigatorTemplate.Models
                     }
                 }
 
-                foreach (System.IO.DirectoryInfo di in CurrentDirectory.GetDirectories())
+                foreach (System.IO.DirectoryInfo di in CurrentDirectory.GetDirectories("*.*",System.IO.SearchOption.AllDirectories))
                 {
                     if (MappedDriveResolver.ResolveToUNC(di.FullName).Length > 50)
                     {
