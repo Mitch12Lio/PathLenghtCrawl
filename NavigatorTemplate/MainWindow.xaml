@@ -105,6 +105,25 @@
             </GroupBox>
             <GridSplitter Grid.Column="1" Grid.Row="0" Width="3" HorizontalAlignment="Stretch" />
             <TabControl Grid.Row="0" Grid.Column="2">
+                <TabItem Header="Singles">
+                    <StackPanel>
+                        <Label Content="Creation Date:"></Label>
+                        <Label Content="{Binding Master.CurrentDirectory.CreationTime}"></Label>
+                        <Label Content="Lenght"></Label>
+                        <Label Content="{Binding Master.CurrentUNCObject.Lenght}"></Label>
+                        <Label Content="Mapped Path"></Label>
+                        <Label Content="{Binding Master.CurrentUNCObject.FullName}"></Label>
+                        <Label Content="UNC Path"></Label>
+                        <Label Content="{Binding Master.CurrentUNCObject.NameUNC}"></Label>
+                        <Label Content="Object"></Label>
+                        <Label Content="{Binding Master.CurrentUNCObject}"></Label>
+                        <Label Content="Type"></Label>
+                        <Label Content="Folder"></Label>
+                        <Button Content="Add"></Button>
+                        <Button Content="Count"></Button>
+                        <Label Content="Count"></Label>
+                    </StackPanel>
+                </TabItem>
                 <TabItem Header="Results">
 
                     <Grid>

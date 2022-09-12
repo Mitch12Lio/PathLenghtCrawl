@@ -36,7 +36,7 @@ namespace NavigatorTemplate.Models
 
         #region "************************************************************************************************* Global Properties"
 
-        private bool useAuditDatabase = Properties.Settings.Default.UseAuditDatabase;
+        private bool useAuditDatabase = PathLenghtCrawl.Properties.Settings.Default.UseAuditDatabase;
         public bool UseAuditDatabase
         {
             get
@@ -48,7 +48,7 @@ namespace NavigatorTemplate.Models
                 if (useAuditDatabase != value)
                 {
                     useAuditDatabase = value;
-                    Properties.Settings.Default.UseAuditDatabase = value;
+                    PathLenghtCrawl.Properties.Settings.Default.UseAuditDatabase = value;
                     SaveProperties();
                     NotifyPropertyChanged("UseAuditDatabase");
                 }
@@ -73,7 +73,7 @@ namespace NavigatorTemplate.Models
         }
 
 
-        private string databaseValLocationPath = Properties.Settings.Default.DatabaseValLocationPath;
+        private string databaseValLocationPath = PathLenghtCrawl.Properties.Settings.Default.DatabaseValLocationPath;
         public string DatabaseValLocationPath
         {
             get
@@ -85,14 +85,14 @@ namespace NavigatorTemplate.Models
                 if (databaseValLocationPath != value)
                 {
                     databaseValLocationPath = value;
-                    Properties.Settings.Default.DatabaseValLocationPath = value;
+                    PathLenghtCrawl.Properties.Settings.Default.DatabaseValLocationPath = value;
                     SaveProperties();
                     NotifyPropertyChanged("DatabaseValLocationPath");
                 }
             }
         }
 
-        private string databaseValName = Properties.Settings.Default.DatabaseValName;
+        private string databaseValName = PathLenghtCrawl.Properties.Settings.Default.DatabaseValName;
         public string DatabaseValName
         {
             get
@@ -104,14 +104,14 @@ namespace NavigatorTemplate.Models
                 if (databaseValName != value)
                 {
                     databaseValName = value;
-                    Properties.Settings.Default.DatabaseValName = value;
+                    PathLenghtCrawl.Properties.Settings.Default.DatabaseValName = value;
                     SaveProperties();
                     NotifyPropertyChanged("DatabaseValName");
                 }
             }
         }
 
-        private string databaseValLocation = Properties.Settings.Default.DatabaseValLocation;
+        private string databaseValLocation = PathLenghtCrawl.Properties.Settings.Default.DatabaseValLocation;
         public string DatabaseValLocation
         {
             get
@@ -123,7 +123,7 @@ namespace NavigatorTemplate.Models
                 if (databaseValLocation != value)
                 {
                     databaseValLocation = value;
-                    Properties.Settings.Default.DatabaseValLocation = value;
+                    PathLenghtCrawl.Properties.Settings.Default.DatabaseValLocation = value;
                     SaveProperties();
                     NotifyPropertyChanged("DatabaseValLocation");
                 }
@@ -131,7 +131,7 @@ namespace NavigatorTemplate.Models
         }
 
 
-        private string filePath = Properties.Settings.Default.FilePath;
+        private string filePath = PathLenghtCrawl.Properties.Settings.Default.FilePath;
         public string FilePath
         {
             get
@@ -143,14 +143,14 @@ namespace NavigatorTemplate.Models
                 if (filePath != value)
                 {
                     filePath = value;
-                    Properties.Settings.Default.FilePath = value;
+                    PathLenghtCrawl.Properties.Settings.Default.FilePath = value;
                     SaveProperties();
                     NotifyPropertyChanged("FilePath");
                 }
             }
         }
 
-        private string folderPath = Properties.Settings.Default.FolderPath;
+        private string folderPath = PathLenghtCrawl.Properties.Settings.Default.FolderPath;
         public string FolderPath
         {
             get
@@ -162,7 +162,7 @@ namespace NavigatorTemplate.Models
                 if (folderPath != value)
                 {
                     folderPath = value;
-                    Properties.Settings.Default.FolderPath = value;
+                    PathLenghtCrawl.Properties.Settings.Default.FolderPath = value;
                     SaveProperties();
                     NotifyPropertyChanged("FolderPath");
                 }
@@ -199,10 +199,29 @@ namespace NavigatorTemplate.Models
                     currentDirectory = value;
                     //CurrentSelectedNode = value.Name;
                     NotifyPropertyChanged("CurrentDirectory");
+                    //SetCurrentUNCObject();
                     //GetDirectoryFiles();
                 }
             }
         }
+
+        private UNCObject currentUNCObject = new UNCObject();
+        public UNCObject CurrentUNCObject
+        {
+            get
+            {
+                return currentUNCObject;
+            }
+            set
+            {
+                if (currentUNCObject != value)
+                {
+                    currentUNCObject = value;
+                    NotifyPropertyChanged("CurrentUNCObject");
+                }
+            }
+        }
+
 
         private System.Collections.ObjectModel.ObservableCollection<UNCObject> uncObjectLst = new System.Collections.ObjectModel.ObservableCollection<UNCObject>();
         public System.Collections.ObjectModel.ObservableCollection<UNCObject> UNCObjectLst
@@ -224,47 +243,22 @@ namespace NavigatorTemplate.Models
         #endregion
 
 
-        #region "************************************************************************************************* View Life Cycle"
 
-        private bool _isLoaded = false;
+        #region "************************************************************************************************* Bread & Butter"
 
-        public void Initialize()
+        public void SetCurrentUNCObject() 
         {
-            StatusMessage = "Initializing...";
-            // TODO: Add your initialization code here 
-            // This method is only called when the application is running
-            StatusMessage = "Ready";
+            //CurrentUNCObject = new UNCObject();
+            CurrentUNCObject.CharacterCount = MappedDriveResolver.ResolveToUNC(CurrentDirectory.FullName).Length;
+            CurrentUNCObject.NameObject = CurrentDirectory.Name;
+            CurrentUNCObject.Folder = true;  //always a directory at this point
+            CurrentUNCObject.NameUNC = MappedDriveResolver.ResolveToUNC(CurrentDirectory.FullName);
         }
-
-        public void OnLoaded()
-        {
-            if (!_isLoaded)
-            {
-                StatusMessage = "Loading...";
-                // TODO: Add your loaded code here 
-                _isLoaded = true;
-                StatusMessage = "Ready";
-            }
-        }
-
-        public void OnUnloaded()
-        {
-            if (_isLoaded)
-            {
-                StatusMessage = "Unloading...";
-                // TODO: Add your cleanup/unloaded code here 
-                _isLoaded = false;
-                StatusMessage = "Ready";
-            }
-        }
-
-        #endregion      
-
         public bool GetDirectoryFiles()
         {           
             FileCount = 0;
             bool success = true;
-            //StatusMessage = "Loading...";
+
             App.Current.Dispatcher.BeginInvoke((Action)delegate ()
             {
                 UNCObjectLst.Clear();
@@ -332,12 +326,26 @@ namespace NavigatorTemplate.Models
             return success;
         }
 
-        #region "************************************************************************************************* OI Functions"
+        private ICommand addSinglePathCommand;
+        public ICommand AddSinglePathCommand
+        {
+            get
+            {
+                return addSinglePathCommand ?? (addSinglePathCommand = new CommandHandler(() => AddSinglePath(), _canExecute));
+            }
+        }
+        private void AddSinglePath()
+        {
 
-        private void SaveProperties()
+        }
+            #endregion
+
+            #region "************************************************************************************************* OI Functions"
+
+            private void SaveProperties()
         {
             StatusMessage = "Saving...";
-            Properties.Settings.Default.Save();
+            PathLenghtCrawl.Properties.Settings.Default.Save();
             StatusMessage = "Ready";
         }
 
@@ -752,5 +760,42 @@ namespace NavigatorTemplate.Models
         }
 
         #endregion
+
+        #region "************************************************************************************************* View Life Cycle"
+
+        private bool _isLoaded = false;
+
+        public void Initialize()
+        {
+            StatusMessage = "Initializing...";
+            // TODO: Add your initialization code here 
+            // This method is only called when the application is running
+            StatusMessage = "Ready";
+        }
+
+        public void OnLoaded()
+        {
+            if (!_isLoaded)
+            {
+                StatusMessage = "Loading...";
+                // TODO: Add your loaded code here 
+                _isLoaded = true;
+                StatusMessage = "Ready";
+            }
+        }
+
+        public void OnUnloaded()
+        {
+            if (_isLoaded)
+            {
+                StatusMessage = "Unloading...";
+                // TODO: Add your cleanup/unloaded code here 
+                _isLoaded = false;
+                StatusMessage = "Ready";
+            }
+        }
+
+        #endregion
+
     }
 }

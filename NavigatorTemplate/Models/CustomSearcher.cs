@@ -143,7 +143,7 @@ namespace NavigatorTemplate.Models
             }
             catch (UnauthorizedAccessException uaEx)
             {
-                using (System.IO.StreamWriter logfile = new System.IO.StreamWriter(Properties.Settings.Default.LogLocalDestinationFolderTxt + System.IO.Path.DirectorySeparatorChar + "tvFolderLogUA.log", true))
+                using (System.IO.StreamWriter logfile = new System.IO.StreamWriter(PathLenghtCrawl.Properties.Settings.Default.LogLocalDestinationFolderTxt + System.IO.Path.DirectorySeparatorChar + "tvFolderLogUA.log", true))
                 {
                     logfile.WriteLine(DateTime.Now.ToString() + ": Type: Folder. |" + path + " -> Exception:" + uaEx.Message.Trim());
                 }
@@ -151,7 +151,7 @@ namespace NavigatorTemplate.Models
             }
             catch (System.IO.IOException ioEx)
             {
-                using (System.IO.StreamWriter logfile = new System.IO.StreamWriter(Properties.Settings.Default.LogLocalDestinationFolderTxt + System.IO.Path.DirectorySeparatorChar + "tvFolderLogIO.log", true))
+                using (System.IO.StreamWriter logfile = new System.IO.StreamWriter(PathLenghtCrawl.Properties.Settings.Default.LogLocalDestinationFolderTxt + System.IO.Path.DirectorySeparatorChar + "tvFolderLogIO.log", true))
                 {
                     logfile.WriteLine(DateTime.Now.ToString() + ": Type: Folder. |" + path + " -> Exception:" + ioEx.Message.Trim());
                 }
@@ -159,7 +159,7 @@ namespace NavigatorTemplate.Models
             }
             catch (System.Exception unknownEx)
             {
-                using (System.IO.StreamWriter logfile = new System.IO.StreamWriter(Properties.Settings.Default.LogLocalDestinationFolderTxt + System.IO.Path.DirectorySeparatorChar + "tvFolderLogUE.log", true))
+                using (System.IO.StreamWriter logfile = new System.IO.StreamWriter(PathLenghtCrawl.Properties.Settings.Default.LogLocalDestinationFolderTxt + System.IO.Path.DirectorySeparatorChar + "tvFolderLogUE.log", true))
                 {
                     logfile.WriteLine(DateTime.Now.ToString() + ": Type: Folder. |" + path + " -> Exception:" + unknownEx.Message.Trim());
                 }
@@ -191,7 +191,7 @@ namespace NavigatorTemplate.Models
             }
             catch (UnauthorizedAccessException uaEx)
             {
-                using (System.IO.StreamWriter logfile = new System.IO.StreamWriter(Properties.Settings.Default.LogLocalDestinationFolderTxt + System.IO.Path.DirectorySeparatorChar + "tvFileLogUA.log", true))
+                using (System.IO.StreamWriter logfile = new System.IO.StreamWriter(PathLenghtCrawl.Properties.Settings.Default.LogLocalDestinationFolderTxt + System.IO.Path.DirectorySeparatorChar + "tvFileLogUA.log", true))
                 {
                     logfile.WriteLine(DateTime.Now.ToString() + ": Type: Document. |" + path + " -> Exception:" + uaEx.Message.Trim());
                 }
@@ -199,7 +199,7 @@ namespace NavigatorTemplate.Models
             }
             catch (System.IO.IOException ioEx)
             {
-                using (System.IO.StreamWriter logfile = new System.IO.StreamWriter(Properties.Settings.Default.LogLocalDestinationFolderTxt + System.IO.Path.DirectorySeparatorChar + "tvFileLogOI.log", true))
+                using (System.IO.StreamWriter logfile = new System.IO.StreamWriter(PathLenghtCrawl.Properties.Settings.Default.LogLocalDestinationFolderTxt + System.IO.Path.DirectorySeparatorChar + "tvFileLogOI.log", true))
                 {
                     logfile.WriteLine(DateTime.Now.ToString() + ": Type: Document. |" + path + " -> Exception:" + ioEx.Message.Trim());
                 }
@@ -207,7 +207,7 @@ namespace NavigatorTemplate.Models
             }
             catch (System.Exception unknownEx)
             {
-                using (System.IO.StreamWriter logfile = new System.IO.StreamWriter(Properties.Settings.Default.LogLocalDestinationFolderTxt + System.IO.Path.DirectorySeparatorChar + "tvFileLogUE.log", true))
+                using (System.IO.StreamWriter logfile = new System.IO.StreamWriter(PathLenghtCrawl.Properties.Settings.Default.LogLocalDestinationFolderTxt + System.IO.Path.DirectorySeparatorChar + "tvFileLogUE.log", true))
                 {
                     logfile.WriteLine(DateTime.Now.ToString() + ": Type: Document. |" + path + " -> Exception:" + unknownEx.Message.Trim());
                 }
