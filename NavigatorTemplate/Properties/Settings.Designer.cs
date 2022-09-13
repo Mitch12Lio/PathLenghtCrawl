@@ -106,5 +106,77 @@ namespace PathLenghtCrawl.Properties {
                 this["DatabaseValLocation"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IncludeFolders {
+            get {
+                return ((bool)(this["IncludeFolders"]));
+            }
+            set {
+                this["IncludeFolders"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IncludeSubFolders {
+            get {
+                return ((bool)(this["IncludeSubFolders"]));
+            }
+            set {
+                this["IncludeSubFolders"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IncludeDocuments {
+            get {
+                return ((bool)(this["IncludeDocuments"]));
+            }
+            set {
+                this["IncludeDocuments"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IncludeEmptyFolders {
+            get {
+                return ((bool)(this["IncludeEmptyFolders"]));
+            }
+            set {
+                this["IncludeEmptyFolders"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int MinPathLength {
+            get {
+                return ((int)(this["MinPathLength"]));
+            }
+            set {
+                this["MinPathLength"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int MaxPathLength {
+            get {
+                return ((int)(this["MaxPathLength"]));
+            }
+            set {
+                this["MaxPathLength"] = value;
+            }
+        }
     }
 }

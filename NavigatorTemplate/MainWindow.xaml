@@ -117,10 +117,7 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="0">
-                            <GroupBox.Header>
-                                <Span FontWeight="DemiBold">Options</Span>
-                            </GroupBox.Header>
+                        <Expander Grid.Column="0" Grid.Row="0" Header="Options" IsExpanded="True">
                             <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
@@ -130,24 +127,38 @@
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
+                                    <!--<RowDefinition Height="Auto"/>-->
                                 </Grid.RowDefinitions>
-                                <CheckBox Grid.Row="0" Grid.Column="0" Content="Include Folders" IsChecked="{Binding Master.MigrateFolders}" IsEnabled="False"></CheckBox>
-                                <CheckBox Grid.Row="1" Grid.Column="0" Content="Include Sub-Folders" IsChecked="{Binding Master.MigrateDocuments}" IsEnabled="False"></CheckBox>
+                                <Grid Grid.Row="0" Grid.Column="2" Grid.RowSpan="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Label Grid.Row="0" Grid.Column="0" Content="Min Path Length:"></Label>
+                                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Master.MinPathLength}"></TextBox>
+                                    <Label Grid.Row="1" Grid.Column="0" Content="Max Path Length:"></Label>
+                                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Master.MaxPathLength}" IsEnabled="False"></TextBox>
+                                </Grid>
+                                <CheckBox Grid.Row="0" Grid.Column="0" Content="Include Folders" IsChecked="{Binding Master.IncludeFolders}"></CheckBox>
+                                <CheckBox Grid.Row="0" Grid.Column="1" Content="Include Sub-Folders" IsChecked="{Binding Master.IncludeSubFolders}"></CheckBox>
 
-                                <CheckBox Grid.Row="0" Grid.Column="1" Content="Include Documents" IsChecked="{Binding Master.ICFCreation}"></CheckBox>
-                                <CheckBox Grid.Row="2" Grid.Column="0" Content="Include Empty Folders" IsChecked="{Binding Master.MigrateEmptyFolders}" IsEnabled="False"></CheckBox>
+                                <CheckBox Grid.Row="1" Grid.Column="0" Content="Include Documents" IsChecked="{Binding Master.IncludeDocuments}"></CheckBox>
+                                <CheckBox Grid.Row="1" Grid.Column="1" Content="Include Empty Folders" IsChecked="{Binding Master.IncludeEmptyFolders}"></CheckBox>
 
                                 <!--<CheckBox Grid.Row="0" Grid.Column="2" Content="Copy ICF 2 Import Directory" IsChecked="{Binding Master.CopyICF2ImportDirectory}"></CheckBox>-->
-                                <ComboBox Grid.Row="0" Grid.Column="2"></ComboBox>
-                                <CheckBox Grid.Row="1" Grid.Column="2" Content="Copy Document 2 Temp Directory" IsChecked="{Binding Master.CopyDocuments2TempDirectory}"></CheckBox>
+                                <!--<TextBox Grid.Row="0" Grid.Column="2"></TextBox>-->
+                                <!--<CheckBox Grid.Row="1" Grid.Column="2" Content="Copy Document 2 Temp Directory" IsChecked="{Binding Master.CopyDocuments2TempDirectory}"></CheckBox>-->
 
-                                <CheckBox Grid.Row="1" Grid.Column="1" Content="Exclusions" IsChecked="{Binding Master.Exclusions}" IsEnabled="False"></CheckBox>
-                                <CheckBox Grid.Row="2" Grid.Column="1" Content="Permissions" IsChecked="{Binding Master.Permissions}" IsEnabled="False"></CheckBox>
+                                <!--<CheckBox Grid.Row="1" Grid.Column="1" Content="Exclusions" IsChecked="{Binding Master.Exclusions}" IsEnabled="False"></CheckBox>
+                                <CheckBox Grid.Row="2" Grid.Column="1" Content="Permissions" IsChecked="{Binding Master.Permissions}" IsEnabled="False"></CheckBox>-->
 
-                                <CheckBox Grid.Row="2" Grid.Column="2" Content="Folder Structure Snapshot" IsChecked="{Binding Master.FolderStructureSnapshot}" IsEnabled="False"></CheckBox>
+                                <!--<CheckBox Grid.Row="2" Grid.Column="2" Content="Folder Structure Snapshot" IsChecked="{Binding Master.FolderStructureSnapshot}" IsEnabled="False"></CheckBox>-->
                             </Grid>
-                        </GroupBox>
+                        </Expander>
                         <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="1">
                             <GroupBox.Header>
                                 <Span FontWeight="DemiBold">Path</Span>
@@ -160,7 +171,7 @@
                             <GroupBox.Header>
                                 <Span FontWeight="DemiBold">Results</Span>
                             </GroupBox.Header>
-                            <ListView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding Master.UNCObjectLst}" VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True">
+                            <ListView ItemsSource="{Binding Master.UNCObjectLst}" VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True">
                                 <ListView.ItemContainerStyle>
                                     <Style TargetType="ListViewItem">
                                         <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
@@ -212,8 +223,8 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <Button Grid.Row="0" Grid.Column="0" Content="Execute..." Command="{Binding Master.ExecuteLPFNListCommand}"></Button>
-                            <Button Grid.Row="0" Grid.Column="1" Content="Copy as CSV..."></Button>
-                            <Button Grid.Row="0" Grid.Column="2" Content="Save as CSV..."></Button>
+                            <Button Grid.Row="0" Grid.Column="1" Content="Copy as CSV..." IsEnabled="{Binding Master.CopyAsCSVEnabled}"></Button>
+                            <Button Grid.Row="0" Grid.Column="2" Content="Save as CSV..." IsEnabled="{Binding Master.SaveAsCSVEnabled}"></Button>
                         </Grid>
                         <Grid Grid.Row="4" Grid.Column="0">
                             <Grid.ColumnDefinitions>
@@ -229,14 +240,14 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <Label Grid.Row="0" Grid.Column="0" Content="Total Count:"></Label>
-                            <Label Grid.Row="0" Grid.Column="1" Content="{Binding Master.FileCount}"></Label>
+                            <Label Grid.Row="0" Grid.Column="0" Content="Total Count:" FontSize="10"></Label>
+                            <Label Grid.Row="0" Grid.Column="1" Content="{Binding Master.ObjectCount}" FontSize="10" FontWeight="Heavy"></Label>
                             <Rectangle Grid.Row="0" Grid.Column="2" VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="Black" />
-                            <Label Grid.Row="0" Grid.Column="3" Content="Folder Count:"></Label>
-                            <Label Grid.Row="0" Grid.Column="4" Content="{Binding Master.FileCount}"></Label>
+                            <Label Grid.Row="0" Grid.Column="3" Content="Folder Count:" FontSize="10"></Label>
+                            <Label Grid.Row="0" Grid.Column="4" Content="{Binding Master.FolderCount}" FontSize="10" FontWeight="Heavy"></Label>
                             <Rectangle Grid.Row="0" Grid.Column="5" VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="Black" />
-                            <Label Grid.Row="0" Grid.Column="6" Content="Document Count:"></Label>
-                            <Label Grid.Row="0" Grid.Column="7" Content="{Binding Master.FileCount}"></Label>
+                            <Label Grid.Row="0" Grid.Column="6" Content="Document Count:" FontSize="10"></Label>
+                            <Label Grid.Row="0" Grid.Column="7" Content="{Binding Master.FileCount}" FontSize="10" FontWeight="Heavy"></Label>
                         </Grid>
 
                         <!--<Label Grid.Row="3" Grid.Column="0" Content="Folder Count:"></Label>

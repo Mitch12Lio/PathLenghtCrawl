@@ -56,6 +56,172 @@ namespace NavigatorTemplate.Models
             }
         }
 
+        private bool includeFolders = PathLenghtCrawl.Properties.Settings.Default.IncludeFolders;
+        public bool IncludeFolders
+        {
+            get
+            {
+                return includeFolders;
+            }
+            set
+            {
+                if (includeFolders != value)
+                {
+                    includeFolders = value;
+                    PathLenghtCrawl.Properties.Settings.Default.IncludeFolders = value;
+                    SaveProperties();
+                    NotifyPropertyChanged("IncludeFolders");
+                }
+            }
+        }
+
+        private bool includeSubFolders = PathLenghtCrawl.Properties.Settings.Default.IncludeSubFolders;
+        public bool IncludeSubFolders
+        {
+            get
+            {
+                return includeSubFolders;
+            }
+            set
+            {
+                if (includeSubFolders != value)
+                {
+                    includeSubFolders = value;
+                    PathLenghtCrawl.Properties.Settings.Default.IncludeSubFolders = value;
+                    SaveProperties();
+                    NotifyPropertyChanged("IncludeSubFolders");
+                }
+            }
+        }
+
+        private bool includeDocuments = PathLenghtCrawl.Properties.Settings.Default.IncludeDocuments;
+        public bool IncludeDocuments
+        {
+            get
+            {
+                return includeDocuments;
+            }
+            set
+            {
+                if (includeDocuments != value)
+                {
+                    includeDocuments = value;
+                    PathLenghtCrawl.Properties.Settings.Default.IncludeDocuments = value;
+                    SaveProperties();
+                    NotifyPropertyChanged("IncludeDocuments");
+                }
+            }
+        }
+
+        private int minPathLength = PathLenghtCrawl.Properties.Settings.Default.MinPathLength;
+        public int MinPathLength
+        {
+            get
+            {
+                return minPathLength;
+            }
+            set
+            {
+                if (minPathLength != value)
+                {
+                    minPathLength = value;
+                    PathLenghtCrawl.Properties.Settings.Default.MinPathLength = value;
+                    SaveProperties();
+                    NotifyPropertyChanged("MinPathLength");
+                }
+            }
+        }
+
+        private int maxPathLength = PathLenghtCrawl.Properties.Settings.Default.MaxPathLength;
+        public int MaxPathLength
+        {
+            get
+            {
+                return maxPathLength;
+            }
+            set
+            {
+                if (maxPathLength != value)
+                {
+                    maxPathLength = value;
+                    PathLenghtCrawl.Properties.Settings.Default.MaxPathLength = value;
+                    SaveProperties();
+                    NotifyPropertyChanged("MaxPathLength");
+                }
+            }
+        }
+
+        private bool copyAsCSVEnabled = true;
+        public bool CopyAsCSVEnabled
+        {
+            get
+            {
+                return copyAsCSVEnabled;
+            }
+            set
+            {
+                if (copyAsCSVEnabled != value)
+                {
+                    copyAsCSVEnabled = value;
+                    NotifyPropertyChanged("CopyAsCSVEnabled");
+                }
+            }
+        }
+
+        private bool saveAsCSVEnabled = true;
+        public bool SaveAsCSVEnabled
+        {
+            get
+            {
+                return saveAsCSVEnabled;
+            }
+            set
+            {
+                if (saveAsCSVEnabled != value)
+                {
+                    saveAsCSVEnabled = value;
+                    NotifyPropertyChanged("SaveAsCSVEnabled");
+                }
+            }
+        }
+
+        private bool includeEmptyFolders = PathLenghtCrawl.Properties.Settings.Default.IncludeEmptyFolders;
+        public bool IncludeEmptyFolders
+        {
+            get
+            {
+                return includeEmptyFolders;
+            }
+            set
+            {
+                if (includeEmptyFolders != value)
+                {
+                    includeEmptyFolders = value;
+                    PathLenghtCrawl.Properties.Settings.Default.IncludeEmptyFolders = value;
+                    SaveProperties();
+                    NotifyPropertyChanged("IncludeEmptyFolders");
+                }
+            }
+        }
+
+
+        private int objectCount = 0;
+        public int ObjectCount
+        {
+            get
+            {
+                return objectCount;
+            }
+            set
+            {
+                if (objectCount != value)
+                {
+                    objectCount = value;
+                    NotifyPropertyChanged("ObjectCount");
+                }
+            }
+        }
+
         private int fileCount = 0;
         public int FileCount
         {
@@ -69,6 +235,74 @@ namespace NavigatorTemplate.Models
                 {
                     fileCount = value;
                     NotifyPropertyChanged("FileCount");
+                }
+            }
+        }
+
+        private int folderCount = 0;
+        public int FolderCount
+        {
+            get
+            {
+                return folderCount;
+            }
+            set
+            {
+                if (folderCount != value)
+                {
+                    folderCount = value;
+                    NotifyPropertyChanged("FolderCount");
+                }
+            }
+        }
+
+        private int objectCountTotal = 0;
+        public int ObjectCountTotal
+        {
+            get
+            {
+                return objectCountTotal;
+            }
+            set
+            {
+                if (objectCountTotal != value)
+                {
+                    objectCountTotal = value;
+                    NotifyPropertyChanged("ObjectCountTotal");
+                }
+            }
+        }
+
+        private int fileCountTotal = 0;
+        public int FileCountTotal
+        {
+            get
+            {
+                return fileCountTotal;
+            }
+            set
+            {
+                if (fileCountTotal != value)
+                {
+                    fileCountTotal = value;
+                    NotifyPropertyChanged("FileCountTotal");
+                }
+            }
+        }
+
+        private int folderCountTotal = 0;
+        public int FolderCountTotal
+        {
+            get
+            {
+                return folderCount;
+            }
+            set
+            {
+                if (folderCountTotal != value)
+                {
+                    folderCountTotal = value;
+                    NotifyPropertyChanged("FolderCountTotal");
                 }
             }
         }
@@ -259,52 +493,83 @@ namespace NavigatorTemplate.Models
         {
             await Task.Run(() =>
             {
-                FileCount = 0;
+                CopyAsCSVEnabled = false;
+                SaveAsCSVEnabled = false;
 
+                ObjectCount = 0;
+                FolderCount = 0;
+                FileCount = 0;
+                ObjectCountTotal = 0;
+                FolderCountTotal = 0;
+                FileCountTotal = 0;
+
+               
 
                 App.Current.Dispatcher.BeginInvoke((Action)delegate ()
                 {
                     UNCObjectLst.Clear();
                 });
-
-                //System.Collections.ObjectModel.ObservableCollection<UNCObject> uncObjectList = new System.Collections.ObjectModel.ObservableCollection<UNCObject>();
-                foreach (System.IO.FileInfo fi in CurrentDirectory.GetFiles())
+                try
                 {
-                    if (MappedDriveResolver.ResolveToUNC(fi.FullName).Length > 50)
-                    {
-                        UNCObject uncObject = new UNCObject() { CharacterCount = MappedDriveResolver.ResolveToUNC(fi.FullName).Length, NameUNC = MappedDriveResolver.ResolveToUNC(fi.FullName) };
-                        App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                        {
-                            UNCObjectLst.Add(uncObject);
-                            FileCount++;
-                        });
-                    }
-                }
+                    //FileCountTotal = System.IO.Directory.EnumerateFiles(CurrentDirectory.FullName, "*.*", System.IO.SearchOption.AllDirectories).Count();
+                    //FolderCountTotal = System.IO.Directory.EnumerateDirectories(CurrentDirectory.FullName, "*", System.IO.SearchOption.AllDirectories).Count();
+                    //ObjectCountTotal = FileCountTotal + FolderCountTotal;
 
-                foreach (System.IO.DirectoryInfo di in CurrentDirectory.GetDirectories("*.*",System.IO.SearchOption.AllDirectories))
-                {
-                    if (MappedDriveResolver.ResolveToUNC(di.FullName).Length > 50)
+                    //System.Collections.ObjectModel.ObservableCollection<UNCObject> uncObjectList = new System.Collections.ObjectModel.ObservableCollection<UNCObject>();
+                    foreach (System.IO.FileInfo fi in CurrentDirectory.GetFiles())
                     {
-                        UNCObject uncObject = new UNCObject() { CharacterCount = MappedDriveResolver.ResolveToUNC(di.FullName).Length, NameUNC = MappedDriveResolver.ResolveToUNC(di.FullName) };
-                        App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                        {
-                            UNCObjectLst.Add(uncObject);
-                            FileCount++;
-                        });
-                    }
-                    foreach (System.IO.FileInfo fi in di.GetFiles())
-                    {
-                        if (MappedDriveResolver.ResolveToUNC(fi.FullName).Length > 50)
+                        if (MappedDriveResolver.ResolveToUNC(fi.FullName).Length > MinPathLength)
                         {
                             UNCObject uncObject = new UNCObject() { CharacterCount = MappedDriveResolver.ResolveToUNC(fi.FullName).Length, NameUNC = MappedDriveResolver.ResolveToUNC(fi.FullName) };
                             App.Current.Dispatcher.BeginInvoke((Action)delegate ()
                             {
                                 UNCObjectLst.Add(uncObject);
+                                ObjectCount++;
                                 FileCount++;
                             });
                         }
                     }
+
+                    foreach (System.IO.DirectoryInfo di in CurrentDirectory.GetDirectories("*.*", System.IO.SearchOption.AllDirectories))
+                    {
+                        if (MappedDriveResolver.ResolveToUNC(di.FullName).Length > MinPathLength)
+                        {
+                            UNCObject uncObject = new UNCObject() { CharacterCount = MappedDriveResolver.ResolveToUNC(di.FullName).Length, NameUNC = MappedDriveResolver.ResolveToUNC(di.FullName) };
+                            App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+                            {
+                                UNCObjectLst.Add(uncObject);
+                                FolderCount++;
+                                ObjectCount++;
+                            });
+                        }
+                        foreach (System.IO.FileInfo fi in di.GetFiles())
+                        {
+                            if (MappedDriveResolver.ResolveToUNC(fi.FullName).Length > MinPathLength)
+                            {
+                                UNCObject uncObject = new UNCObject() { CharacterCount = MappedDriveResolver.ResolveToUNC(fi.FullName).Length, NameUNC = MappedDriveResolver.ResolveToUNC(fi.FullName) };
+                                App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+                                {
+                                    UNCObjectLst.Add(uncObject);
+                                    FileCount++;
+                                    ObjectCount++;
+                                });
+                            }
+                        }
+                    }
                 }
+                catch (UnauthorizedAccessException uae)
+                {
+                    StatusMessage = "Unauthorized Access";
+                    //success = false;
+                }
+                catch (Exception ex)
+                {
+                    StatusMessage = "Problem detected";
+                    //success = false;
+                }
+
+                CopyAsCSVEnabled = true;
+                SaveAsCSVEnabled = true;
             });
         }
         private ICommand compareUserListsCommand;
