@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace NavigatorTemplate.Models
@@ -36,6 +37,9 @@ namespace NavigatorTemplate.Models
         }
 
         #region "************************************************************************************************* Global Properties"
+
+
+
 
         private bool useAuditDatabase = PathLenghtCrawl.Properties.Settings.Default.UseAuditDatabase;
         public bool UseAuditDatabase
@@ -204,6 +208,56 @@ namespace NavigatorTemplate.Models
             }
         }
 
+        private string pathCurrentlyProcessing = String.Empty;
+        public string PathCurrentlyProcessing
+        {
+            get
+            {
+                return pathCurrentlyProcessing;
+            }
+            set
+            {
+                if (pathCurrentlyProcessing != value)
+                {
+                    pathCurrentlyProcessing = value;
+                    NotifyPropertyChanged("PathCurrentlyProcessing");
+                }
+            }
+        }
+
+        private int pathProcessedCount = 0;
+        public int PathProcessedCount
+        {
+            get
+            {
+                return pathProcessedCount;
+            }
+            set
+            {
+                if (pathProcessedCount != value)
+                {
+                    pathProcessedCount = value;
+                    NotifyPropertyChanged("PathProcessedCount");
+                }
+            }
+        }
+
+        private int pathImportedCount = 0;
+        public int PathImportedCount
+        {
+            get
+            {
+                return pathProcessedCount;
+            }
+            set
+            {
+                if (pathImportedCount != value)
+                {
+                    pathImportedCount = value;
+                    NotifyPropertyChanged("PathImportedCount");
+                }
+            }
+        }
 
         private int objectCount = 0;
         public int ObjectCount
@@ -306,7 +360,24 @@ namespace NavigatorTemplate.Models
                 }
             }
         }
-
+        private string pathFileImportTxt = PathLenghtCrawl.Properties.Settings.Default.PathFileImportTxt;
+        public string PathFileImportTxt
+        {
+            get
+            {
+                return pathFileImportTxt;
+            }
+            set
+            {
+                if (pathFileImportTxt != value)
+                {
+                    pathFileImportTxt = value;
+                    PathLenghtCrawl.Properties.Settings.Default.PathFileImportTxt = value;
+                    SaveProperties();
+                    NotifyPropertyChanged("PathFileImportTxt");
+                }
+            }
+        }
 
         private string databaseValLocationPath = PathLenghtCrawl.Properties.Settings.Default.DatabaseValLocationPath;
         public string DatabaseValLocationPath
@@ -481,6 +552,35 @@ namespace NavigatorTemplate.Models
 
         #region "************************************************************************************************* Bread & Butter"
 
+
+        private ICommand importPathFileCommand;
+        public ICommand ImportPathFileCommand
+        {
+            get
+            {
+                return importPathFileCommand ?? (importPathFileCommand = new CommandHandler(() => ImportPathFile(), _canExecute));
+            }
+        }
+        private void ImportPathFile()
+        {
+            List<string> uncPathsToScan = new List<string>();
+
+            using (System.IO.StreamReader reader = new System.IO.StreamReader(PathFileImportTxt))
+            {
+                while (!reader.EndOfStream)
+                {
+                    var CSValues = reader.ReadLine().Split(',');
+                    string stringToDitch = "NDS://HEALTH_TREE";
+
+                    string realValue = CSValues.First().Replace(stringToDitch, "");
+
+                    uncPathsToScan.Add(realValue);
+                }
+            }
+
+            int k = 8;
+        }
+
         private ICommand executeLPFNListCommand;
         public ICommand ExecuteLPFNListCommand
         {
@@ -503,7 +603,7 @@ namespace NavigatorTemplate.Models
                 FolderCountTotal = 0;
                 FileCountTotal = 0;
 
-               
+
 
                 App.Current.Dispatcher.BeginInvoke((Action)delegate ()
                 {
@@ -797,7 +897,10 @@ namespace NavigatorTemplate.Models
                         FilePath = pathName;
                         break;
                     case "DatabaseValLocationPath":
-                        FilePath = pathName;
+                        DatabaseValLocationPath = pathName;
+                        break;
+                    case "PathFileImportTxt":
+                        PathFileImportTxt = pathName;
                         break;
                     default:
                         StatusMessage = "Save Incomplete.";

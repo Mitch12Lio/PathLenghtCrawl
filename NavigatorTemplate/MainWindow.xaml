@@ -273,6 +273,14 @@
                         <Label Content="Count"></Label>-->
                     </Grid>
                 </TabItem>
+                <TabItem Header="Bulk">
+                    <StackPanel>
+                        <CheckBox Content="Omit NDS://HEALTH_TREE prefix" IsChecked="True"></CheckBox>
+                        <Label Content="Import"></Label>
+                        <TextBox Text="{Binding Master.PathFileImportTxt}"></TextBox>
+                        <Button Content="Select..." CommandParameter="PathFileImportTxt" Command="{Binding Master.SetFileCommand}"></Button>
+                        <Button Content="Import"  Command="{Binding Master.ImportPathFileCommand}"></Button>
+                    </StackPanel></TabItem>
                 <TabItem Header="UserList Compare">
                     <StackPanel>
                         <Button Content="Compare" Command="{Binding Master.CompareUserListsCommand}"></Button>

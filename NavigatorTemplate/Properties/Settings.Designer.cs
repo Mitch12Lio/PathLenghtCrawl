@@ -178,5 +178,29 @@ namespace PathLenghtCrawl.Properties {
                 this["MaxPathLength"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        public double HorizontalInputRegionSizeDefault {
+            get {
+                return ((double)(this["HorizontalInputRegionSizeDefault"]));
+            }
+            set {
+                this["HorizontalInputRegionSizeDefault"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string PathFileImportTxt {
+            get {
+                return ((string)(this["PathFileImportTxt"]));
+            }
+            set {
+                this["PathFileImportTxt"] = value;
+            }
+        }
     }
 }
