@@ -274,13 +274,56 @@
                     </Grid>
                 </TabItem>
                 <TabItem Header="Bulk">
-                    <StackPanel>
-                        <CheckBox Content="Omit NDS://HEALTH_TREE prefix" IsChecked="True"></CheckBox>
-                        <Label Content="Import"></Label>
-                        <TextBox Text="{Binding Master.PathFileImportTxt}"></TextBox>
-                        <Button Content="Select..." CommandParameter="PathFileImportTxt" Command="{Binding Master.SetFileCommand}"></Button>
-                        <Button Content="Import"  Command="{Binding Master.ImportPathFileCommand}"></Button>
-                    </StackPanel></TabItem>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <CheckBox Grid.Row="0" Grid.Column="0" Content="Omit NDS://HEALTH_TREE prefix" IsChecked="True"></CheckBox>
+                        <Label Grid.Row="1" Grid.Column="0" Content="Import"></Label>
+                        <TextBox Grid.Row="2" Grid.Column="0" Text="{Binding Master.PathFileImportTxt}"></TextBox>
+                        <Button Grid.Row="3" Grid.Column="0" Content="Select..." CommandParameter="PathFileImportTxt" Command="{Binding Master.SetFileCommand}"></Button>
+                        <Button Grid.Row="4" Grid.Column="0" Content="Import"  Command="{Binding Master.ImportPathFileCommand}"></Button>
+                        <ListView Grid.Row="5" Grid.Column="0"></ListView>
+                        <StatusBar Grid.Row="6" Grid.Column="0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"></RowDefinition>
+                                    <RowDefinition Height="Auto"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Content="Currently Processing"></Label>
+                                <Label Grid.Row="0" Grid.Column="2" Content="Paths Imported:"></Label>                                
+                                <TextBlock Grid.Row="0" Grid.Column="3" HorizontalAlignment="Center">
+                                <Run Text="{Binding Master.PathImportedCount}"></Run>
+                                <Run Text="/"></Run>
+                                <Run Text="{Binding Master.PathImportedCountTotal}"></Run>
+                                </TextBlock>
+                                <Label Grid.Row="0" Grid.Column="4" Content="Paths Processed:"></Label>
+                                <TextBlock Grid.Row="0" Grid.Column="5" HorizontalAlignment="Center">
+                                <Run Text="{Binding Master.PathProcessedCount}"></Run>
+                                <Run Text="/"></Run>
+                                <Run Text="{Binding Master.PathProcessedCountTotal}"></Run>
+                                </TextBlock>
+                                <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="6" Content="{Binding Master.PathCurrentlyProcessing}"></Label>
+                            </Grid>
+                        </StatusBar>
+                    </Grid></TabItem>
                 <TabItem Header="UserList Compare">
                     <StackPanel>
                         <Button Content="Compare" Command="{Binding Master.CompareUserListsCommand}"></Button>

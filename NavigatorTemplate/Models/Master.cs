@@ -208,7 +208,7 @@ namespace NavigatorTemplate.Models
             }
         }
 
-        private string pathCurrentlyProcessing = String.Empty;
+        private string pathCurrentlyProcessing = "N/A";
         public string PathCurrentlyProcessing
         {
             get
@@ -221,6 +221,40 @@ namespace NavigatorTemplate.Models
                 {
                     pathCurrentlyProcessing = value;
                     NotifyPropertyChanged("PathCurrentlyProcessing");
+                }
+            }
+        }
+
+        private int pathProcessedCountTotal = 0;
+        public int PathProcessedCountTotal
+        {
+            get
+            {
+                return pathProcessedCountTotal;
+            }
+            set
+            {
+                if (pathProcessedCountTotal != value)
+                {
+                    pathProcessedCountTotal = value;
+                    NotifyPropertyChanged("PathProcessedCountTotal");
+                }
+            }
+        }
+
+        private int pathImportedCountTotal = 0;
+        public int PathImportedCountTotal
+        {
+            get
+            {
+                return pathImportedCountTotal;
+            }
+            set
+            {
+                if (pathImportedCountTotal != value)
+                {
+                    pathImportedCountTotal = value;
+                    NotifyPropertyChanged("PathImportedCountTotal");
                 }
             }
         }
@@ -247,7 +281,7 @@ namespace NavigatorTemplate.Models
         {
             get
             {
-                return pathProcessedCount;
+                return pathImportedCount;
             }
             set
             {
@@ -561,9 +595,19 @@ namespace NavigatorTemplate.Models
                 return importPathFileCommand ?? (importPathFileCommand = new CommandHandler(() => ImportPathFile(), _canExecute));
             }
         }
-        private void ImportPathFile()
+        private async void ImportPathFile()
         {
+            PathImportedCount = 0;
+            PathImportedCountTotal = 0;
+            PathProcessedCount = 0;
+            PathProcessedCountTotal = 0;
+            PathCurrentlyProcessing = "N/A";
+
             List<string> uncPathsToScan = new List<string>();
+
+            System.IO.FileInfo fi = new System.IO.FileInfo(PathFileImportTxt);
+            PathImportedCountTotal = System.IO.File.ReadLines(fi.FullName).Count();
+
 
             using (System.IO.StreamReader reader = new System.IO.StreamReader(PathFileImportTxt))
             {
@@ -575,10 +619,25 @@ namespace NavigatorTemplate.Models
                     string realValue = CSValues.First().Replace(stringToDitch, "");
 
                     uncPathsToScan.Add(realValue);
+                    PathImportedCount++;
                 }
             }
 
-            int k = 8;
+            PathProcessedCountTotal = uncPathsToScan.Count();
+
+            await Task.Run(() =>
+            {
+                foreach (String path in uncPathsToScan)
+                {
+                    CurrentDirectory = new System.IO.DirectoryInfo(path);
+                    PathProcessedCount++;
+                    PathCurrentlyProcessing = path;
+                    Thread.Sleep(100);
+                    //ExecuteLPFNList();
+                }
+            });
+
+            PathCurrentlyProcessing = "N/A";
         }
 
         private ICommand executeLPFNListCommand;
