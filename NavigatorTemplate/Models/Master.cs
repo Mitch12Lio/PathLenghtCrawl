@@ -689,7 +689,7 @@ namespace NavigatorTemplate.Models
 
                     PathCurrentlyProcessing = path;
                     Thread.Sleep(100);
-                    ExecuteLPFNBulkList();
+                    ExecuteLPFNBulkList_Linq();
                     PathProcessedCount++;
 
                     StopTimerPer();
@@ -702,10 +702,11 @@ namespace NavigatorTemplate.Models
 
         }
 
-        private void NewAlgorithm() 
+
+        private void NewAlgorithm()
         {
-        
-        
+
+
         }
 
         static long GetFileLength(System.IO.FileInfo fi)
@@ -724,6 +725,125 @@ namespace NavigatorTemplate.Models
             }
             return retval;
         }
+        static long GetDirectoryLength(System.IO.DirectoryInfo di)
+        {
+            long retval;
+            try
+            {
+                retval = di.FullName.Length;
+            }
+            catch (System.IO.DirectoryNotFoundException)
+            {
+                // If a file is no longer present,  
+                // just add zero bytes to the total.  
+                retval = 0;
+            }
+            return retval;
+        }
+
+        private void ExecuteLPFNBulkList_Linq()
+        {
+            bool alreadyUNC = false;
+            if (CurrentDirectory.FullName.StartsWith("\\")) { alreadyUNC = true; }
+            try
+            {
+                dtRunningPer.Tick += new EventHandler(dtRunningPer_Tick);
+                dtRunningPer.Interval = new TimeSpan(0, 0, 0, 0, 1);
+
+
+                try
+                {
+                    StatusMessage = "Gathering Information (Files)...";
+                    //System.IO.FileInfo[] fileInfos = CurrentDirectory.GetFiles();
+                    IEnumerable<System.IO.FileInfo> fileList = CurrentDirectory.GetFiles("*.*", System.IO.SearchOption.AllDirectories);
+                    StatusMessage = "Processing Files...";
+                    IEnumerable<System.IO.FileInfo> queryLongestFiles = (from file in fileList let len = GetFileLength(file) where len > minPathLength orderby len descending select file);
+                    //var queryTenLargest = (from file in fileList let len = GetFileLength(file) where len > 255 orderby len descending select file).Take(10);
+
+                    foreach (System.IO.FileInfo fi in queryLongestFiles)
+                    {
+                        try
+                        {
+                            if (fi.Exists)
+                            {
+                                UNCObject uncObject = new UNCObject() { CharacterCount = fi.FullName.Length, NameUNC = fi.FullName };
+                                ObjectCount++;
+                                FileCount++;
+                                App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+                                {
+                                    UNCBulkObjectLst.Add(uncObject);
+                                });
+                            }
+                            else
+                            {
+                                //log
+                                int e = 9;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            int e = 7;
+                            continue;
+                            // throw;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    int e = 7;
+                }
+
+                try
+                {
+                    StatusMessage = "Gathering Information (Folders)...";
+                    //System.IO.DirectoryInfo[] directoryInfos = CurrentDirectory.GetDirectories("*.*", System.IO.SearchOption.AllDirectories);
+                    IEnumerable<System.IO.DirectoryInfo> directoryList = CurrentDirectory.GetDirectories("*", System.IO.SearchOption.AllDirectories);
+                    StatusMessage = "Processing Folders...";
+                    IEnumerable<System.IO.DirectoryInfo> queryLongestFolders = (from directory in directoryList let len = GetDirectoryLength(directory) where len > minPathLength orderby len descending select directory);
+
+                    foreach (System.IO.DirectoryInfo di in queryLongestFolders)
+                    {
+                        try
+                        {
+                            if (di.Exists)
+                            {
+                                UNCObject uncObject = new UNCObject() { CharacterCount = di.FullName.Length, NameUNC = di.FullName };
+                                ObjectCount++;
+                                FolderCount++;
+                                App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+                                {
+                                    UNCBulkObjectLst.Add(uncObject);
+                                });
+                            }
+                            else 
+                            {
+                                //log
+                                int e = 9;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            int e = 7;
+                            continue;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    int e = 7;
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                int e = 7;
+            }
+            finally { }
+
+            StatusMessage = "Ready";
+        }
+
         private void ExecuteLPFNBulkList()
         {
 
@@ -741,61 +861,43 @@ namespace NavigatorTemplate.Models
 
                 try
                 {
+                    foreach (System.IO.FileInfo fi in fileInfos)
+                    {
+                        string fiInUNC = String.Empty;
+                        if (!alreadyUNC)
+                        {
+                            try
+                            {
+                                fiInUNC = MappedDriveResolver.ResolveToUNC(fi.FullName);
+                            }
+                            catch (Exception)
+                            {
+                                throw;
+                            }
 
-                    var queryTenLargest = (from file in fileList
-let len = GetFileLength(file)
-where len > 255
-orderby len descending
-select file).Take(10);
+                        }
+                        else
+                        {
+                            fiInUNC = fi.FullName;
+                        }
+                        try
+                        {
 
+                            int fileLenght = fiInUNC.Length;
+                            if (fileLenght > MinPathLength)
+                            {
+                                UNCObject uncObject = new UNCObject() { CharacterCount = fileLenght, NameUNC = fiInUNC };
+                                ObjectCount++;
+                                FileCount++;
+                                UNCBulkObjectLst.Add(uncObject);
+                            }
+                        }
+                        catch (Exception)
+                        {
 
-
-
-                    //        System.IO.FileInfo longestFile =
-                    //(from file in fileList
-                    // let len = GetFileLength(file)
-                    // where len > 0
-                    // orderby len descending
-                    // select file)
-                    //.First();
-
-                    //foreach (System.IO.FileInfo fi in fileInfos)
-                    //{
-                    //    string fiInUNC = String.Empty;
-                    //    if (!alreadyUNC)
-                    //    {
-                    //        try
-                    //        {
-                    //            fiInUNC = MappedDriveResolver.ResolveToUNC(fi.FullName);
-                    //        }
-                    //        catch (Exception)
-                    //        {
-                    //            throw;
-                    //        }
-
-                    //    }
-                    //    else
-                    //    {
-                    //        fiInUNC = fi.FullName;
-                    //    }
-                    //    try
-                    //    {
-
-                    //        int fileLenght = fiInUNC.Length;
-                    //        if (fileLenght > MinPathLength)
-                    //        {
-                    //            UNCObject uncObject = new UNCObject() { CharacterCount = fileLenght, NameUNC = fiInUNC };
-                    //            ObjectCount++;
-                    //            FileCount++;
-                    //            UNCBulkObjectLst.Add(uncObject);
-                    //        }
-                    //    }
-                    //    catch (Exception)
-                    //    {
-
-                    //        throw;
-                    //    }
-                    //}
+                            throw;
+                        }
+                    }
                 }
                 catch (Exception)
                 {
@@ -859,7 +961,7 @@ select file).Take(10);
 
                                 throw;
                             }
-                            
+
                             foreach (System.IO.FileInfo fi in fileInfos1)
                             {
                                 try

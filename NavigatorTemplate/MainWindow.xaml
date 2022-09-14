@@ -164,7 +164,7 @@
                                 <Span FontWeight="DemiBold">Path</Span>
                             </GroupBox.Header>
                             <StackPanel>
-                                <TextBox Text="{Binding Master.CurrentUNCObject.NameUNC}"></TextBox>
+                                <TextBox IsReadOnly ="True" Text="{Binding Master.CurrentUNCObject.NameUNC}"></TextBox>
                             </StackPanel>
                         </GroupBox>
                         <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="2">
@@ -277,26 +277,51 @@
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <CheckBox Grid.Row="0" Grid.Column="0" Content="Omit NDS://HEALTH_TREE prefix" IsChecked="True"></CheckBox>
-                        <Label Grid.Row="1" Grid.Column="0" Content="Import"></Label>
-                        <TextBox Grid.Row="2" Grid.Column="0" Text="{Binding Master.PathFileImportTxt}"></TextBox>
-                        <Button Grid.Row="3" Grid.Column="0" Content="Select..." CommandParameter="PathFileImportTxt" Command="{Binding Master.SetFileCommand}"></Button>
-                        <Button Grid.Row="4" Grid.Column="0" Content="Import"  Command="{Binding Master.ImportPathFileCommand}"></Button>
-                        <ListView Grid.Row="5" Grid.Column="0"></ListView>
-                        <Separator Grid.Row="6" Grid.Column="0"></Separator>
+                        <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Master.PathFileImportTxt}"></TextBox>
+                        <Button Grid.Row="2" Grid.Column="0" Content="Import..." CommandParameter="PathFileImportTxt" Command="{Binding Master.SetFileCommand}"></Button>
+                        <Button Grid.Row="2" Grid.Column="1" Content="Process"  Command="{Binding Master.ImportPathFileCommand}"></Button>
+                        <ListView Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding Master.UNCBulkObjectLst}" VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                    <Setter Property="VerticalContentAlignment" Value="Stretch"></Setter>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Length" Width="50">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding CharacterCount}" HorizontalAlignment="Center" Foreground="{Binding HomeNameExistForeground}" FontWeight="{Binding HomeNameExistFontWeight}"></TextBlock>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="UNC Path" Width="Auto">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox ToolTip="{Binding NameUNC}" Text="{Binding NameUNC}" IsReadOnly ="True" HorizontalAlignment="Left" Foreground="{Binding MemberExistForeground}" FontWeight="{Binding MemberExistFontWeight}"></TextBox>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                        <Separator Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"></Separator>
                         <!--<StatusBar Grid.Row="6" Grid.Column="0">-->
-                        <Grid Grid.Row="7" Grid.Column="0">
+                        <Grid Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
@@ -322,7 +347,7 @@
                                 <Run Text="/"></Run>
                                 <Run Text="{Binding Master.PathProcessedCountTotal}"></Run>
                             </TextBlock>
-                            <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="6" Text="{Binding Master.PathCurrentlyProcessing}"></TextBox>
+                            <TextBox Grid.Row="1" Grid.Column="0" IsReadOnly ="True" Grid.ColumnSpan="6" Text="{Binding Master.PathCurrentlyProcessing}"></TextBox>
                         </Grid>
                         <!--</StatusBar>-->
                     </Grid>
@@ -516,7 +541,7 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <CheckBox Grid.Row="0" Grid.Column="0"  Content="AutoSave"></CheckBox>                            
+                            <CheckBox Grid.Row="0" Grid.Column="0"  Content="AutoSave"></CheckBox>
                             <CheckBox Grid.Row="0" Grid.Column="1"  Content="Create New Log Per Session"></CheckBox>
                             <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="Folder"></Label>
                             <TextBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Master.FolderPath}"></TextBox>
