@@ -743,105 +743,113 @@ namespace NavigatorTemplate.Models
 
         private void ExecuteLPFNBulkList_Linq()
         {
-            bool alreadyUNC = false;
-            if (CurrentDirectory.FullName.StartsWith("\\")) { alreadyUNC = true; }
-            try
+            if (!System.IO.File.Exists(PathFileImportTxt)) 
             {
-                dtRunningPer.Tick += new EventHandler(dtRunningPer_Tick);
-                dtRunningPer.Interval = new TimeSpan(0, 0, 0, 0, 1);
-
-
+                StatusMessage = "File does not exists.";
+            }
+            else
+            {
+                bool alreadyUNC = false;
+                if (CurrentDirectory.FullName.StartsWith("\\")) { alreadyUNC = true; }
                 try
                 {
-                    StatusMessage = "Gathering Information (Files)...";
-                    //System.IO.FileInfo[] fileInfos = CurrentDirectory.GetFiles();
-                    IEnumerable<System.IO.FileInfo> fileList = CurrentDirectory.GetFiles("*.*", System.IO.SearchOption.AllDirectories);
-                    StatusMessage = "Processing Files...";
-                    IEnumerable<System.IO.FileInfo> queryLongestFiles = (from file in fileList let len = GetFileLength(file) where len > minPathLength orderby len descending select file);
-                    //var queryTenLargest = (from file in fileList let len = GetFileLength(file) where len > 255 orderby len descending select file).Take(10);
+                    dtRunningPer.Tick += new EventHandler(dtRunningPer_Tick);
+                    dtRunningPer.Interval = new TimeSpan(0, 0, 0, 0, 1);
 
-                    foreach (System.IO.FileInfo fi in queryLongestFiles)
+
+                    try
                     {
-                        try
+                        StatusMessage = "Gathering Information (Files)...";
+                        //System.IO.FileInfo[] fileInfos = CurrentDirectory.GetFiles();
+                        IEnumerable<System.IO.FileInfo> fileList = CurrentDirectory.GetFiles("*.*", System.IO.SearchOption.AllDirectories);
+                        StatusMessage = "Processing Files...";
+                        IEnumerable<System.IO.FileInfo> queryLongestFiles = (from file in fileList let len = GetFileLength(file) where len > minPathLength orderby len descending select file);
+                        //var queryTenLargest = (from file in fileList let len = GetFileLength(file) where len > 255 orderby len descending select file).Take(10);
+
+                        foreach (System.IO.FileInfo fi in queryLongestFiles)
                         {
-                            if (fi.Exists)
+                            try
                             {
-                                UNCObject uncObject = new UNCObject() { CharacterCount = fi.FullName.Length, NameUNC = fi.FullName };
-                                ObjectCount++;
-                                FileCount++;
-                                App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+                                if (fi.Exists)
                                 {
-                                    UNCBulkObjectLst.Add(uncObject);
-                                });
+                                    UNCObject uncObject = new UNCObject() { CharacterCount = fi.FullName.Length, NameUNC = fi.FullName };
+                                    ObjectCount++;
+                                    FileCount++;
+                                    App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+                                    {
+                                        UNCBulkObjectLst.Add(uncObject);
+                                    });
+                                }
+                                else
+                                {
+                                    
+                                    //log
+                                    int e = 9;
+                                }
                             }
-                            else
+                            catch (Exception ex)
                             {
-                                //log
-                                int e = 9;
+                                int e = 7;
+                                continue;
+                                // throw;
                             }
-                        }
-                        catch (Exception ex)
-                        {
-                            int e = 7;
-                            continue;
-                            // throw;
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        int e = 7;
+                    }
+
+                    try
+                    {
+                        StatusMessage = "Gathering Information (Folders)...";
+                        //System.IO.DirectoryInfo[] directoryInfos = CurrentDirectory.GetDirectories("*.*", System.IO.SearchOption.AllDirectories);
+                        IEnumerable<System.IO.DirectoryInfo> directoryList = CurrentDirectory.GetDirectories("*", System.IO.SearchOption.AllDirectories);
+                        StatusMessage = "Processing Folders...";
+                        IEnumerable<System.IO.DirectoryInfo> queryLongestFolders = (from directory in directoryList let len = GetDirectoryLength(directory) where len > minPathLength orderby len descending select directory);
+
+                        foreach (System.IO.DirectoryInfo di in queryLongestFolders)
+                        {
+                            try
+                            {
+                                if (di.Exists)
+                                {
+                                    UNCObject uncObject = new UNCObject() { CharacterCount = di.FullName.Length, NameUNC = di.FullName };
+                                    ObjectCount++;
+                                    FolderCount++;
+                                    App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+                                    {
+                                        UNCBulkObjectLst.Add(uncObject);
+                                    });
+                                }
+                                else
+                                {
+                                    //log
+                                    int e = 9;
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                int e = 7;
+                                continue;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        int e = 7;
+
+                    }
+
                 }
                 catch (Exception ex)
                 {
                     int e = 7;
                 }
+                finally { }
 
-                try
-                {
-                    StatusMessage = "Gathering Information (Folders)...";
-                    //System.IO.DirectoryInfo[] directoryInfos = CurrentDirectory.GetDirectories("*.*", System.IO.SearchOption.AllDirectories);
-                    IEnumerable<System.IO.DirectoryInfo> directoryList = CurrentDirectory.GetDirectories("*", System.IO.SearchOption.AllDirectories);
-                    StatusMessage = "Processing Folders...";
-                    IEnumerable<System.IO.DirectoryInfo> queryLongestFolders = (from directory in directoryList let len = GetDirectoryLength(directory) where len > minPathLength orderby len descending select directory);
-
-                    foreach (System.IO.DirectoryInfo di in queryLongestFolders)
-                    {
-                        try
-                        {
-                            if (di.Exists)
-                            {
-                                UNCObject uncObject = new UNCObject() { CharacterCount = di.FullName.Length, NameUNC = di.FullName };
-                                ObjectCount++;
-                                FolderCount++;
-                                App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                                {
-                                    UNCBulkObjectLst.Add(uncObject);
-                                });
-                            }
-                            else 
-                            {
-                                //log
-                                int e = 9;
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            int e = 7;
-                            continue;
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    int e = 7;
-
-                }
-
+                StatusMessage = "Ready";
             }
-            catch (Exception ex)
-            {
-                int e = 7;
-            }
-            finally { }
-
-            StatusMessage = "Ready";
         }
 
         private void ExecuteLPFNBulkList()
