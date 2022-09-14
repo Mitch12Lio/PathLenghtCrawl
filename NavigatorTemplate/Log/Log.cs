@@ -6,11 +6,20 @@ namespace PathLenghtCrawl.Log
 {
     public static class Log
     {
-        public static void WriteLog(string path, string value)
+        //public static void Write2ErrorLog(string path, string value)
+        //{
+        //    using (System.IO.StreamWriter logFile = new System.IO.StreamWriter(path + System.IO.Path.DirectorySeparatorChar + "log.log", true, Encoding.UTF8))
+        //    {
+        //        logFile.WriteLine(value);
+        //    }
+        //}
+        public static void Write2ErrorLog(string path, DateTime dateTime, string errorMessage,string pathCausingError)
         {
             using (System.IO.StreamWriter logFile = new System.IO.StreamWriter(path + System.IO.Path.DirectorySeparatorChar + "log.log", true, Encoding.UTF8))
             {
-                logFile.WriteLine(value);
+                logFile.WriteLine(dateTime.ToString());
+                logFile.WriteLine(errorMessage);
+                logFile.WriteLine(pathCausingError);
             }
         }
     }

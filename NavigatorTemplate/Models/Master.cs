@@ -694,7 +694,8 @@ namespace NavigatorTemplate.Models
 
                     StopTimerPer();
                     dtRunningPer.Stop();
-                    AverageRunningTimePer = String.Format("{0:0.00}", Math.Round(AverageRunningTimePerLst.Average(), 2));
+                    //AverageRunningTimePer = String.Format("{0:0.00}", Math.Round(AverageRunningTimePerLst.Average(), 2));
+                    AverageRunningTimePer = String.Format("{0:00}:{1:00}:{2:00}:{3:00}", Math.Round(AverageRunningTimePerLst.Average(), 2));
                 }
             });
 
@@ -782,22 +783,19 @@ namespace NavigatorTemplate.Models
                                 }
                                 else
                                 {
-                                    
-                                    //log
-                                    int e = 9;
+                                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt,DateTime.Now, "File does Not Exists.", fi.FullName);
                                 }
                             }
                             catch (Exception ex)
                             {
-                                int e = 7;
+                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, fi.FullName);
                                 continue;
-                                // throw;
                             }
                         }
                     }
                     catch (Exception ex)
                     {
-                        int e = 7;
+                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Error while gathering files");
                     }
 
                     try
@@ -824,27 +822,26 @@ namespace NavigatorTemplate.Models
                                 }
                                 else
                                 {
-                                    //log
-                                    int e = 9;
+                                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, "Directory does Not Exists.", di.FullName);
                                 }
                             }
                             catch (Exception ex)
                             {
-                                int e = 7;
+                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, di.FullName);
                                 continue;
                             }
                         }
                     }
                     catch (Exception ex)
                     {
-                        int e = 7;
+                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Error while gathering directories");
 
                     }
 
                 }
                 catch (Exception ex)
                 {
-                    int e = 7;
+                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "General error in ExecuteLPFNBulkList_Linq()");
                 }
                 finally { }
 
