@@ -471,6 +471,25 @@ namespace NavigatorTemplate.Models
         }
 
 
+        private string logLocationTxt = PathLenghtCrawl.Properties.Settings.Default.LogLocationTxt;
+        public string LogLocationTxt
+        {
+            get
+            {
+                return logLocationTxt;
+            }
+            set
+            {
+                if (logLocationTxt != value)
+                {
+                    logLocationTxt = value;
+                    PathLenghtCrawl.Properties.Settings.Default.LogLocationTxt = value;
+                    SaveProperties();
+                    NotifyPropertyChanged("LogLocationTxt");
+                }
+            }
+        }
+
         private string filePath = PathLenghtCrawl.Properties.Settings.Default.FilePath;
         public string FilePath
         {
@@ -563,6 +582,24 @@ namespace NavigatorTemplate.Models
         }
 
 
+        private System.Collections.ObjectModel.ObservableCollection<UNCObject> uncBulkObjectLst = new System.Collections.ObjectModel.ObservableCollection<UNCObject>();
+        public System.Collections.ObjectModel.ObservableCollection<UNCObject> UNCBulkObjectLst
+        {
+            get
+            {
+                return uncBulkObjectLst;
+            }
+            set
+            {
+                if (uncBulkObjectLst != value)
+                {
+                    uncBulkObjectLst = value;
+                    NotifyPropertyChanged("UNCBulkObjectLst");
+                }
+            }
+        }
+
+
         private System.Collections.ObjectModel.ObservableCollection<UNCObject> uncObjectLst = new System.Collections.ObjectModel.ObservableCollection<UNCObject>();
         public System.Collections.ObjectModel.ObservableCollection<UNCObject> UNCObjectLst
         {
@@ -597,11 +634,20 @@ namespace NavigatorTemplate.Models
         }
         private async void ImportPathFile()
         {
+            StatusMessage = "Ready";
+
             PathImportedCount = 0;
             PathImportedCountTotal = 0;
             PathProcessedCount = 0;
             PathProcessedCountTotal = 0;
             PathCurrentlyProcessing = "N/A";
+
+            ObjectCount = 0;
+            FolderCount = 0;
+            FileCount = 0;
+            ObjectCountTotal = 0;
+            FolderCountTotal = 0;
+            FileCountTotal = 0;
 
             List<string> uncPathsToScan = new List<string>();
 
@@ -616,7 +662,7 @@ namespace NavigatorTemplate.Models
                     var CSValues = reader.ReadLine().Split(',');
                     string stringToDitch = "NDS://HEALTH_TREE";
 
-                    string realValue = CSValues.First().Replace(stringToDitch, "");
+                    string realValue = CSValues.FirstOrDefault().Replace(stringToDitch, "");
 
                     uncPathsToScan.Add(realValue);
                     PathImportedCount++;
@@ -624,22 +670,269 @@ namespace NavigatorTemplate.Models
             }
 
             PathProcessedCountTotal = uncPathsToScan.Count();
+            UNCBulkObjectLst.Clear();
+
+
+
 
             await Task.Run(() =>
+
             {
+
                 foreach (String path in uncPathsToScan)
                 {
+                    dtRunningPer.Start();
+                    ResetTimerPer();
+                    StartTimerPer();
+
                     CurrentDirectory = new System.IO.DirectoryInfo(path);
-                    PathProcessedCount++;
+
                     PathCurrentlyProcessing = path;
                     Thread.Sleep(100);
-                    //ExecuteLPFNList();
+                    ExecuteLPFNBulkList();
+                    PathProcessedCount++;
+
+                    StopTimerPer();
+                    dtRunningPer.Stop();
+                    AverageRunningTimePer = String.Format("{0:0.00}", Math.Round(AverageRunningTimePerLst.Average(), 2));
                 }
             });
 
             PathCurrentlyProcessing = "N/A";
+
         }
 
+        private void NewAlgorithm() 
+        {
+        
+        
+        }
+
+        static long GetFileLength(System.IO.FileInfo fi)
+        {
+            long retval;
+            try
+            {
+                //retval = fi.Length;
+                retval = fi.FullName.Length;
+            }
+            catch (System.IO.FileNotFoundException)
+            {
+                // If a file is no longer present,  
+                // just add zero bytes to the total.  
+                retval = 0;
+            }
+            return retval;
+        }
+        private void ExecuteLPFNBulkList()
+        {
+
+            bool alreadyUNC = false;
+            if (CurrentDirectory.FullName.StartsWith("\\")) { alreadyUNC = true; }
+            try
+            {
+                dtRunningPer.Tick += new EventHandler(dtRunningPer_Tick);
+                dtRunningPer.Interval = new TimeSpan(0, 0, 0, 0, 1);
+
+                StatusMessage = "Gathering Information (Files)...";
+                System.IO.FileInfo[] fileInfos = CurrentDirectory.GetFiles();
+                IEnumerable<System.IO.FileInfo> fileList = CurrentDirectory.GetFiles("*.*", System.IO.SearchOption.AllDirectories);
+                StatusMessage = "Processing Files...";
+
+                try
+                {
+
+                    var queryTenLargest = (from file in fileList
+let len = GetFileLength(file)
+where len > 255
+orderby len descending
+select file).Take(10);
+
+
+
+
+                    //        System.IO.FileInfo longestFile =
+                    //(from file in fileList
+                    // let len = GetFileLength(file)
+                    // where len > 0
+                    // orderby len descending
+                    // select file)
+                    //.First();
+
+                    //foreach (System.IO.FileInfo fi in fileInfos)
+                    //{
+                    //    string fiInUNC = String.Empty;
+                    //    if (!alreadyUNC)
+                    //    {
+                    //        try
+                    //        {
+                    //            fiInUNC = MappedDriveResolver.ResolveToUNC(fi.FullName);
+                    //        }
+                    //        catch (Exception)
+                    //        {
+                    //            throw;
+                    //        }
+
+                    //    }
+                    //    else
+                    //    {
+                    //        fiInUNC = fi.FullName;
+                    //    }
+                    //    try
+                    //    {
+
+                    //        int fileLenght = fiInUNC.Length;
+                    //        if (fileLenght > MinPathLength)
+                    //        {
+                    //            UNCObject uncObject = new UNCObject() { CharacterCount = fileLenght, NameUNC = fiInUNC };
+                    //            ObjectCount++;
+                    //            FileCount++;
+                    //            UNCBulkObjectLst.Add(uncObject);
+                    //        }
+                    //    }
+                    //    catch (Exception)
+                    //    {
+
+                    //        throw;
+                    //    }
+                    //}
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+                StatusMessage = "Gathering Information (Folders)...";
+                System.IO.DirectoryInfo[] directoryInfos = CurrentDirectory.GetDirectories("*.*", System.IO.SearchOption.AllDirectories);
+                StatusMessage = "Processing Folders...";
+                try
+                {
+
+
+                    foreach (System.IO.DirectoryInfo di in directoryInfos)
+                    {
+                        string diInUNC = String.Empty;
+                        if (!alreadyUNC)
+                        {
+                            try
+                            {
+                                diInUNC = MappedDriveResolver.ResolveToUNC(di.FullName);
+                            }
+                            catch (Exception)
+                            {
+                                throw;
+                            }
+
+                        }
+                        else
+                        {
+                            diInUNC = di.FullName;
+                        }
+
+
+
+                        int directoryLenght = diInUNC.Length;
+                        if (directoryLenght > MinPathLength)
+                        {
+                            try
+                            {
+                                UNCObject uncObject = new UNCObject() { CharacterCount = directoryLenght, NameUNC = diInUNC };
+                                ObjectCount++;
+                                FolderCount++;
+                                UNCBulkObjectLst.Add(uncObject);
+                            }
+                            catch (Exception)
+                            {
+                                throw;
+                            }
+
+                        }
+                        try
+                        {
+                            System.IO.FileInfo[] fileInfos1;
+                            try
+                            {
+                                fileInfos1 = di.GetFiles();
+                            }
+                            catch (Exception ex)
+                            {
+
+                                throw;
+                            }
+                            
+                            foreach (System.IO.FileInfo fi in fileInfos1)
+                            {
+                                try
+                                {
+
+
+                                    string fiInUNC = String.Empty;
+                                    if (!alreadyUNC)
+                                    {
+                                        try
+                                        {
+                                            fiInUNC = MappedDriveResolver.ResolveToUNC(fi.FullName);
+                                        }
+                                        catch (Exception ex)
+                                        {
+
+                                            throw;
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        fiInUNC = fi.FullName;
+                                    }
+                                    try
+                                    {
+                                        int fileLenght = fiInUNC.Length;
+                                        if (fileLenght > MinPathLength)
+                                        {
+                                            UNCObject uncObject = new UNCObject() { CharacterCount = fileLenght, NameUNC = fiInUNC };
+                                            ObjectCount++;
+                                            FileCount++;
+                                            UNCBulkObjectLst.Add(uncObject);
+
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+
+                                        throw;
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    throw;
+                                }
+                            }
+                        }
+                        catch (Exception es)
+                        {
+                            //break was here the last time
+                            throw;
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+            catch (UnauthorizedAccessException uae)
+            {
+                StatusMessage = "Unauthorized Access";
+                //success = false;
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = "Problem detected";
+                //success = false;
+            }
+            StatusMessage = "Ready";
+        }
         private ICommand executeLPFNListCommand;
         public ICommand ExecuteLPFNListCommand
         {
@@ -984,8 +1277,8 @@ namespace NavigatorTemplate.Models
         {
             switch (obj.ToString())
             {
-                case "FolderPathTxt":
-                    FolderPath = CurrentDirectory.FullName;
+                case "LogLocationTxt":
+                    LogLocationTxt = CurrentDirectory.FullName;
                     break;
                 case "DatabaseValLocation":
                     DatabaseValLocation = CurrentDirectory.FullName;
@@ -1019,10 +1312,10 @@ namespace NavigatorTemplate.Models
 
             switch (obj.ToString())
             {
-                case "FolderPathTxt":
-                    if (FolderPath != string.Empty)
+                case "LogLocationTxt":
+                    if (LogLocationTxt != string.Empty)
                     {
-                        folderBrowserDialog.SelectedPath = FolderPath;
+                        folderBrowserDialog.SelectedPath = LogLocationTxt;
                     }
                     break;
                 case "DatabaseValLocation":
@@ -1041,8 +1334,8 @@ namespace NavigatorTemplate.Models
                 string pathName = folderBrowserDialog.SelectedPath;
                 switch (obj.ToString())
                 {
-                    case "FolderPathTxt":
-                        FolderPath = pathName;
+                    case "LogLocationTxt":
+                        LogLocationTxt = pathName;
                         break;
                     case "DatabaseValLocation":
                         DatabaseValLocation = pathName;
@@ -1269,6 +1562,73 @@ namespace NavigatorTemplate.Models
 
         #region "************************************************************************************************* StopWatch"
 
+        private double currentAverageRunningTimePer = 0;
+        public double CurrentAverageRunningTimePer
+        {
+            get
+            {
+                return currentAverageRunningTimePer;
+            }
+            set
+            {
+                currentAverageRunningTimePer = value;
+                AverageRunningTimePerLst.Add(value);
+                NotifyPropertyChanged("CurrentAverageRunningTimePer");
+            }
+        }
+
+        private List<double> averageRunningTimePerLst = new List<double>();
+        public List<double> AverageRunningTimePerLst
+        {
+            get
+            {
+                return averageRunningTimePerLst;
+            }
+            set
+            {
+                averageRunningTimePerLst = value;
+                //AverageRunningTimePer = averageRunningTimePerLst.Average();
+                NotifyPropertyChanged("AverageRunningTimePerLst");
+            }
+        }
+
+        private string averageRunningTimePer = "N/A";
+        public string AverageRunningTimePer
+        {
+            get
+            {
+                return averageRunningTimePer;
+            }
+            set
+            {
+                averageRunningTimePer = value;
+                NotifyPropertyChanged("AverageRunningTimePer");
+            }
+        }
+
+
+        private string validatorRunningTimePer = "N/A";
+        public string ValidatorRunningTimePer
+        {
+            get
+            {
+                return validatorRunningTimePer;
+            }
+            set
+            {
+                validatorRunningTimePer = value;
+                NotifyPropertyChanged("ValidatorRunningTimePer");
+            }
+        }
+
+        void dtRunningPer_Tick(object sender, EventArgs e)
+        {
+            TimeSpan ts = stopWatchRunningPer.Elapsed;
+            currentRunningTimePer = String.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds);
+            ValidatorRunningTimePer = currentRunningTimePer;
+
+        }
+
         void dtRunning_Tick(object sender, EventArgs e)
         {
             TimeSpan ts = stopWatchRunning.Elapsed;
@@ -1298,6 +1658,18 @@ namespace NavigatorTemplate.Models
             }
         }
 
+        private ICommand resetTimerPerCommand;
+        public ICommand ResetTimerPerCommand
+        {
+            get
+            {
+                return resetTimerPerCommand ?? (resetTimerPerCommand = new CommandHandler(() => ResetTimerPer(), _canExecute));
+            }
+        }
+        private void ResetTimerPer()
+        {
+            stopWatchRunningPer.Reset();
+        }
         private void StartTimerPer()
         {
             stopWatchRunningPer.Start();
@@ -1314,7 +1686,7 @@ namespace NavigatorTemplate.Models
         private void StopTimerPer()
         {
             stopWatchRunningPer.Stop();
-            //AverageRunningTimePerLst.Add(stopWatchRunningPer.Elapsed.TotalSeconds);
+            AverageRunningTimePerLst.Add(stopWatchRunningPer.Elapsed.TotalSeconds);
         }
 
         private ICommand startTimerCommand;

@@ -202,5 +202,17 @@ namespace PathLenghtCrawl.Properties {
                 this["PathFileImportTxt"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LogLocationTxt {
+            get {
+                return ((string)(this["LogLocationTxt"]));
+            }
+            set {
+                this["LogLocationTxt"] = value;
+            }
+        }
     }
 }
