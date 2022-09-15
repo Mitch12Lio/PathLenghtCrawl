@@ -840,9 +840,10 @@ namespace NavigatorTemplate.Models
                                         UNCObject uncObject = new UNCObject() { CharacterCount = fi.FullName.Length, NameUNC = fi.FullName };
                                         ObjectCount++;
                                         FileCount++;
+                                        UNCObjectFileList.Add(uncObject);
                                         //App.Current.Dispatcher.BeginInvoke((Action)delegate ()
                                         //{
-                                            UNCObjectFileList.Add(uncObject);
+                                        //    UNCObjectFileLst.Add(uncObject);
                                         //});
                                     }
                                     else
