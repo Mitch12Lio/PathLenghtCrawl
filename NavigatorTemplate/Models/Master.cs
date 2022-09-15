@@ -721,8 +721,9 @@ namespace NavigatorTemplate.Models
             }
 
             PathProcessedCountTotal = uncPathsToScan.Count();
-            UNCObjectFileLst.Clear();
-            UNCObjectFolderLst.Clear();
+            //UNCObjectFileLst.Clear();
+            //UNCObjectFolderLst.Clear();
+            UNCObjectFileList.Clear();
 
 
 
@@ -827,6 +828,14 @@ namespace NavigatorTemplate.Models
                             StatusMessage = "Gathering Information (Files)...";
                             //System.IO.FileInfo[] fileInfos = CurrentDirectory.GetFiles();
                             IEnumerable<System.IO.FileInfo> fileList = CurrentDirectory.GetFiles("*.*", System.IO.SearchOption.AllDirectories);
+
+
+                            IEnumerable<string> fileListStrings = System.IO.Directory.EnumerateFiles(CurrentDirectory.FullName,"*.*", System.IO.SearchOption.AllDirectories);
+
+                            int www = fileList.Count();
+                            int skljd = fileListStrings.Count();
+
+
                             StatusMessage = "Processing Files...";
                             IEnumerable<System.IO.FileInfo> queryLongestFiles = (from file in fileList let len = GetFileLength(file) where len > minPathLength orderby len descending select file);
                             //var queryTenLargest = (from file in fileList let len = GetFileLength(file) where len > 255 orderby len descending select file).Take(10);
@@ -837,14 +846,15 @@ namespace NavigatorTemplate.Models
                                 {
                                     if (fi.Exists)
                                     {
-                                        UNCObject uncObject = new UNCObject() { CharacterCount = fi.FullName.Length, NameUNC = fi.FullName };
                                         ObjectCount++;
                                         FileCount++;
+                                        UNCObject uncObject = new UNCObject() {Count = FileCount, CharacterCount = fi.FullName.Length, NameUNC = fi.FullName };
+
                                         UNCObjectFileList.Add(uncObject);
-                                        //App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                                        //{
-                                        //    UNCObjectFileLst.Add(uncObject);
-                                        //});
+                                        App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+                                        {
+                                            UNCObjectFileLst.Add(uncObject);
+                                        });
                                     }
                                     else
                                     {
@@ -873,7 +883,7 @@ namespace NavigatorTemplate.Models
                                     //{
                                         foreach (UNCObject path in UNCObjectFileList)
                                         {
-                                            resultsFile.WriteLine(path.CharacterCount + "," + path.NameUNC);
+                                            resultsFile.WriteLine(path.Count+","+path.CharacterCount + "," + path.NameUNC);
                                         }
                                     //}
                                 }
@@ -901,10 +911,12 @@ namespace NavigatorTemplate.Models
                                 try
                                 {
                                     if (di.Exists)
-                                    {
-                                        UNCObject uncObject = new UNCObject() { CharacterCount = di.FullName.Length, NameUNC = di.FullName };
+                                    {                                        
                                         ObjectCount++;
                                         FolderCount++;
+                                        UNCObject uncObject = new UNCObject() { Count = FolderCount, CharacterCount = di.FullName.Length, NameUNC = di.FullName };
+
+                                        UNCObjectFolderList.Add(uncObject);
                                         App.Current.Dispatcher.BeginInvoke((Action)delegate ()
                                         {
                                             UNCObjectFolderLst.Add(uncObject);
@@ -933,13 +945,13 @@ namespace NavigatorTemplate.Models
                             {
                                 try
                                 {
-                                    lock (UNCObjectFolderLst)
-                                    {
-                                        foreach (UNCObject path in UNCObjectFolderLst.ToList())
+                                    //lock (UNCObjectFolderLst)
+                                    //{
+                                        foreach (UNCObject path in UNCObjectFolderList)
                                         {
-                                            resultsFile.WriteLine(path.CharacterCount + "," + path.NameUNC);
+                                            resultsFile.WriteLine(path.Count + "," + path.CharacterCount + "," + path.NameUNC);
                                         }
-                                    }
+                                    //}
                                 }
                                 catch (Exception ex)
                                 {

@@ -6,6 +6,7 @@ namespace NavigatorTemplate.Models
 {
     public class UNCObject
     {
+        public int Count { get; set; }
         public int CharacterCount { get; set; }
         public string NameUNC { get; set; }
         public bool Folder { get; set; }
