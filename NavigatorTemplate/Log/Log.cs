@@ -20,6 +20,7 @@ namespace PathLenghtCrawl.Log
                 logFile.WriteLine(dateTime.ToString());
                 logFile.WriteLine(errorMessage);
                 logFile.WriteLine(pathCausingError);
+                logFile.WriteLine(Environment.NewLine);
             }
         }
     }
