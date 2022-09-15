@@ -581,20 +581,70 @@ namespace NavigatorTemplate.Models
             }
         }
 
-
-        private System.Collections.ObjectModel.ObservableCollection<UNCObject> uncBulkObjectLst = new System.Collections.ObjectModel.ObservableCollection<UNCObject>();
-        public System.Collections.ObjectModel.ObservableCollection<UNCObject> UNCBulkObjectLst
+        private List<UNCObject> uncObjectFileList = new List<UNCObject>();
+        public List<UNCObject> UNCObjectFileList
         {
             get
             {
-                return uncBulkObjectLst;
+                return uncObjectFileList;
             }
             set
             {
-                if (uncBulkObjectLst != value)
+                if (uncObjectFileList != value)
                 {
-                    uncBulkObjectLst = value;
-                    NotifyPropertyChanged("UNCBulkObjectLst");
+                    uncObjectFileList = value;
+                    NotifyPropertyChanged("UNCObjectFileList");
+                }
+            }
+        }
+
+        private List<UNCObject> uncObjectFolderList = new List<UNCObject>();
+        public List<UNCObject> UNCObjectFolderList
+        {
+            get
+            {
+                return uncObjectFolderList;
+            }
+            set
+            {
+                if (uncObjectFolderList != value)
+                {
+                    uncObjectFolderList = value;
+                    NotifyPropertyChanged("UNCObjectFolderList");
+                }
+            }
+        }
+
+        private System.Collections.ObjectModel.ObservableCollection<UNCObject> uncObjectFileLst = new System.Collections.ObjectModel.ObservableCollection<UNCObject>();
+        public System.Collections.ObjectModel.ObservableCollection<UNCObject> UNCObjectFileLst
+        {
+            get
+            {
+                return uncObjectFileLst;
+            }
+            set
+            {
+                if (uncObjectFileLst != value)
+                {
+                    uncObjectFileLst = value;
+                    NotifyPropertyChanged("UNCObjectFileLst");
+                }
+            }
+        }
+
+        private System.Collections.ObjectModel.ObservableCollection<UNCObject> uncObjectFolderLst = new System.Collections.ObjectModel.ObservableCollection<UNCObject>();
+        public System.Collections.ObjectModel.ObservableCollection<UNCObject> UNCObjectFolderLst
+        {
+            get
+            {
+                return uncObjectFolderLst;
+            }
+            set
+            {
+                if (uncObjectFolderLst != value)
+                {
+                    uncObjectFolderLst = value;
+                    NotifyPropertyChanged("UNCObjectFolderLst");
                 }
             }
         }
@@ -632,6 +682,7 @@ namespace NavigatorTemplate.Models
                 return importPathFileCommand ?? (importPathFileCommand = new CommandHandler(() => ImportPathFile(), _canExecute));
             }
         }
+        //private async void ImportPathFile()
         private async void ImportPathFile()
         {
             StatusMessage = "Ready";
@@ -670,7 +721,8 @@ namespace NavigatorTemplate.Models
             }
 
             PathProcessedCountTotal = uncPathsToScan.Count();
-            UNCBulkObjectLst.Clear();
+            UNCObjectFileLst.Clear();
+            UNCObjectFolderLst.Clear();
 
 
 
@@ -694,8 +746,16 @@ namespace NavigatorTemplate.Models
 
                     StopTimerPer();
                     dtRunningPer.Stop();
-                    //AverageRunningTimePer = String.Format("{0:0.00}", Math.Round(AverageRunningTimePerLst.Average(), 2));
-                    AverageRunningTimePer = String.Format("{0:00}:{1:00}:{2:00}:{3:00}", Math.Round(AverageRunningTimePerLst.Average(), 2));
+                    AverageRunningTimePer = String.Format("{0:0.00}", Math.Round(AverageRunningTimePerLst.Average(), 2));
+                    try
+                    {
+                        //AverageRunningTimePer = String.Format("{0:00}:{1:00}:{2:00}:{3:00}", Math.Round(AverageRunningTimePerLst.Average(), 2));
+                    }
+                    catch (Exception ex)
+                    {
+                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "AvrRunTImePer Error: line 700");
+                    }
+
                 }
             });
 
@@ -744,106 +804,158 @@ namespace NavigatorTemplate.Models
 
         private void ExecuteLPFNBulkList_Linq()
         {
-            if (!System.IO.File.Exists(PathFileImportTxt)) 
+            if (!System.IO.File.Exists(PathFileImportTxt))
             {
                 StatusMessage = "File does not exists.";
             }
             else
             {
-                bool alreadyUNC = false;
-                if (CurrentDirectory.FullName.StartsWith("\\")) { alreadyUNC = true; }
+                //bool alreadyUNC = false;
+                //if (CurrentDirectory.FullName.StartsWith("\\"))
+                //{
+                //    alreadyUNC = true; 
+                //}
                 try
                 {
                     dtRunningPer.Tick += new EventHandler(dtRunningPer_Tick);
                     dtRunningPer.Interval = new TimeSpan(0, 0, 0, 0, 1);
 
-
-                    try
+                    if (IncludeDocuments)
                     {
-                        StatusMessage = "Gathering Information (Files)...";
-                        //System.IO.FileInfo[] fileInfos = CurrentDirectory.GetFiles();
-                        IEnumerable<System.IO.FileInfo> fileList = CurrentDirectory.GetFiles("*.*", System.IO.SearchOption.AllDirectories);
-                        StatusMessage = "Processing Files...";
-                        IEnumerable<System.IO.FileInfo> queryLongestFiles = (from file in fileList let len = GetFileLength(file) where len > minPathLength orderby len descending select file);
-                        //var queryTenLargest = (from file in fileList let len = GetFileLength(file) where len > 255 orderby len descending select file).Take(10);
-
-                        foreach (System.IO.FileInfo fi in queryLongestFiles)
+                        try
                         {
-                            try
+                            StatusMessage = "Gathering Information (Files)...";
+                            //System.IO.FileInfo[] fileInfos = CurrentDirectory.GetFiles();
+                            IEnumerable<System.IO.FileInfo> fileList = CurrentDirectory.GetFiles("*.*", System.IO.SearchOption.AllDirectories);
+                            StatusMessage = "Processing Files...";
+                            IEnumerable<System.IO.FileInfo> queryLongestFiles = (from file in fileList let len = GetFileLength(file) where len > minPathLength orderby len descending select file);
+                            //var queryTenLargest = (from file in fileList let len = GetFileLength(file) where len > 255 orderby len descending select file).Take(10);
+
+                            foreach (System.IO.FileInfo fi in queryLongestFiles)
                             {
-                                if (fi.Exists)
+                                try
                                 {
-                                    UNCObject uncObject = new UNCObject() { CharacterCount = fi.FullName.Length, NameUNC = fi.FullName };
-                                    ObjectCount++;
-                                    FileCount++;
-                                    App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+                                    if (fi.Exists)
                                     {
-                                        UNCBulkObjectLst.Add(uncObject);
-                                    });
+                                        UNCObject uncObject = new UNCObject() { CharacterCount = fi.FullName.Length, NameUNC = fi.FullName };
+                                        ObjectCount++;
+                                        FileCount++;
+                                        //App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+                                        //{
+                                            UNCObjectFileList.Add(uncObject);
+                                        //});
+                                    }
+                                    else
+                                    {
+                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, "File does Not Exists.", fi.FullName);
+                                    }
                                 }
-                                else
+                                catch (Exception ex)
                                 {
-                                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt,DateTime.Now, "File does Not Exists.", fi.FullName);
+                                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, fi.FullName);
+                                    continue;
                                 }
                             }
-                            catch (Exception ex)
+                        }
+                        catch (Exception ex)
+                        {
+                            PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Error while gathering files");
+                        }
+                        finally
+                        {
+                            System.IO.FileInfo fi4Log = new System.IO.FileInfo(PathFileImportTxt);
+                            using (System.IO.StreamWriter resultsFile = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Files_" + fi4Log.Name + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + "results.csv", false, Encoding.Unicode))
                             {
-                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, fi.FullName);
-                                continue;
+                                try
+                                {
+                                    //lock (UNCObjectFileLst)
+                                    //{
+                                        foreach (UNCObject path in UNCObjectFileList)
+                                        {
+                                            resultsFile.WriteLine(path.CharacterCount + "," + path.NameUNC);
+                                        }
+                                    //}
+                                }
+                                catch (Exception ex)
+                                {
+                                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Error while writing log (files)");
+                                }
+
                             }
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Error while gathering files");
-                    }
 
-                    try
+                    if (IncludeFolders)
                     {
-                        StatusMessage = "Gathering Information (Folders)...";
-                        //System.IO.DirectoryInfo[] directoryInfos = CurrentDirectory.GetDirectories("*.*", System.IO.SearchOption.AllDirectories);
-                        IEnumerable<System.IO.DirectoryInfo> directoryList = CurrentDirectory.GetDirectories("*", System.IO.SearchOption.AllDirectories);
-                        StatusMessage = "Processing Folders...";
-                        IEnumerable<System.IO.DirectoryInfo> queryLongestFolders = (from directory in directoryList let len = GetDirectoryLength(directory) where len > minPathLength orderby len descending select directory);
-
-                        foreach (System.IO.DirectoryInfo di in queryLongestFolders)
+                        try
                         {
-                            try
+                            StatusMessage = "Gathering Information (Folders)...";
+                            //System.IO.DirectoryInfo[] directoryInfos = CurrentDirectory.GetDirectories("*.*", System.IO.SearchOption.AllDirectories);
+                            IEnumerable<System.IO.DirectoryInfo> directoryList = CurrentDirectory.GetDirectories("*", System.IO.SearchOption.AllDirectories);
+                            StatusMessage = "Processing Folders...";
+                            IEnumerable<System.IO.DirectoryInfo> queryLongestFolders = (from directory in directoryList let len = GetDirectoryLength(directory) where len > minPathLength orderby len descending select directory);
+
+                            foreach (System.IO.DirectoryInfo di in queryLongestFolders)
                             {
-                                if (di.Exists)
+                                try
                                 {
-                                    UNCObject uncObject = new UNCObject() { CharacterCount = di.FullName.Length, NameUNC = di.FullName };
-                                    ObjectCount++;
-                                    FolderCount++;
-                                    App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+                                    if (di.Exists)
                                     {
-                                        UNCBulkObjectLst.Add(uncObject);
-                                    });
+                                        UNCObject uncObject = new UNCObject() { CharacterCount = di.FullName.Length, NameUNC = di.FullName };
+                                        ObjectCount++;
+                                        FolderCount++;
+                                        App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+                                        {
+                                            UNCObjectFolderLst.Add(uncObject);
+                                        });
+                                    }
+                                    else
+                                    {
+                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, "Directory does Not Exists.", di.FullName);
+                                    }
                                 }
-                                else
+                                catch (Exception ex)
                                 {
-                                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, "Directory does Not Exists.", di.FullName);
+                                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, di.FullName);
+                                    continue;
                                 }
                             }
-                            catch (Exception ex)
+                        }
+                        catch (Exception ex)
+                        {
+                            PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Error while gathering directories");
+                        }
+                        finally
+                        {
+                            System.IO.FileInfo fi4Log = new System.IO.FileInfo(PathFileImportTxt);
+                            using (System.IO.StreamWriter resultsFile = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Folders_" + fi4Log.Name + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + "results.csv", false, Encoding.Unicode))
                             {
-                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, di.FullName);
-                                continue;
+                                try
+                                {
+                                    lock (UNCObjectFolderLst)
+                                    {
+                                        foreach (UNCObject path in UNCObjectFolderLst.ToList())
+                                        {
+                                            resultsFile.WriteLine(path.CharacterCount + "," + path.NameUNC);
+                                        }
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Error while writing log (folders)");
+                                }
                             }
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Error while gathering directories");
-
-                    }
-
                 }
                 catch (Exception ex)
                 {
                     PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "General error in ExecuteLPFNBulkList_Linq()");
                 }
-                finally { }
+                finally
+                { }
+
+
 
                 StatusMessage = "Ready";
             }
@@ -894,7 +1006,7 @@ namespace NavigatorTemplate.Models
                                 UNCObject uncObject = new UNCObject() { CharacterCount = fileLenght, NameUNC = fiInUNC };
                                 ObjectCount++;
                                 FileCount++;
-                                UNCBulkObjectLst.Add(uncObject);
+                                UNCObjectFileLst.Add(uncObject);
                             }
                         }
                         catch (Exception)
@@ -946,7 +1058,7 @@ namespace NavigatorTemplate.Models
                                 UNCObject uncObject = new UNCObject() { CharacterCount = directoryLenght, NameUNC = diInUNC };
                                 ObjectCount++;
                                 FolderCount++;
-                                UNCBulkObjectLst.Add(uncObject);
+                                UNCObjectFileLst.Add(uncObject);
                             }
                             catch (Exception)
                             {
@@ -999,7 +1111,7 @@ namespace NavigatorTemplate.Models
                                             UNCObject uncObject = new UNCObject() { CharacterCount = fileLenght, NameUNC = fiInUNC };
                                             ObjectCount++;
                                             FileCount++;
-                                            UNCBulkObjectLst.Add(uncObject);
+                                            UNCObjectFileLst.Add(uncObject);
 
                                         }
                                     }

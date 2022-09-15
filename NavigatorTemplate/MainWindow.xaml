@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NavigatorTemplate"
         mc:Ignorable="d"
-        Title="Navigation Template - Written by Mitch Girard" Height="450" Width="800">
+        Title="Path Length Crawler - Written by Mitch Girard" Height="450" Width="800">
     <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
@@ -293,7 +293,7 @@
                         <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Master.PathFileImportTxt}"></TextBox>
                         <Button Grid.Row="2" Grid.Column="0" Content="Import..." CommandParameter="PathFileImportTxt" Command="{Binding Master.SetFileCommand}"></Button>
                         <Button Grid.Row="2" Grid.Column="1" Content="Process"  Command="{Binding Master.ImportPathFileCommand}"></Button>
-                        <ListView Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding Master.UNCBulkObjectLst}" VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True">
+                        <ListView Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding Master.UNCObjectFileLst}" VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True">
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
                                     <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
@@ -544,7 +544,7 @@
                             <CheckBox Grid.Row="0" Grid.Column="0"  Content="AutoSave"></CheckBox>
                             <CheckBox Grid.Row="0" Grid.Column="1"  Content="Create New Log Per Session"></CheckBox>
                             <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="Folder"></Label>
-                            <TextBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Master.FolderPath}"></TextBox>
+                            <TextBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Master.LogLocationTxt}"></TextBox>
                             <Button Grid.Row="3" Grid.Column="0" Content="Folder..." CommandParameter="LogLocationTxt" Command="{Binding Master.SetFolderCommand}"></Button>
                             <Button Grid.Row="3" Grid.Column="1" Content="Folder (via TreeView)..." CommandParameter="LogLocationTxt" Command="{Binding Master.SetFolderViaTVCommand}"></Button>
                             <Separator Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"></Separator>
