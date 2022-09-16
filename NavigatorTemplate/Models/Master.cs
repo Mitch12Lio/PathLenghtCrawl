@@ -687,18 +687,23 @@ namespace NavigatorTemplate.Models
         {
             StatusMessage = "Ready";
 
-            PathImportedCount = 0;
-            PathImportedCountTotal = 0;
-            PathProcessedCount = 0;
-            PathProcessedCountTotal = 0;
-            PathCurrentlyProcessing = "N/A";
+            //PathImportedCount = 0;
+            //PathImportedCountTotal = 0;
+            //PathProcessedCount = 0;
+            //PathProcessedCountTotal = 0;
+            //PathCurrentlyProcessing = "N/A";
 
-            ObjectCount = 0;
-            FolderCount = 0;
-            FileCount = 0;
-            ObjectCountTotal = 0;
-            FolderCountTotal = 0;
-            FileCountTotal = 0;
+            //ObjectCount = 0;
+            //FolderCount = 0;
+            //FileCount = 0;
+            //ObjectCountTotal = 0;
+            //FolderCountTotal = 0;
+            //FileCountTotal = 0;
+
+            //UNCObjectFileList.Clear();
+            //UNCObjectFolderList.Clear();
+            //UNCObjectFileLst.Clear();
+            //UNCObjectFolderLst.Clear();
 
             List<string> uncPathsToScan = new List<string>();
 
@@ -734,6 +739,24 @@ namespace NavigatorTemplate.Models
 
                 foreach (String path in uncPathsToScan)
                 {
+                    PathImportedCount = 0;
+                    PathImportedCountTotal = 0;
+                    PathProcessedCount = 0;
+                    PathProcessedCountTotal = 0;
+                    PathCurrentlyProcessing = "N/A";
+
+                    ObjectCount = 0;
+                    FolderCount = 0;
+                    FileCount = 0;
+                    ObjectCountTotal = 0;
+                    FolderCountTotal = 0;
+                    FileCountTotal = 0;
+
+                    UNCObjectFileList.Clear();
+                    UNCObjectFolderList.Clear();
+                    UNCObjectFileLst.Clear();
+                    UNCObjectFolderLst.Clear();
+
                     dtRunningPer.Start();
                     ResetTimerPer();
                     StartTimerPer();
@@ -741,7 +764,7 @@ namespace NavigatorTemplate.Models
                     CurrentDirectory = new System.IO.DirectoryInfo(path);
 
                     PathCurrentlyProcessing = path;
-                    Thread.Sleep(100);
+                    //Thread.Sleep(100);
                     ExecuteLPFNBulkList_Linq();
                     PathProcessedCount++;
 
@@ -876,7 +899,8 @@ namespace NavigatorTemplate.Models
 
                             //IEnumerable<string> queryLongestFiles = System.IO.Directory.EnumerateFiles(CurrentDirectory.FullName, "*.*", System.IO.SearchOption.AllDirectories).Where(x => MappedDriveResolver.ResolveToUNC(x).Length > MinPathLength);
                             IEnumerable<string> queryLongestFiles = System.IO.Directory.EnumerateFiles(CurrentDirectory.FullName, "*.*", System.IO.SearchOption.AllDirectories).Where(x => x.Length > MinPathLength);
-
+                            //ObjectCountTotal = queryLongestFiles.Count();
+                            //FileCountTotal = queryLongestFiles.Count();
                             //var queryTenLargest = (from file in fileList let len = GetFileLength(file) where len > 255 orderby len descending select file).Take(10);
                             StatusMessage = "Processing Files...";
                             //foreach (System.IO.FileInfo fi in queryLongestFiles)
@@ -989,7 +1013,8 @@ namespace NavigatorTemplate.Models
                             //IEnumerable<System.IO.DirectoryInfo> directoryList = CurrentDirectory.GetDirectories("*", System.IO.SearchOption.AllDirectories);
                             //IEnumerable<string> queryLongestFolders = System.IO.Directory.EnumerateDirectories(CurrentDirectory.FullName, "*", System.IO.SearchOption.AllDirectories).Where(x => MappedDriveResolver.ResolveToUNC(x).Length > MinPathLength);
                             IEnumerable<string> queryLongestFolders = System.IO.Directory.EnumerateDirectories(CurrentDirectory.FullName, "*", System.IO.SearchOption.AllDirectories).Where(x => x.Length > MinPathLength);
-
+                            //ObjectCountTotal += queryLongestFolders.Count();
+                            //FolderCountTotal = queryLongestFolders.Count();
                             StatusMessage = "Processing Folders...";
                             //IEnumerable<System.IO.DirectoryInfo> queryLongestFolders = (from directory in directoryList let len = GetDirectoryLength(directory) where len > minPathLength orderby len descending select directory);
                             try
