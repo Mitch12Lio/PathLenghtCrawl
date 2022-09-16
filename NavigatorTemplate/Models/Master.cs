@@ -225,6 +225,26 @@ namespace NavigatorTemplate.Models
             }
         }
 
+
+        private string pathCurrentlyCounting = "N/A";
+        public string PathCurrentlyCounting
+        {
+            get
+            {
+                return pathCurrentlyCounting;
+            }
+            set
+            {
+                if (pathCurrentlyCounting != value)
+                {
+                    pathCurrentlyCounting = value;
+                    NotifyPropertyChanged("PathCurrentlyCounting");
+                }
+            }
+        }
+
+
+
         private int pathProcessedCountTotal = 0;
         public int PathProcessedCountTotal
         {
@@ -687,18 +707,18 @@ namespace NavigatorTemplate.Models
         {
             StatusMessage = "Ready";
 
-            //PathImportedCount = 0;
-            //PathImportedCountTotal = 0;
-            //PathProcessedCount = 0;
-            //PathProcessedCountTotal = 0;
-            //PathCurrentlyProcessing = "N/A";
+            PathImportedCount = 0;
+            PathImportedCountTotal = 0;
+            PathProcessedCount = 0;
+            PathProcessedCountTotal = 0;
+            PathCurrentlyProcessing = "N/A";
 
-            //ObjectCount = 0;
-            //FolderCount = 0;
-            //FileCount = 0;
-            //ObjectCountTotal = 0;
-            //FolderCountTotal = 0;
-            //FileCountTotal = 0;
+            ObjectCount = 0;
+            FolderCount = 0;
+            FileCount = 0;
+            ObjectCountTotal = 0;
+            FolderCountTotal = 0;
+            FileCountTotal = 0;
 
             //UNCObjectFileList.Clear();
             //UNCObjectFolderList.Clear();
@@ -730,6 +750,7 @@ namespace NavigatorTemplate.Models
             //UNCObjectFolderLst.Clear();
             UNCObjectFileList.Clear();
 
+            string DateGuid = DateTime.Now.ToString("yyyyMMddHHmmssffff");
 
 
 
@@ -739,23 +760,15 @@ namespace NavigatorTemplate.Models
 
                 foreach (String path in uncPathsToScan)
                 {
-                    PathImportedCount = 0;
-                    PathImportedCountTotal = 0;
-                    PathProcessedCount = 0;
-                    PathProcessedCountTotal = 0;
-                    PathCurrentlyProcessing = "N/A";
 
-                    ObjectCount = 0;
-                    FolderCount = 0;
-                    FileCount = 0;
-                    ObjectCountTotal = 0;
-                    FolderCountTotal = 0;
-                    FileCountTotal = 0;
 
                     UNCObjectFileList.Clear();
                     UNCObjectFolderList.Clear();
-                    UNCObjectFileLst.Clear();
-                    UNCObjectFolderLst.Clear();
+                    App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+                    {
+                        UNCObjectFileLst.Clear();
+                        UNCObjectFolderLst.Clear();
+                    });
 
                     dtRunningPer.Start();
                     ResetTimerPer();
@@ -765,7 +778,8 @@ namespace NavigatorTemplate.Models
 
                     PathCurrentlyProcessing = path;
                     //Thread.Sleep(100);
-                    ExecuteLPFNBulkList_Linq();
+
+                    ExecuteLPFNBulkList_Linq(DateGuid);
                     PathProcessedCount++;
 
                     StopTimerPer();
@@ -857,9 +871,59 @@ namespace NavigatorTemplate.Models
             return retval;
         }
 
-        private void ExecuteLPFNBulkList_Linq()
+        private void ExecuteLPFNBulkList_Linq(string DateGuid)
         {
+            //try
+            //{
+            //    foreach (var file in System.IO.Directory.EnumerateFiles(@"C:\", "*", System.IO.SearchOption.AllDirectories))
+            //    {
+            //        // whatever
+            //        int ewrwerwe = 8;
+            //    }
+            //}
+            //catch (ArgumentNullException ex)
+            //{
+            //    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: Error while gathering files");
+            //}
+            //catch (System.IO.DirectoryNotFoundException ex)
+            //{
+            //    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: Error while gathering files");
+            //}
+            //catch (System.IO.PathTooLongException ex)
+            //{
+            //    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: Error while gathering files");
+            //}
+            //catch (System.IO.IOException ex)
+            //{
+            //    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: Error while gathering files");
+            //}
+            //catch (System.Security.SecurityException ex)
+            //{
+            //    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: Error while gathering files");
+            //}
+            //catch (UnauthorizedAccessException ex)
+            //{
+            //    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: Error while gathering files");
+            //}
+            //catch (ArgumentException ex)
+            //{
+            //    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: Error while gathering files");
+            //}
+            //catch (Exception ex)
+            //{
+            //    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: Error while gathering files");
+            //}
+            //finally 
+            //{
+
+            //    int sdlkfjsdf = 8;
+            //}
+
+
+
+
             //CurrentDirectory = new System.IO.DirectoryInfo(@"Z:\Users\JHamrlik");
+            //CurrentDirectory = new System.IO.DirectoryInfo(@"C:\");
             if (!System.IO.File.Exists(PathFileImportTxt))
             {
                 StatusMessage = "File does not exists.";
@@ -892,13 +956,17 @@ namespace NavigatorTemplate.Models
                             //int skljd = fileListStrings.Count();
 
 
+                            
+
+                            //CurrentDirectory.EnumerateFiles().ForEach
+
 
                             //IEnumerable<System.IO.FileInfo> queryLongestFiles = (from file in fileList let len = GetFileLength(file) where len > minPathLength orderby len descending select file);
                             //IEnumerable<string> queryLongestFiles = (from file in fileListStrings let len = GetFileLength(file) where len > minPathLength orderby len descending select file);
-                            //IEnumerable<string> queryLongestFiles = (from file in System.IO.Directory.EnumerateFiles(CurrentDirectory.FullName, "*.*", System.IO.SearchOption.AllDirectories) let len = GetFileLength(file) where len > minPathLength orderby len descending select file);
+                            //IEnumerable<string> queryLongestFilesX = (from file in System.IO.Directory.EnumerateFiles(CurrentDirectory.FullName, "*.*", System.IO.SearchOption.AllDirectories) let len = GetFileLength(file) where len > minPathLength orderby len descending select file);
 
                             //IEnumerable<string> queryLongestFiles = System.IO.Directory.EnumerateFiles(CurrentDirectory.FullName, "*.*", System.IO.SearchOption.AllDirectories).Where(x => MappedDriveResolver.ResolveToUNC(x).Length > MinPathLength);
-                            IEnumerable<string> queryLongestFiles = System.IO.Directory.EnumerateFiles(CurrentDirectory.FullName, "*.*", System.IO.SearchOption.AllDirectories).Where(x => x.Length > MinPathLength);
+                            //-->GOOD ONE IEnumerable<string> queryLongestFiles = System.IO.Directory.EnumerateFiles(CurrentDirectory.FullName, "*.*", System.IO.SearchOption.AllDirectories).Where(x => x.Length > MinPathLength);
                             //ObjectCountTotal = queryLongestFiles.Count();
                             //FileCountTotal = queryLongestFiles.Count();
                             //var queryTenLargest = (from file in fileList let len = GetFileLength(file) where len > 255 orderby len descending select file).Take(10);
@@ -907,10 +975,12 @@ namespace NavigatorTemplate.Models
 
                             try
                             {
-                                 foreach (String fi in queryLongestFiles)
+                                //foreach (String fi in queryLongestFiles)
+                                foreach (String fi in System.IO.Directory.EnumerateFiles(CurrentDirectory.FullName, "*.*", System.IO.SearchOption.AllDirectories).Where(x => x.Length > MinPathLength))
                                 {
                                     try
                                     {
+                                        PathCurrentlyCounting = fi;
                                         //if (fi.Exists)
                                         if (System.IO.File.Exists(fi))
                                         { }
@@ -943,9 +1013,37 @@ namespace NavigatorTemplate.Models
                                     }
                                 }
                             }
+                            catch (ArgumentNullException ex)
+                            {
+                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: Error in Files ForEach");
+                            }
+                            catch (System.IO.DirectoryNotFoundException ex)
+                            {
+                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: Error in Files ForEach");
+                            }
+                            catch (System.IO.PathTooLongException ex)
+                            {
+                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: Error in Files ForEach");
+                            }
+                            catch (System.IO.IOException ex)
+                            {
+                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: Error in Files ForEach");
+                            }
+                            catch (System.Security.SecurityException ex)
+                            {
+                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: Error in Files ForEach");
+                            }
+                            catch (UnauthorizedAccessException ex)
+                            {
+                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: Error in Files ForEach");
+                            }
+                            catch (ArgumentException ex)
+                            {
+                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: Error in Files ForEach");
+                            }
                             catch (Exception ex)
                             {
-                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Error in Files ForEach");
+                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: Error in Files ForEach");                                
                             }
                         }
                         catch (ArgumentNullException ex)
@@ -963,7 +1061,7 @@ namespace NavigatorTemplate.Models
                         catch (System.IO.IOException ex)
                         {
                             PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: Error while gathering files");
-                        }    
+                        }
                         catch (System.Security.SecurityException ex)
                         {
                             PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: Error while gathering files");
@@ -982,8 +1080,10 @@ namespace NavigatorTemplate.Models
                         }
                         finally
                         {
-                            System.IO.FileInfo fi4Log = new System.IO.FileInfo(PathFileImportTxt);
-                            using (System.IO.StreamWriter resultsFile = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Files_" + fi4Log.Name + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + "results.csv", false, Encoding.Unicode))
+                            //System.IO.FileInfo fi4Log = new System.IO.FileInfo(PathFileImportTxt);
+
+                            string fileNamePath = CurrentDirectory.FullName.Substring(2).Replace("\\", "_");
+                            using (System.IO.StreamWriter resultsFile = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Files_" + fileNamePath + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + "results.csv", false, Encoding.Unicode))
                             {
                                 try
                                 {
@@ -1000,6 +1100,21 @@ namespace NavigatorTemplate.Models
                                     PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Error while writing log (files)");
                                 }
 
+                            }
+                            string masterFileNameWOXtension = System.IO.Path.GetFileNameWithoutExtension(PathFileImportTxt);
+                            using (System.IO.StreamWriter resultsFile = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + masterFileNameWOXtension + "_" + DateGuid + "_" + "lpfn.csv", true, Encoding.Unicode))
+                            {
+                                try
+                                {
+                                    foreach (UNCObject path in UNCObjectFileList)
+                                    {
+                                        resultsFile.WriteLine(path.Count + "," + path.CharacterCount + "," + path.NameUNC);
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Error while writing master log (files)");
+                                }
                             }
                         }
                     }
@@ -1091,8 +1206,11 @@ namespace NavigatorTemplate.Models
                         }
                         finally
                         {
-                            System.IO.FileInfo fi4Log = new System.IO.FileInfo(PathFileImportTxt);
-                            using (System.IO.StreamWriter resultsFile = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Folders_" + fi4Log.Name + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + "results.csv", false, Encoding.Unicode))
+                            //System.IO.FileInfo fi4Log = new System.IO.FileInfo(PathFileImportTxt);
+
+                            string fileNamePath = CurrentDirectory.FullName.Substring(2).Replace("\\", "_");
+                            //using (System.IO.StreamWriter resultsFile = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Folders_" + fi4Log.Name + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + "results.csv", false, Encoding.Unicode))
+                            using (System.IO.StreamWriter resultsFile = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Folders_" + fileNamePath + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + "lpfn.csv", false, Encoding.Unicode))
                             {
                                 try
                                 {
@@ -1109,6 +1227,21 @@ namespace NavigatorTemplate.Models
                                     PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Error while writing log (folders)");
                                 }
                             }
+                            string masterFileNameWOXtension = System.IO.Path.GetFileNameWithoutExtension(PathFileImportTxt);
+                            using (System.IO.StreamWriter resultsFile = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + masterFileNameWOXtension + "_" + DateGuid + "_" + "lpfn.csv", true, Encoding.Unicode))
+                            {
+                                try
+                                {
+                                    foreach (UNCObject path in UNCObjectFolderList)
+                                    {
+                                        resultsFile.WriteLine(path.Count + "," + path.CharacterCount + "," + path.NameUNC);
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Error while writing master log (folders)");
+                                }
+                            }
                         }
                     }
                 }
@@ -1118,8 +1251,6 @@ namespace NavigatorTemplate.Models
                 }
                 finally
                 { }
-
-
 
                 StatusMessage = "Ready";
             }
