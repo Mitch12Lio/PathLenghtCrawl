@@ -48,13 +48,7 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"></RowDefinition>
@@ -66,9 +60,9 @@
                         <Rectangle Grid.Row="0" Grid.Column="4" VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="Black" />
                         <Label Grid.Row="0" Grid.Column="5" Content="Status:"></Label>
                         <Label Grid.Row="0" Grid.Column="6" Content="{Binding Master.StatusMessage}"></Label>
-                        <Rectangle Grid.Row="0" Grid.Column="7" VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="Black" />
+                        <!--<Rectangle Grid.Row="0" Grid.Column="7" VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="Black" />
                         <Label Grid.Row="0" Grid.Column="8" Content="Average:"></Label>
-                        <Label Grid.Row="0" Grid.Column="9" Content="{Binding Master.AverageRunningTimePer}"></Label>
+                        <Label Grid.Row="0" Grid.Column="9" Content="{Binding Master.AverageRunningTimePer}"></Label>-->
                         <!--<Rectangle Grid.Row="0" Grid.Column="10" VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="Black" />
                         <Label Grid.Row="0" Grid.Column="11" Content="Per:"></Label>
                         <Label Grid.Row="0" Grid.Column="12" Content="{Binding Master.ValidatorRunningTimePer}"></Label>-->
@@ -176,8 +170,11 @@
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2">
@@ -191,17 +188,18 @@
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <CheckBox Grid.Row="0" Grid.Column="0" Content="Omit NDS://HEALTH_TREE prefix" IsChecked="True"></CheckBox>
                             <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Master.PathFileImportTxt}"></TextBox>
-                            <Button Grid.Row="2" Grid.Column="0" Content="Select..." CommandParameter="PathFileImportTxt" Command="{Binding Master.SetFileCommand}"></Button>
-                            <Button Grid.Row="2" Grid.Column="1" Content="Import &amp; Process"  Command="{Binding Master.ImportPathFileCommand}"></Button>
+                            <Button Grid.Row="2" Grid.Column="0" Content="Select..." CommandParameter="PathFileImportTxt" Command="{Binding Master.SetFileCommand}" IsEnabled="{Binding Master.SelectBulkFile2ProcessButtonEnabled}"></Button>
+                            <Button Grid.Row="2" Grid.Column="1" Content="Import &amp; Process"  Command="{Binding Master.ImportPathFileCommand}" IsEnabled="{Binding Master.ImportProcessBulkFileButtonEnabled}"></Button>
                         </Grid>
                     </GroupBox>
-                    <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
+                    <GridSplitter Grid.Column="0" Grid.Row="1" Grid.ColumnSpan ="2" Height="3" HorizontalAlignment="Stretch"></GridSplitter>
+                    <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2">
                         <GroupBox.Header>
                             <Span FontWeight="DemiBold">Files</Span>
                         </GroupBox.Header>
@@ -239,7 +237,8 @@
                             </ListView.View>
                         </ListView>
                     </GroupBox>
-                    <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2">
+                    <GridSplitter Grid.Column="0" Grid.Row="3" Grid.ColumnSpan ="2" Height="3" HorizontalAlignment="Stretch"></GridSplitter>
+                    <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2">
                         <GroupBox.Header>
                             <Span FontWeight="DemiBold">Folders</Span>
                         </GroupBox.Header>
@@ -277,12 +276,15 @@
                             </ListView.View>
                         </ListView>
                     </GroupBox>
-                    <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2">
+                    <GridSplitter Grid.Column="0" Grid.Row="5" Grid.ColumnSpan ="2" Height="3" HorizontalAlignment="Stretch"></GridSplitter>
+                    <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="2">
                         <GroupBox.Header>
                             <Span FontWeight="DemiBold">Statistics</Span>
                         </GroupBox.Header>
                         <Grid Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2">
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
@@ -335,8 +337,22 @@
                                 <!--<Run Text="/"></Run>
                                 <Run Text="{Binding Master.FileCountTotal}"></Run>-->
                             </TextBlock>
+                            <Label Grid.Row="0" Grid.Column="6" Content="Warning Count" FontSize="10" HorizontalAlignment="Center"></Label>
+                            <!--<Label Grid.Row="1" Grid.Column="4" Content="{Binding Master.FileCount}" FontSize="10" FontWeight="Heavy"></Label>-->
+                            <TextBlock Grid.Row="1" Grid.Column="6" HorizontalAlignment="Center" FontSize="10" FontWeight="Heavy">
+                                <Run Text="{Binding Master.WarningCount}"></Run>
+                                <!--<Run Text="/"></Run>
+                                <Run Text="{Binding Master.FileCountTotal}"></Run>-->
+                            </TextBlock>
+                            <Label Grid.Row="0" Grid.Column="7" Content="Error Count" FontSize="10" HorizontalAlignment="Center"></Label>
+                            <!--<Label Grid.Row="1" Grid.Column="4" Content="{Binding Master.FileCount}" FontSize="10" FontWeight="Heavy"></Label>-->
+                            <TextBlock Grid.Row="1" Grid.Column="7" HorizontalAlignment="Center" FontSize="10" FontWeight="Heavy">
+                                <Run Text="{Binding Master.ErrorCount}"></Run>
+                                <!--<Run Text="/"></Run>
+                                <Run Text="{Binding Master.FileCountTotal}"></Run>-->
+                            </TextBlock>
 
-                            <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="6">
+                            <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="8">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
@@ -347,9 +363,9 @@
                                 </Grid.RowDefinitions>
 
                                 <Label Grid.Row="0" Grid.Column="0" Content="Processing:" FontSize="10"></Label>
-                                <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="5" IsReadOnly ="True" Text="{Binding Master.PathCurrentlyProcessing}"></TextBox>
+                                <TextBox Grid.Row="0" Grid.Column="1" IsReadOnly ="True" Text="{Binding Master.PathCurrentlyProcessing}"></TextBox>
                                 <Label Grid.Row="1" Grid.Column="0" Content="Counting:" FontSize="10"></Label>
-                                <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="5" IsReadOnly ="True" Text="{Binding Master.PathCurrentlyCounting}"></TextBox>
+                                <TextBox Grid.Row="1" Grid.Column="1" IsReadOnly ="True" Text="{Binding Master.PathCurrentlyCounting}"></TextBox>
                             </Grid>
                         </Grid>
                     </GroupBox>
