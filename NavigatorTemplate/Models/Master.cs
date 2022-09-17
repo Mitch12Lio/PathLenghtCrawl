@@ -755,6 +755,25 @@ namespace NavigatorTemplate.Models
             }
         }
 
+        private List<PathLenghtCrawl.POCO.Duration> durationList = new List<PathLenghtCrawl.POCO.Duration>();
+        public List<PathLenghtCrawl.POCO.Duration> DurationList
+        {
+            get
+            {
+                return durationList;
+            }
+            set
+            {
+                if (durationList != value)
+                {
+                    durationList = value;
+                    NotifyPropertyChanged("DurationList");
+                }
+            }
+        }
+
+
+
         #endregion
 
 
@@ -823,19 +842,17 @@ namespace NavigatorTemplate.Models
             UNCObjectFileList.Clear();
 
             string DateGuid = DateTime.Now.ToString("yyyyMMddHHmmssffff");
-
+            //List<PathLenghtCrawl.POCO.Duration> durations = new List<PathLenghtCrawl.POCO.Duration>();
+            DurationList.Clear();
 
 
             await Task.Run(() =>
-
             {
-
                 foreach (String path in uncPathsToScan)
                 {
-
-
                     UNCObjectFileList.Clear();
                     UNCObjectFolderList.Clear();
+
                     App.Current.Dispatcher.BeginInvoke((Action)delegate ()
                     {
                         UNCObjectFileLst.Clear();
@@ -846,28 +863,41 @@ namespace NavigatorTemplate.Models
                     ResetTimerPer();
                     StartTimerPer();
 
-                    CurrentDirectory = new System.IO.DirectoryInfo(path);
-
-                    PathCurrentlyProcessing = path;
-                    //Thread.Sleep(100);
-
-                    bool success = ExecuteLPFNBulkList_Linq(DateGuid);
-                    PathProcessedCount++;
-
-                    StopTimerPer();
-                    dtRunningPer.Stop();
-                    AverageRunningTimePer = String.Format("{0:0.00}", Math.Round(AverageRunningTimePerLst.Average(), 2));
                     try
                     {
-                        //AverageRunningTimePer = String.Format("{0:00}:{1:00}:{2:00}:{3:00}", Math.Round(AverageRunningTimePerLst.Average(), 2));
+                        CurrentDirectory = new System.IO.DirectoryInfo(path);
+                        PathCurrentlyProcessing = path;
+                        //Thread.Sleep(100);
+
+                        bool success = ExecuteLPFNBulkList_Linq(DateGuid);
+                        PathProcessedCount++;
+
+                        StopTimerPer();
+                        dtRunningPer.Stop();
+                        AverageRunningTimePer = String.Format("{0:0.00}", Math.Round(AverageRunningTimePerLst.Average(), 2));
+                        try
+                        {
+                            //AverageRunningTimePer = String.Format("{0:00}:{1:00}:{2:00}:{3:00}", Math.Round(AverageRunningTimePerLst.Average(), 2));
+                        }
+                        catch (Exception ex)
+                        {
+                            PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "AvrRunTImePer Error: line 875");
+                        }
                     }
                     catch (Exception ex)
                     {
-                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "AvrRunTImePer Error: line 700");
+                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Line 855");
                     }
-
                 }
             });
+           
+            using (System.IO.StreamWriter resultsFile = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Statistics_" + DateGuid + ".csv", true, Encoding.Unicode))
+            {
+                foreach (PathLenghtCrawl.POCO.Duration duration in DurationList)
+                {
+                    resultsFile.WriteLine(duration.Name + "," + duration.Time);
+                }
+            }
 
             PathCurrentlyProcessing = "N/A";
             SelectBulkFile2ProcessButtonEnabled = true;
@@ -980,7 +1010,7 @@ namespace NavigatorTemplate.Models
                                 string masterFileLogName = masterFileNameWOXtension + "_" + DateGuid + "_" + "lpfn.csv";
                                 using (System.IO.StreamWriter resultsFileGlobal = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + masterFileLogName, true, Encoding.Unicode))
                                 {
-                                    StatusMessage = "Processing Folders...";
+                                    StatusMessage = "Processing Files...";
                                     try
                                     {
                                         foreach (String fi in System.IO.Directory.EnumerateFiles(CurrentDirectory.FullName, "*.*", System.IO.SearchOption.AllDirectories).Where(x => x.Length > MinPathLength))
@@ -1015,6 +1045,7 @@ namespace NavigatorTemplate.Models
                                                     StatusMessage = ex.Message;
                                                     PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Error while writing to " + masterFileLogName);
                                                 }
+
                                                 UNCObject uncObject = new UNCObject() { Count = FileCount, CharacterCount = fi.Length, NameUNC = fi };
 
                                                 UNCObjectFileList.Add(uncObject);
@@ -1075,7 +1106,6 @@ namespace NavigatorTemplate.Models
                                             #endregion
                                         }
                                     }
-
                                     #region "Catches"
                                     catch (ArgumentNullException ex)
                                     {
@@ -1126,6 +1156,10 @@ namespace NavigatorTemplate.Models
                                         PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: Error in Files outside ForEach");
                                     }
                                     #endregion
+
+                                    PathLenghtCrawl.POCO.Duration currentDuration = new PathLenghtCrawl.POCO.Duration() { Name = CurrentDirectory.FullName + " (Files)", Time = ValidatorRunningTimePer };
+                                    DurationList.Add(currentDuration);
+
                                 }
                             }
                         }
@@ -1375,6 +1409,9 @@ namespace NavigatorTemplate.Models
                                         PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: Error in Directory outside ForEach");
                                     }
                                     #endregion
+
+                                    PathLenghtCrawl.POCO.Duration currentDuration = new PathLenghtCrawl.POCO.Duration() { Name = CurrentDirectory.FullName + " (Folders)", Time = ValidatorRunningTimePer };
+                                    DurationList.Add(currentDuration);
                                 }
                             }
                         }
