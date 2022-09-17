@@ -149,7 +149,7 @@ namespace NavigatorTemplate.Models
             }
         }
 
-        private int minPathLength = PathLenghtCrawl.Properties.Settings.Default.MinPathLength;
+        private int minPathLength = PathLenghtCrawl.Properties.Settings.Default.MinPathLength - 1;
         public int MinPathLength
         {
             get
@@ -160,7 +160,7 @@ namespace NavigatorTemplate.Models
             {
                 if (minPathLength != value)
                 {
-                    minPathLength = value;
+                    minPathLength = value - 1;
                     PathLenghtCrawl.Properties.Settings.Default.MinPathLength = value;
                     SaveProperties();
                     NotifyPropertyChanged("MinPathLength");
@@ -890,7 +890,7 @@ namespace NavigatorTemplate.Models
                     }
                 }
             });
-           
+
             using (System.IO.StreamWriter resultsFile = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Statistics_" + DateGuid + ".csv", true, Encoding.Unicode))
             {
                 foreach (PathLenghtCrawl.POCO.Duration duration in DurationList)

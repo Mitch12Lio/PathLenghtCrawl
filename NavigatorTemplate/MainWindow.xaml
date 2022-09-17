@@ -371,7 +371,7 @@
                     </GroupBox>
                 </Grid>
             </TabItem>
-            <TabItem Header="Rest">
+            <TabItem Header="Rest" Visibility="Hidden">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
