@@ -38,6 +38,40 @@ namespace NavigatorTemplate.Models
 
         #region "************************************************************************************************* Global Properties"
 
+        private string expandOptionsStats = "Visible";
+        public string ExpandOptionsStats
+        {
+            get
+            {
+                return expandOptionsStats;
+            }
+            set
+            {
+                if (expandOptionsStats != value)
+                {
+                    expandOptionsStats = value;
+                    NotifyPropertyChanged("ExpandOptionsStats");
+                }
+            }
+        }
+
+        private bool expandOptionsStatsBool = true;
+        public bool ExpandOptionsStatsBool
+        {
+            get
+            {
+                return expandOptionsStatsBool;
+            }
+            set
+            {
+                if (expandOptionsStatsBool != value)
+                {
+                    expandOptionsStatsBool = value;
+                    if (value) { ExpandOptionsStats = "Visible"; } else { ExpandOptionsStats = "Collapsed"; }
+                    NotifyPropertyChanged("ExpandOptionsStatsBool");
+                }
+            }
+        }
 
         private bool selectBulkFile2ProcessButtonEnabled = true;
         public bool SelectBulkFile2ProcessButtonEnabled
@@ -149,7 +183,7 @@ namespace NavigatorTemplate.Models
             }
         }
 
-        private int minPathLength = PathLenghtCrawl.Properties.Settings.Default.MinPathLength - 1;
+        private int minPathLength = PathLenghtCrawl.Properties.Settings.Default.MinPathLength;
         public int MinPathLength
         {
             get
@@ -271,6 +305,45 @@ namespace NavigatorTemplate.Models
                 {
                     pathCurrentlyCounting = value;
                     NotifyPropertyChanged("PathCurrentlyCounting");
+                }
+            }
+        }
+
+
+        private string magikFileSource = PathLenghtCrawl.Properties.Settings.Default.MagikFileSource;
+        public string MagikFileSource
+        {
+            get
+            {
+                return magikFileSource;
+            }
+            set
+            {
+                if (magikFileSource != value)
+                {
+                    magikFileSource = value;
+                    PathLenghtCrawl.Properties.Settings.Default.MagikFileSource = value;
+                    SaveProperties();
+                    NotifyPropertyChanged("MagikFileSource");
+                }
+            }
+        }
+
+        private string magikFolderDestination = PathLenghtCrawl.Properties.Settings.Default.MagikFolderDestination;
+        public string MagikFolderDestination
+        {
+            get
+            {
+                return magikFolderDestination;
+            }
+            set
+            {
+                if (magikFolderDestination != value)
+                {
+                    magikFolderDestination = value;
+                    PathLenghtCrawl.Properties.Settings.Default.MagikFolderDestination = value;
+                    SaveProperties();
+                    NotifyPropertyChanged("MagikFolderDestination");
                 }
             }
         }
@@ -977,6 +1050,7 @@ namespace NavigatorTemplate.Models
 
         private bool ExecuteLPFNBulkList_Linq(string DateGuid)
         {
+            System.IO.Directory.CreateDirectory(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Details");
             bool success = true;
 
             //CurrentDirectory = new System.IO.DirectoryInfo(@"Z:\Users\JHamrlik");
@@ -1004,7 +1078,7 @@ namespace NavigatorTemplate.Models
                             StatusMessage = "Processing Files...";
                             string fileNamePath = CurrentDirectory.FullName.Substring(2).Replace("\\", "_");
                             string logFileName = "Files_" + fileNamePath + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + "lpfn.csv";
-                            using (System.IO.StreamWriter resultsFileByPathType = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + logFileName, false, Encoding.Unicode))
+                            using (System.IO.StreamWriter resultsFileByPathType = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Details" + System.IO.Path.DirectorySeparatorChar + logFileName, false, Encoding.Unicode))
                             {
                                 string masterFileNameWOXtension = System.IO.Path.GetFileNameWithoutExtension(PathFileImportTxt);
                                 string masterFileLogName = masterFileNameWOXtension + "_" + DateGuid + "_" + "lpfn.csv";
@@ -1256,7 +1330,7 @@ namespace NavigatorTemplate.Models
                         {
                             string fileNamePath = CurrentDirectory.FullName.Substring(2).Replace("\\", "_");
                             string logFileName = "Folders_" + fileNamePath + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + "lpfn.csv";
-                            using (System.IO.StreamWriter resultsFileByPathType = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + logFileName, false, Encoding.Unicode))
+                            using (System.IO.StreamWriter resultsFileByPathType = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Details" + System.IO.Path.DirectorySeparatorChar + logFileName, false, Encoding.Unicode))
                             {
                                 string masterFileNameWOXtension = System.IO.Path.GetFileNameWithoutExtension(PathFileImportTxt);
                                 string masterFileLogName = masterFileNameWOXtension + "_" + DateGuid + "_" + "lpfn.csv";
@@ -1410,7 +1484,7 @@ namespace NavigatorTemplate.Models
                                     }
                                     #endregion
 
-                                    PathLenghtCrawl.POCO.Duration currentDuration = new PathLenghtCrawl.POCO.Duration() { Name = CurrentDirectory.FullName + " (Folders)", Time = ValidatorRunningTimePer };
+                                    PathLenghtCrawl.POCO.Duration currentDuration = new PathLenghtCrawl.POCO.Duration() { Name = CurrentDirectory.FullName + " (+ Folders)", Time = ValidatorRunningTimePer };
                                     DurationList.Add(currentDuration);
                                 }
                             }
@@ -2018,8 +2092,16 @@ namespace NavigatorTemplate.Models
         }
         public void SetFile(object obj)
         {
-
             Microsoft.Win32.OpenFileDialog openFD = new Microsoft.Win32.OpenFileDialog();
+
+            switch (obj.ToString())
+            {
+                case "PathFileImportTxt":
+                    openFD.Filter = "csv files (*.csv)|*.csv";
+                    break;
+                default:
+                    break;
+            }
 
             if (openFD.ShowDialog() == true)
             {
@@ -2033,7 +2115,17 @@ namespace NavigatorTemplate.Models
                         DatabaseValLocationPath = pathName;
                         break;
                     case "PathFileImportTxt":
-                        PathFileImportTxt = pathName;
+                        if (System.IO.Path.GetExtension(pathName) != ".csv")
+                        {
+                            StatusMessage = ".csv format required.";
+                        }
+                        else
+                        {
+                            PathFileImportTxt = pathName;
+                        }
+                        break;
+                    case "MagikFileSource":
+                        MagikFileSource = pathName;
                         break;
                     default:
                         StatusMessage = "Save Incomplete.";
@@ -2105,6 +2197,12 @@ namespace NavigatorTemplate.Models
                         folderBrowserDialog.SelectedPath = DatabaseValLocation;
                     }
                     break;
+                case "MagikFolderDestination":
+                    if (MagikFolderDestination != string.Empty)
+                    {
+                        folderBrowserDialog.SelectedPath = MagikFolderDestination;
+                    }
+                    break;
                 default:
                     break;
             }
@@ -2120,6 +2218,9 @@ namespace NavigatorTemplate.Models
                         break;
                     case "DatabaseValLocation":
                         DatabaseValLocation = pathName;
+                        break;
+                    case "MagikFolderDestination":
+                        MagikFolderDestination = pathName;
                         break;
                     default:
                         StatusMessage = "Save Incomplete.";
@@ -2534,5 +2635,50 @@ namespace NavigatorTemplate.Models
 
         #endregion
 
+        private ICommand magikCopyCommand;
+        public ICommand MagikCopyCommand
+        {
+            get
+            {
+                return magikCopyCommand ?? (magikCopyCommand = new CommandHandler(() => MagikCopy(), _canExecute));
+            }
+        }
+        private void MagikCopy()
+        {
+            //string fileName = @"test.txt";
+            //string magicSource = @"\\?\M:\Analytical Team\Summer 2007 onwards\check for archiving\Alan's Folders\Attachments\DAPS - Varia\Briefing for SJW\draft BRIEFING NOTE_DG - Lead study co-presentation by AT and OR at the FN Water Symposium March 18 and 19, 2008.wpd";
+            //string source = @"M:\Analytical Team\Summer 2007 onwards\check for archiving\Alan's Folders\Attachments\DAPS - Varia\Briefing for SJW\draft BN TO DG_OR and AT co-presentation at FN Water Symposium March 19th.wpd";
+            ////string source = @"M:\Analytical Team\Summer 2007 onwards\check for archiving\Alan's Folders\Attachments\DAPS - Varia\Briefing for SJW\Appendix A  - First Nations Water Symposium Poster.doc";
+            //string xxx = MappedDriveResolver.ResolveToUNC(source);
+
+            //\\NCR-A_FNIHBC3S\FNIHBC3\FNIHB-HQ-VOL1\SHARED\PHCPH\Environmental Research\Analytical Team\Summer 2007 onwards\check for archiving\Alan's Folders\Attachments\DAPS - Varia\Briefing for SJW\draft BN TO DG_OR and AT co-presentation at FN Water Symposium March 19th.wpd
+            try
+            {
+                MagikFileSource = @"\?\\Health_tree\.HOGA_HOGUC1.HOGA.CLUSTERS.MB.hc-sc\common\fnih\admin\Business Office\Archived Folders\2019-2020\Accounts Payable\Business Office\Travel\Training Applications\01 IPAC - ON-LINE COURSES -  Papio, Elmer\Papio Elmer - TAA - IPAC DISTANCE - Canada Sponsored Online Novice IPAC Course - signed.pdf";
+
+                //\\Health_tree\.HOGA_HOGUC1.HOGA.CLUSTERS.MB.hc-sc\common\fnih\admin\Business Office\Archived Folders\2019-2020\Accounts Payable\Business Office\Travel\Training Applications\01 IPAC - ON-LINE COURSES -  Papio, Elmer
+
+                //\\Health_tree\.HOGA_HOGUC1.HOGA.CLUSTERS.MB.hc-sc\common\fnih\admin\Business Office\Archived Folders\2019-2020\Accounts Payable\Business Office\Travel\Training Applications\01 IPAC - ON-LINE COURSES -  Papio, Elmer
+                System.IO.File.Copy(MagikFileSource, MagikFolderDestination + System.IO.Path.DirectorySeparatorChar + DateTime.Now.ToString("yyyyMMddHHmmssffff"));
+                //System.IO.File.Copy(@"\\NCR-A_FNIHBC3S\FNIHBC3\FNIHB-HQ-VOL1\SHARED\PHCPH\Environmental Research\Analytical Team\Summer 2007 onwards\check for archiving\Alan's Folders\Attachments\DAPS - Varia\Briefing for SJW\draft BN TO DG_OR and AT co-presentation at FN Water Symposium March 19th.wpd", MagicFolderDestination + System.IO.Path.DirectorySeparatorChar + fileName, true);
+                ////System.IO.File.Copy(@"\\NCR-A_FNIHBC3S\FNIHBC3\FNIHB-HQ-VOL1\SHARED\PHCPH\Environmental Research\Analytical Team\Summer 2007 onwards\check for archiving\Alan's Folders\Attachments\DAPS - Varia\Briefing for SJW\Appendix A  - First Nations Water Symposium Poster.doc", MagicFolderDestination + System.IO.Path.DirectorySeparatorChar + fileName, true);
+                ////System.IO.File.Copy(xxx, MagicFolderDestination + System.IO.Path.DirectorySeparatorChar + fileName, true);
+                ////System.IO.File.Copy(xxx, MagicFolderDestination + System.IO.Path.DirectorySeparatorChar + fileName, true);
+            }
+            catch (System.IO.IOException ioEx)
+            {
+                StatusMessage = ioEx.Message;
+            }
+            catch (System.UnauthorizedAccessException uaEx)
+            {
+                StatusMessage = uaEx.Message;
+            }
+            catch (System.Exception unknownEx)
+            {
+                StatusMessage = unknownEx.Message;
+            }
+            finally
+            { }
+        }
     }
 }

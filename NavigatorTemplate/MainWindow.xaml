@@ -29,45 +29,66 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Rectangle Grid.Row="0" Grid.Column="0" VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="Black" />
-                --><!--<Separator Grid.Row="0" Grid.Column="0"></Separator>--><!--
+                -->
+            <!--<Separator Grid.Row="0" Grid.Column="0"></Separator>-->
+            <!--
                 <Label Grid.Row="0" Grid.Column="1" Content="Some Information"></Label>
                 <Rectangle Grid.Row="0" Grid.Column="2" VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="Black" />
-                --><!--<Separator Grid.Row="0" Grid.Column="2"></Separator>--><!--
+                -->
+            <!--<Separator Grid.Row="0" Grid.Column="2"></Separator>-->
+            <!--
                 <Label Grid.Row="0" Grid.Column="3" Content="Other Information"></Label>
             </Grid>-->
         </Menu>
+        <!--<StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem Content="Item 1"/>
+            <StatusBarItem Content="Item 2" />
+            <StatusBarItem HorizontalAlignment="Right">
+                <StackPanel Orientation="Horizontal">
+                    <StatusBarItem  Content="Item 3"/>
+                    <StatusBarItem Content="Item 4"/>
+                    <ProgressBar Height="15" Width="50" IsIndeterminate="True" Margin="5,0"/>
+                </StackPanel>
+            </StatusBarItem>
+        </StatusBar>-->
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
-                <StackPanel>
-                    <Separator></Separator>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"></RowDefinition>
-                        </Grid.RowDefinitions>
-                        <Label Grid.Row="0" Grid.Column="0" Content="Running Time:"></Label>
-                        <Label Grid.Row="0" Grid.Column="1" Content="{Binding Master.ValidatorRunningTime}"></Label>
-                        <Button Grid.Row="0" Grid.Column="2" Content="Start" Command="{Binding Master.StartTimerCommand}"></Button>
-                        <Button Grid.Row="0" Grid.Column="3" Content="Stop" Command="{Binding Master.StopTimerCommand}"></Button>
-                        <Rectangle Grid.Row="0" Grid.Column="4" VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="Black" />
-                        <Label Grid.Row="0" Grid.Column="5" Content="Status:"></Label>
-                        <Label Grid.Row="0" Grid.Column="6" Content="{Binding Master.StatusMessage}"></Label>
-                        <!--<Rectangle Grid.Row="0" Grid.Column="7" VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="Black" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Grid.Column="0" Content="Status:"></Label>
+                    <Label Grid.Row="0" Grid.Column="1" Content="{Binding Master.StatusMessage}"></Label>
+                    <!--<Rectangle Grid.Row="0" Grid.Column="7" VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="Black" />
                         <Label Grid.Row="0" Grid.Column="8" Content="Average:"></Label>
                         <Label Grid.Row="0" Grid.Column="9" Content="{Binding Master.AverageRunningTimePer}"></Label>-->
-                        <!--<Rectangle Grid.Row="0" Grid.Column="10" VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="Black" />
+                    <!--<Rectangle Grid.Row="0" Grid.Column="10" VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="Black" />
                         <Label Grid.Row="0" Grid.Column="11" Content="Per:"></Label>
                         <Label Grid.Row="0" Grid.Column="12" Content="{Binding Master.ValidatorRunningTimePer}"></Label>-->
-                    </Grid>
-                </StackPanel>
+                </Grid>
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Grid.Column="1" Content="Running Time:"></Label>
+                    <Label Grid.Row="0" Grid.Column="2" Content="{Binding Master.ValidatorRunningTime}"></Label>
+                    <Button Grid.Row="0" Grid.Column="3" Content="Start" Command="{Binding Master.StartTimerCommand}"></Button>
+                    <Button Grid.Row="0" Grid.Column="4" Content="Stop" Command="{Binding Master.StopTimerCommand}"></Button>
+                    <Rectangle Grid.Row="0" Grid.Column="0" VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="Black" />
+                </Grid>
             </StatusBarItem>
         </StatusBar>
         <TabControl>
@@ -111,13 +132,13 @@
                                 <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Master.MaxPathLength}" IsEnabled="False"></TextBox>
                             </Grid>
                             <CheckBox Grid.Row="0" Grid.Column="0" Content="Include Folders" IsChecked="{Binding Master.IncludeFolders}"></CheckBox>
-                            <CheckBox Grid.Row="0" Grid.Column="1" Content="Include Sub-Folders" IsChecked="{Binding Master.IncludeSubFolders}"></CheckBox>
+                            <CheckBox Grid.Row="0" Grid.Column="1" Content="Include Sub-Folders" IsChecked="{Binding Master.IncludeSubFolders}" IsEnabled="False"></CheckBox>
 
                             <CheckBox Grid.Row="1" Grid.Column="0" Content="Include Documents" IsChecked="{Binding Master.IncludeDocuments}"></CheckBox>
-                            <CheckBox Grid.Row="1" Grid.Column="1" Content="Include Empty Folders" IsChecked="{Binding Master.IncludeEmptyFolders}"></CheckBox>
+                            <CheckBox Grid.Row="1" Grid.Column="1" Content="Include Empty Folders" IsChecked="{Binding Master.IncludeEmptyFolders}" IsEnabled="False"></CheckBox>
 
-                            <CheckBox Grid.Row="0" Grid.Column="2" Content="AutoSave Report" IsChecked="{Binding Master.IncludeDocuments}"></CheckBox>
-                            <CheckBox Grid.Row="1" Grid.Column="2" Content="--PlaceHolder--" IsChecked="{Binding Master.IncludeEmptyFolders}"></CheckBox>
+                            <CheckBox Grid.Row="0" Grid.Column="2" Content="AutoSave Report" IsChecked="True" IsEnabled="False"></CheckBox>
+                            <!--<CheckBox Grid.Row="1" Grid.Column="2" Content="-PlaceHolder-" IsChecked="{Binding Master.IncludeEmptyFolders}"></CheckBox>-->
 
                             <!--<CheckBox Grid.Row="0" Grid.Column="2" Content="Copy ICF 2 Import Directory" IsChecked="{Binding Master.CopyICF2ImportDirectory}"></CheckBox>-->
                             <!--<TextBox Grid.Row="0" Grid.Column="2"></TextBox>-->
@@ -147,17 +168,16 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <CheckBox Grid.Row="0" Grid.Column="0"  Content="AutoSave"></CheckBox>
-                            <CheckBox Grid.Row="0" Grid.Column="1"  Content="Create New Log Per Session"></CheckBox>
-                            <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="Folder"></Label>
+                            <CheckBox Grid.Row="0" Grid.Column="0"  Content="Create Logs" IsChecked="True" IsEnabled="False"></CheckBox>
+                            <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="Location"></Label>
                             <TextBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Master.LogLocationTxt}"></TextBox>
                             <Button Grid.Row="3" Grid.Column="0" Content="Folder..." CommandParameter="LogLocationTxt" Command="{Binding Master.SetFolderCommand}"></Button>
                             <Button Grid.Row="3" Grid.Column="1" Content="Folder (via TreeView)..." CommandParameter="LogLocationTxt" Command="{Binding Master.SetFolderViaTVCommand}"></Button>
-                            <Separator Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"></Separator>
+                            <!--<Separator Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"></Separator>
                             <Label Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Content="Audit Database"></Label>
                             <TextBox Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Master.FilePath}"></TextBox>
                             <Button Grid.Row="7" Grid.Column="0" Content="File..." CommandParameter="FilePathTxt" Command="{Binding Master.SetFileCommand}"></Button>
-                            <Button Grid.Row="7" Grid.Column="1" Content="File (via TreeView)..." CommandParameter="FilePathTxt" Command="{Binding Master.SetFileViaTVCommand}" IsEnabled="False"></Button>
+                            <Button Grid.Row="7" Grid.Column="1" Content="File (via TreeView)..." CommandParameter="FilePathTxt" Command="{Binding Master.SetFileViaTVCommand}" IsEnabled="False"></Button>-->
                         </Grid>
                     </GroupBox>
                 </Grid>
@@ -192,7 +212,8 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <CheckBox Grid.Row="0" Grid.Column="0" Content="Omit NDS://HEALTH_TREE prefix" IsChecked="True"></CheckBox>
+                            <CheckBox Grid.Row="0" Grid.Column="0" Content="Omit NDS://HEALTH_TREE prefix" IsChecked="True" IsEnabled="False"></CheckBox>
+                            <CheckBox Grid.Row="0" Grid.Column="1" Content="Expand Stats" IsChecked="{Binding Master.ExpandOptionsStatsBool}"></CheckBox>
                             <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Master.PathFileImportTxt}"></TextBox>
                             <Button Grid.Row="2" Grid.Column="0" Content="Select..." CommandParameter="PathFileImportTxt" Command="{Binding Master.SetFileCommand}" IsEnabled="{Binding Master.SelectBulkFile2ProcessButtonEnabled}"></Button>
                             <Button Grid.Row="2" Grid.Column="1" Content="Import &amp; Process"  Command="{Binding Master.ImportPathFileCommand}" IsEnabled="{Binding Master.ImportProcessBulkFileButtonEnabled}"></Button>
@@ -277,7 +298,7 @@
                         </ListView>
                     </GroupBox>
                     <GridSplitter Grid.Column="0" Grid.Row="5" Grid.ColumnSpan ="2" Height="3" HorizontalAlignment="Stretch"></GridSplitter>
-                    <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="2">
+                    <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="2" Visibility="{Binding Master.ExpandOptionsStats}">
                         <GroupBox.Header>
                             <Span FontWeight="DemiBold">Statistics</Span>
                         </GroupBox.Header>
@@ -370,6 +391,22 @@
                         </Grid>
                     </GroupBox>
                 </Grid>
+            </TabItem>
+            <TabItem Header="Magik Code" Visibility="Hidden">
+                <StackPanel>
+                    <Label Content="Source"></Label>
+                    <TextBox Text="{Binding Master.MagikFileSource}"></TextBox>
+                    <Button Content="File..." CommandParameter="MagikFileSource" Command="{Binding Master.SetFileCommand}"></Button>
+                    <Separator></Separator>
+                    <Label Content="Destination"></Label>
+                    <TextBox Text="{Binding Master.MagikFolderDestination}"></TextBox>
+                    <Button Content="Folder..." CommandParameter="MagikFolderDestination" Command="{Binding Master.SetFolderCommand}"></Button>
+                    <Separator></Separator>
+                    <Button Content="Copy" Command="{Binding Master.MagikCopyCommand}"></Button>
+                    <Separator></Separator>
+                    <Label Content="Status"></Label>
+                    <Label Content="N/A"></Label>
+                </StackPanel>
             </TabItem>
             <TabItem Header="Rest" Visibility="Hidden">
                 <Grid>

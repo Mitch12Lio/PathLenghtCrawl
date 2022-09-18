@@ -214,5 +214,29 @@ namespace PathLenghtCrawl.Properties {
                 this["LogLocationTxt"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string MagikFolderDestination {
+            get {
+                return ((string)(this["MagikFolderDestination"]));
+            }
+            set {
+                this["MagikFolderDestination"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string MagikFileSource {
+            get {
+                return ((string)(this["MagikFileSource"]));
+            }
+            set {
+                this["MagikFileSource"] = value;
+            }
+        }
     }
 }
