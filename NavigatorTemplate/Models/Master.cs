@@ -544,7 +544,7 @@ namespace NavigatorTemplate.Models
         {
             get
             {
-                return folderCount;
+                return folderCountTotal;
             }
             set
             {
@@ -926,6 +926,10 @@ namespace NavigatorTemplate.Models
                     UNCObjectFileList.Clear();
                     UNCObjectFolderList.Clear();
 
+                    ObjectCountTotal = 0;
+                    FolderCountTotal = 0;
+                    FileCountTotal = 0;
+
                     App.Current.Dispatcher.BeginInvoke((Action)delegate ()
                     {
                         UNCObjectFileLst.Clear();
@@ -963,6 +967,10 @@ namespace NavigatorTemplate.Models
                     }
                 }
             });
+
+            ObjectCountTotal = 0;
+            FolderCountTotal = 0;
+            FileCountTotal = 0;
 
             using (System.IO.StreamWriter resultsFile = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Statistics_" + DateGuid + ".csv", true, Encoding.Unicode))
             {
@@ -1099,6 +1107,8 @@ namespace NavigatorTemplate.Models
                                                     WarningCount++;
                                                     PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, "File does Not Exists.", fi);
                                                 }
+                                                ObjectCountTotal++;
+                                                FileCountTotal++;
                                                 ObjectCount++;
                                                 FileCount++;
                                                 try
@@ -1352,6 +1362,8 @@ namespace NavigatorTemplate.Models
                                                     WarningCount++;
                                                     PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, "Directory does Not Exists.", di);
                                                 }
+                                                ObjectCountTotal++;
+                                                FolderCountTotal++;
                                                 ObjectCount++;
                                                 FolderCount++;
 
@@ -1376,6 +1388,7 @@ namespace NavigatorTemplate.Models
 
                                                 UNCObject uncObject = new UNCObject() { Count = FolderCount, CharacterCount = di.Length, NameUNC = di };
                                                 UNCObjectFolderList.Add(uncObject);
+
                                                 App.Current.Dispatcher.BeginInvoke((Action)delegate ()
                                                 {
                                                     UNCObjectFolderLst.Add(uncObject);
@@ -1592,7 +1605,12 @@ namespace NavigatorTemplate.Models
             if (ErrorCount > 0)
             {
                 success = false;
-                //StatusMessage = "Ready"; 
+                StatusMessage = "Check Error Logs";
+
+            }
+            else
+            {
+                StatusMessage = "Ready";
             }
             return success;
         }

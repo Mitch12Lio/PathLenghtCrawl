@@ -317,63 +317,83 @@
                                 <RowDefinition Height="Auto"></RowDefinition>
                                 <RowDefinition Height="Auto"></RowDefinition>
                                 <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
                             </Grid.RowDefinitions>
+                            <!--<Label Grid.Row="0" Grid.Column="3" Content="(Path/Batch)" FontSize="8" HorizontalAlignment="Center" FontWeight="Black"></Label>-->
+                            <TextBlock Grid.Row="1" Grid.Column="3" Text="(Path/Batch)" HorizontalAlignment="Center" FontSize="8" FontFamily="Times New Roman"></TextBlock>
+                            <TextBlock Grid.Row="1" Grid.Column="4" Text="(Path/Batch)" HorizontalAlignment="Center" FontSize="8" FontFamily="Times New Roman"></TextBlock>
+                            <TextBlock Grid.Row="1" Grid.Column="5" Text="(Path/Batch)" HorizontalAlignment="Center" FontSize="8" FontFamily="Times New Roman"></TextBlock>
+                            
+                            <!--<Label Grid.Row="0" Grid.Column="0" Content="Per" FontSize="10" HorizontalAlignment="Left"></Label>-->
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Per" FontSize="10" HorizontalAlignment="Left" VerticalAlignment="Bottom"></TextBlock>
+                            <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" FontSize="10" FontWeight="Heavy">
+                                <Run Text="{Binding Master.ValidatorRunningTimePer}"></Run>
+                                <!--<Run Text="/"></Run>
+                                <Run Text="{Binding Master.PathProcessedCountTotal}"></Run>-->
+                            </TextBlock>
+                            <!--<Label Grid.Row="2" Grid.Column="0" Content="{Binding Master.ValidatorRunningTimePer}" HorizontalContentAlignment="Left"  HorizontalAlignment="Left" FontSize="10" FontWeight="Heavy"></Label>-->
 
-                            <Label Grid.Row="0" Grid.Column="0" Content="Per" FontSize="10" HorizontalAlignment="Left"></Label>
-                            <Label Grid.Row="1" Grid.Column="0" Content="{Binding Master.ValidatorRunningTimePer}" HorizontalContentAlignment="Left"  HorizontalAlignment="Left" FontSize="10" FontWeight="Heavy"></Label>
-
-                            <Label Grid.Row="0" Grid.Column="1" Content="Paths Imported:" FontSize="10" HorizontalAlignment="Center"></Label>
-                            <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" FontSize="10" FontWeight="Heavy">
+                            <!--<Label Grid.Row="0" Grid.Column="1" Content="Paths Imported:" FontSize="10" HorizontalAlignment="Center"></Label>-->
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="Paths Imported:" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Bottom"></TextBlock>
+                            <TextBlock Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" FontSize="10" FontWeight="Heavy">
                                 <Run Text="{Binding Master.PathImportedCount}"></Run>
                                 <Run Text="/"></Run>
                                 <Run Text="{Binding Master.PathImportedCountTotal}"></Run>
                             </TextBlock>
-                            <Label Grid.Row="0" Grid.Column="2" Content="Paths Processed:" FontSize="10" HorizontalAlignment="Center"></Label>
-                            <TextBlock Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" FontSize="10" FontWeight="Heavy">
+                            
+                            <!--<Label Grid.Row="0" Grid.Column="2" Content="Paths Processed:" FontSize="10" HorizontalAlignment="Center"></Label>-->
+                            <TextBlock Grid.Row="0" Grid.Column="2" Text="Paths Processed:" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Bottom"></TextBlock>
+                            <TextBlock Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" FontSize="10" FontWeight="Heavy">
                                 <Run Text="{Binding Master.PathProcessedCount}"></Run>
                                 <Run Text="/"></Run>
                                 <Run Text="{Binding Master.PathProcessedCountTotal}"></Run>
                             </TextBlock>
 
-                            <Label Grid.Row="0" Grid.Column="5" Content="Total Count" FontSize="10" HorizontalAlignment="Center"></Label>
+                            <!--<Label Grid.Row="0" Grid.Column="5" Content="Total Count" FontSize="10" HorizontalAlignment="Center"></Label>-->
                             <!--<Label Grid.Row="1" Grid.Column="2" Content="{Binding Master.ObjectCount}" FontSize="10" FontWeight="Heavy"></Label>-->
-                            <TextBlock Grid.Row="1" Grid.Column="5" HorizontalAlignment="Center" FontSize="10" FontWeight="Heavy">
+                            <TextBlock Grid.Row="0" Grid.Column="5" Text="Total Count" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Bottom"></TextBlock>
+                            <TextBlock Grid.Row="2" Grid.Column="5" HorizontalAlignment="Center" FontSize="10" FontWeight="Heavy">
+                                <Run Text="{Binding Master.ObjectCountTotal}"></Run>
+                                <Run Text="/"></Run>
                                 <Run Text="{Binding Master.ObjectCount}"></Run>
-                                <!--<Run Text="/"></Run>
-                                <Run Text="{Binding Master.ObjectCountTotal}"></Run>-->
                             </TextBlock>
                             <!--<Rectangle Grid.Row="0" Grid.Column="2" VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="Black" />-->
-                            <Label Grid.Row="0" Grid.Column="4" Content="Folder Count" FontSize="10" HorizontalAlignment="Center"></Label>
-                            <TextBlock Grid.Row="1" Grid.Column="4" HorizontalAlignment="Center" FontSize="10" FontWeight="Heavy">
+                            <!--<Label Grid.Row="0" Grid.Column="4" Content="Folder Count" FontSize="10" HorizontalAlignment="Center"></Label>-->
+                            <TextBlock Grid.Row="0" Grid.Column="4" Text="Folder Count" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Bottom"></TextBlock>
+                            <TextBlock Grid.Row="2" Grid.Column="4" HorizontalAlignment="Center" FontSize="10" FontWeight="Heavy">
+                                <Run Text="{Binding Master.FolderCountTotal}"></Run>
+                                <Run Text="/"></Run>
                                 <Run Text="{Binding Master.FolderCount}"></Run>
-                                <!--<Run Text="/"></Run>
-                                <Run Text="{Binding Master.FolderCountTotal}"></Run>-->
                             </TextBlock>
                             <!--<Label Grid.Row="1" Grid.Column="3" Content="{Binding Master.FolderCount}" FontSize="10" FontWeight="Heavy"></Label>-->
                             <!--<Rectangle Grid.Row="0" Grid.Column="5" VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="Black" />-->
-                            <Label Grid.Row="0" Grid.Column="3" Content="Document Count" FontSize="10" HorizontalAlignment="Center"></Label>
+                            <!--<Label Grid.Row="0" Grid.Column="3" Content="Document Count" FontSize="10" HorizontalAlignment="Center"></Label>-->
+                            <TextBlock Grid.Row="0" Grid.Column="3" Text="Document Count" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Bottom"></TextBlock>
                             <!--<Label Grid.Row="1" Grid.Column="4" Content="{Binding Master.FileCount}" FontSize="10" FontWeight="Heavy"></Label>-->
-                            <TextBlock Grid.Row="1" Grid.Column="3" HorizontalAlignment="Center" FontSize="10" FontWeight="Heavy">
+                            <TextBlock Grid.Row="2" Grid.Column="3" HorizontalAlignment="Center" FontSize="10" FontWeight="Heavy">
+                                <Run Text="{Binding Master.FileCountTotal}"></Run>
+                                <Run Text="/"></Run>
                                 <Run Text="{Binding Master.FileCount}"></Run>
-                                <!--<Run Text="/"></Run>
-                                <Run Text="{Binding Master.FileCountTotal}"></Run>-->
                             </TextBlock>
-                            <Label Grid.Row="0" Grid.Column="6" Content="Warning Count" FontSize="10" HorizontalAlignment="Center"></Label>
+                            <!--<Label Grid.Row="0" Grid.Column="6" Content="Warning Count" FontSize="10" HorizontalAlignment="Center"></Label>-->
+                            <TextBlock Grid.Row="0" Grid.Column="6" Text="Warning Count" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Bottom"></TextBlock>
                             <!--<Label Grid.Row="1" Grid.Column="4" Content="{Binding Master.FileCount}" FontSize="10" FontWeight="Heavy"></Label>-->
-                            <TextBlock Grid.Row="1" Grid.Column="6" HorizontalAlignment="Center" FontSize="10" FontWeight="Heavy">
+                            <TextBlock Grid.Row="2" Grid.Column="6" HorizontalAlignment="Center" FontSize="10" FontWeight="Heavy">
                                 <Run Text="{Binding Master.WarningCount}"></Run>
                                 <!--<Run Text="/"></Run>
                                 <Run Text="{Binding Master.FileCountTotal}"></Run>-->
                             </TextBlock>
-                            <Label Grid.Row="0" Grid.Column="7" Content="Error Count" FontSize="10" HorizontalAlignment="Center"></Label>
+                            <!--<Label Grid.Row="0" Grid.Column="7" Content="Error Count" FontSize="10" HorizontalAlignment="Center"></Label>-->
+                            <TextBlock Grid.Row="0" Grid.Column="7" Text="Error Count" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Bottom"></TextBlock>
                             <!--<Label Grid.Row="1" Grid.Column="4" Content="{Binding Master.FileCount}" FontSize="10" FontWeight="Heavy"></Label>-->
-                            <TextBlock Grid.Row="1" Grid.Column="7" HorizontalAlignment="Center" FontSize="10" FontWeight="Heavy">
+                            <TextBlock Grid.Row="2" Grid.Column="7" HorizontalAlignment="Center" FontSize="10" FontWeight="Heavy">
                                 <Run Text="{Binding Master.ErrorCount}"></Run>
                                 <!--<Run Text="/"></Run>
                                 <Run Text="{Binding Master.FileCountTotal}"></Run>-->
                             </TextBlock>
-
-                            <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="8">
+                            <Separator Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="8"></Separator>
+                            <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="8">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
@@ -385,7 +405,7 @@
 
                                 <Label Grid.Row="0" Grid.Column="0" Content="Processing:" FontSize="10"></Label>
                                 <TextBox Grid.Row="0" Grid.Column="1" IsReadOnly ="True" Text="{Binding Master.PathCurrentlyProcessing}"></TextBox>
-                                <Label Grid.Row="1" Grid.Column="0" Content="Counting:" FontSize="10"></Label>
+                                <Label Grid.Row="1" Grid.Column="0" Content="Last Counted:" FontSize="10"></Label>
                                 <TextBox Grid.Row="1" Grid.Column="1" IsReadOnly ="True" Text="{Binding Master.PathCurrentlyCounting}"></TextBox>
                             </Grid>
                         </Grid>
