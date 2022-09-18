@@ -172,7 +172,7 @@
                             <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="Location"></Label>
                             <TextBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Master.LogLocationTxt}"></TextBox>
                             <Button Grid.Row="3" Grid.Column="0" Content="Folder..." CommandParameter="LogLocationTxt" Command="{Binding Master.SetFolderCommand}"></Button>
-                            <Button Grid.Row="3" Grid.Column="1" Content="Folder (via TreeView)..." CommandParameter="LogLocationTxt" Command="{Binding Master.SetFolderViaTVCommand}"></Button>
+                            <Button Grid.Row="3" Grid.Column="1" Content="Folder (via TreeView)..." CommandParameter="LogLocationTxt" Command="{Binding Master.SetFolderViaTVCommand}" IsEnabled="False"></Button>
                             <!--<Separator Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"></Separator>
                             <Label Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Content="Audit Database"></Label>
                             <TextBox Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Master.FilePath}"></TextBox>
