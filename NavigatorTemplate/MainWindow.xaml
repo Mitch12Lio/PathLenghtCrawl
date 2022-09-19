@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NavigatorTemplate"
         mc:Ignorable="d"
-        Title="Path Length Crawler 1.1 - Written by Mitch Girard" Height="450" Width="800">
+        Title="Path Length Crawler 1.0 - Written by Mitch Girard" Height="450" Width="800">
     <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">

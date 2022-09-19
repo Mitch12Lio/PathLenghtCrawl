@@ -1105,7 +1105,7 @@ namespace NavigatorTemplate.Models
                                                 else
                                                 {
                                                     WarningCount++;
-                                                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, "File does Not Exists.", fi);
+                                                    PathLenghtCrawl.Log.Log.Write2WarningLog(LogLocationTxt, DateTime.Now, "File does Not Exists.", fi);
                                                 }
                                                 ObjectCountTotal++;
                                                 FileCountTotal++;
@@ -1360,7 +1360,7 @@ namespace NavigatorTemplate.Models
                                                 else
                                                 {
                                                     WarningCount++;
-                                                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, "Directory does Not Exists.", di);
+                                                    PathLenghtCrawl.Log.Log.Write2WarningLog(LogLocationTxt, DateTime.Now, "Directory does Not Exists.", di);
                                                 }
                                                 ObjectCountTotal++;
                                                 FolderCountTotal++;
