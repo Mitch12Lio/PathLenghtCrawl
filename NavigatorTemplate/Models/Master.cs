@@ -1100,13 +1100,11 @@ namespace NavigatorTemplate.Models
                                             try
                                             {
                                                 PathCurrentlyCounting = fi;
-                                                if (System.IO.File.Exists(fi))
-                                                { }
-                                                else
-                                                {
-                                                    WarningCount++;
-                                                    PathLenghtCrawl.Log.Log.Write2WarningLog(LogLocationTxt, DateTime.Now, "File does Not Exists.", fi);
-                                                }
+                                                //if (!System.IO.File.Exists(fi))
+                                                //{ 
+                                                //    WarningCount++;
+                                                //    PathLenghtCrawl.Log.Log.Write2WarningLog(LogLocationTxt, DateTime.Now, "File does Not Exists.", fi);
+                                                //}
                                                 ObjectCountTotal++;
                                                 FileCountTotal++;
                                                 ObjectCount++;
@@ -1354,14 +1352,11 @@ namespace NavigatorTemplate.Models
                                             try
                                             {
                                                 PathCurrentlyCounting = di;
-                                                if (System.IO.Directory.Exists(di))
-                                                {
-                                                }
-                                                else
-                                                {
-                                                    WarningCount++;
-                                                    PathLenghtCrawl.Log.Log.Write2WarningLog(LogLocationTxt, DateTime.Now, "Directory does Not Exists.", di);
-                                                }
+                                                //if (!System.IO.Directory.Exists(di))
+                                                //{
+                                                //    WarningCount++;
+                                                //    PathLenghtCrawl.Log.Log.Write2WarningLog(LogLocationTxt, DateTime.Now, "Directory does Not Exists.", di);
+                                                //}
                                                 ObjectCountTotal++;
                                                 FolderCountTotal++;
                                                 ObjectCount++;
