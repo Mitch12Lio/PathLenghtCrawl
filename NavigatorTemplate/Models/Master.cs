@@ -359,6 +359,24 @@ namespace NavigatorTemplate.Models
             }
         }
 
+
+        private string dateGuid = DateTime.Now.ToString("yyyyMMddHHmmssffff");
+        public string DateGuid
+        {
+            get
+            {
+                return dateGuid;
+            }
+            //set
+            //{
+            //    if (dateGuid != value)
+            //    {
+            //        dateGuid = value;
+            //        NotifyPropertyChanged("DateGuid");
+            //    }
+            //}
+        }
+
         private string pathCurrentlyProcessing = "N/A";
         public string PathCurrentlyProcessing
         {
@@ -1206,7 +1224,7 @@ namespace NavigatorTemplate.Models
                     {
                         ErrorCount++;
                         StatusMessage = ex.Message;
-                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Exception: WhateverCheckFilesLongWay().ForEach");
+                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Exception: WhateverCheckFilesLongWay().ForEach", DateGuid);
                     }
                 }
             }
@@ -1215,49 +1233,49 @@ namespace NavigatorTemplate.Models
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: WhateverCheckFilesLongWay()");
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: WhateverCheckFilesLongWay()", DateGuid);
             }
             catch (System.IO.DirectoryNotFoundException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: WhateverCheckFilesLongWay()");
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: WhateverCheckFilesLongWay()", DateGuid);
             }
             catch (System.IO.PathTooLongException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: WhateverCheckFilesLongWay()");
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: WhateverCheckFilesLongWay()", DateGuid);
             }
             catch (System.IO.IOException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: WhateverCheckFilesLongWay()");
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: WhateverCheckFilesLongWay()", DateGuid);
             }
             catch (System.Security.SecurityException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: WhateverCheckFilesLongWay()");
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: WhateverCheckFilesLongWay()", DateGuid);
             }
             catch (UnauthorizedAccessException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: WhateverCheckFilesLongWay()");
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: WhateverCheckFilesLongWay()", DateGuid);
             }
             catch (ArgumentException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: WhateverCheckFilesLongWay()");
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: WhateverCheckFilesLongWay()", DateGuid);
             }
             catch (Exception ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: WhateverCheckFilesLongWay()");
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: WhateverCheckFilesLongWay()", DateGuid);
             }
             #endregion
 
@@ -1277,6 +1295,7 @@ namespace NavigatorTemplate.Models
 
         private async void WhateverStartLongWay()
         {
+            //string DateGuid = DateTime.Now.ToString("yyyyMMddHHmmssffff");
             try
             {
                 if (System.IO.File.Exists(PathFileImportTxt))
@@ -1297,7 +1316,7 @@ namespace NavigatorTemplate.Models
 
                     List<string> uncPathsToScan = new List<string>();
                     string currentDI = CurrentDirectory.FullName;
-                    string DateGuid = DateTime.Now.ToString("yyyyMMddHHmmssffff");
+                    
 
                     System.IO.FileInfo fi = new System.IO.FileInfo(PathFileImportTxt);
                     if (Details)
@@ -1360,7 +1379,7 @@ namespace NavigatorTemplate.Models
                                     PathCurrentlyProcessing = path;
                                 }
                                 //Whatever(@"\\HOGA_HOGUC1S\HOGUC1\Users\JHamrlik");
-                                WhateverLongWay(path, DateGuid);
+                                WhateverLongWay(path);
 
                                 if (Details)
                                 {
@@ -1414,7 +1433,7 @@ namespace NavigatorTemplate.Models
                             {
                                 ErrorCount++;
                                 StatusMessage = ex.Message;
-                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Exception: WhateverStartLongWay().ForEach");
+                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Exception: WhateverStartLongWay().ForEach",DateGuid);
                             }
                         }
                     });
@@ -1447,53 +1466,53 @@ namespace NavigatorTemplate.Models
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: WhateverStartLongWay()");
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: WhateverStartLongWay()", DateGuid);
             }
             catch (System.IO.DirectoryNotFoundException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: WhateverStartLongWay()");
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: WhateverStartLongWay()", DateGuid);
             }
             catch (System.IO.PathTooLongException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: WhateverStartLongWay()");
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: WhateverStartLongWay()", DateGuid);
             }
             catch (System.IO.IOException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: WhateverStartLongWay()");
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: WhateverStartLongWay()", DateGuid);
             }
             catch (System.Security.SecurityException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: WhateverStartLongWay()");
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: WhateverStartLongWay()", DateGuid);
             }
             catch (UnauthorizedAccessException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: WhateverStartLongWay()");
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: WhateverStartLongWay()", DateGuid);
             }
             catch (ArgumentException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: WhateverStartLongWay()");
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: WhateverStartLongWay()", DateGuid);
             }
             catch (Exception ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: WhateverStartLongWay()");
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: WhateverStartLongWay()", DateGuid);
             }
             #endregion
         }
-        private void WhateverLongWay(string currentDI, string DateGuid)
+        private void WhateverLongWay(string currentDI)
         {
             try
             {
@@ -1543,14 +1562,14 @@ namespace NavigatorTemplate.Models
                                 if (Skip) { break; }
                                 else
                                 {
-                                    WhateverLongWay(di, DateGuid);
+                                    WhateverLongWay(di);
                                 }
                             }
                             catch (Exception ex)
                             {
                                 ErrorCount++;
                                 StatusMessage = ex.Message;
-                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Exception: WhateverLongWay().ForEach");
+                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Exception: WhateverLongWay().ForEach", DateGuid);
                             }
                         }
                     }
@@ -1558,59 +1577,56 @@ namespace NavigatorTemplate.Models
                     {
                         //finished this branch
                     }
-
-
                 }
-
             }
             #region "Catches"
             catch (ArgumentNullException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: WhateverLongWay()");
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: WhateverLongWay()", DateGuid);
             }
             catch (System.IO.DirectoryNotFoundException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: WhateverLongWay()");
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: WhateverLongWay()", DateGuid);
             }
             catch (System.IO.PathTooLongException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: WhateverLongWay()");
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: WhateverLongWay()", DateGuid);
             }
             catch (System.IO.IOException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: WhateverLongWay()");
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: WhateverLongWay()", DateGuid);
             }
             catch (System.Security.SecurityException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: WhateverLongWay()");
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: WhateverLongWay()", DateGuid);
             }
             catch (UnauthorizedAccessException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: WhateverLongWay()");
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: WhateverLongWay()", DateGuid);
             }
             catch (ArgumentException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: WhateverLongWay()");
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: WhateverLongWay()", DateGuid);
             }
             catch (Exception ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: WhateverLongWay()");
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: WhateverLongWay()", DateGuid);
             }
             #endregion
 
