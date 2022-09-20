@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NavigatorTemplate"
         mc:Ignorable="d"
-        Title="Path Length Crawler 1.0 - Written by Mitch Girard" Height="450" Width="800">
+        Title="Path Length Crawler 1.0 - Written by Mitch Girard" Height="500" Width="800">
     <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
@@ -17,40 +17,8 @@
                 <MenuItem Header="_Cut" />
                 <MenuItem Header="_Copy" />
                 <MenuItem Header="_Paste" />
-            </MenuItem>
-            <!--<Grid HorizontalAlignment="Right">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Rectangle Grid.Row="0" Grid.Column="0" VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="Black" />
-                -->
-            <!--<Separator Grid.Row="0" Grid.Column="0"></Separator>-->
-            <!--
-                <Label Grid.Row="0" Grid.Column="1" Content="Some Information"></Label>
-                <Rectangle Grid.Row="0" Grid.Column="2" VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="Black" />
-                -->
-            <!--<Separator Grid.Row="0" Grid.Column="2"></Separator>-->
-            <!--
-                <Label Grid.Row="0" Grid.Column="3" Content="Other Information"></Label>
-            </Grid>-->
-        </Menu>
-        <!--<StatusBar DockPanel.Dock="Bottom">
-            <StatusBarItem Content="Item 1"/>
-            <StatusBarItem Content="Item 2" />
-            <StatusBarItem HorizontalAlignment="Right">
-                <StackPanel Orientation="Horizontal">
-                    <StatusBarItem  Content="Item 3"/>
-                    <StatusBarItem Content="Item 4"/>
-                    <ProgressBar Height="15" Width="50" IsIndeterminate="True" Margin="5,0"/>
-                </StackPanel>
-            </StatusBarItem>
-        </StatusBar>-->
+            </MenuItem>          
+        </Menu>       
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
                 <Grid>
@@ -63,12 +31,6 @@
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0" Grid.Column="0" Content="Status:"></Label>
                     <Label Grid.Row="0" Grid.Column="1" Content="{Binding Master.StatusMessage}"></Label>
-                    <!--<Rectangle Grid.Row="0" Grid.Column="7" VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="Black" />
-                        <Label Grid.Row="0" Grid.Column="8" Content="Average:"></Label>
-                        <Label Grid.Row="0" Grid.Column="9" Content="{Binding Master.AverageRunningTimePer}"></Label>-->
-                    <!--<Rectangle Grid.Row="0" Grid.Column="10" VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="Black" />
-                        <Label Grid.Row="0" Grid.Column="11" Content="Per:"></Label>
-                        <Label Grid.Row="0" Grid.Column="12" Content="{Binding Master.ValidatorRunningTimePer}"></Label>-->
                 </Grid>
             </StatusBarItem>
             <StatusBarItem HorizontalAlignment="Right">
@@ -91,18 +53,19 @@
                 </Grid>
             </StatusBarItem>
         </StatusBar>
-
         <TabControl>
             <TabItem Header="Settings">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="0">
+                    <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="0" Padding="3">
                         <GroupBox.Header>
                             <Span FontWeight="DemiBold">Behaviour</Span>
                         </GroupBox.Header>
@@ -110,61 +73,48 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
+
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
-                                <!--<RowDefinition Height="Auto"/>-->
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <Grid Grid.Row="0" Grid.Column="3" Grid.RowSpan="2">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
-                                <Label Grid.Row="0" Grid.Column="0" Content="Min Path Length:"></Label>
-                                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Master.MinPathLength}"></TextBox>
-                                <Label Grid.Row="1" Grid.Column="0" Content="Max Path Length:"></Label>
-                                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Master.MaxPathLength}" IsEnabled="False"></TextBox>
-                            </Grid>
+
                             <CheckBox Grid.Row="0" Grid.Column="0" Content="Include Folders" IsChecked="{Binding Master.IncludeFolders}"></CheckBox>
                             <CheckBox Grid.Row="0" Grid.Column="1" Content="Include Sub-Folders" IsChecked="{Binding Master.IncludeSubFolders}" IsEnabled="False"></CheckBox>
 
                             <CheckBox Grid.Row="1" Grid.Column="0" Content="Include Documents" IsChecked="{Binding Master.IncludeDocuments}"></CheckBox>
                             <CheckBox Grid.Row="1" Grid.Column="1" Content="Include Empty Folders" IsChecked="{Binding Master.IncludeEmptyFolders}" IsEnabled="False"></CheckBox>
 
-                            <CheckBox Grid.Row="0" Grid.Column="2" Content="AutoSave Report" IsChecked="True" IsEnabled="False"></CheckBox>
-                            <Grid Grid.Row="1" Grid.Column="2">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
-                            
-                            <RadioButton Grid.Row="0" Grid.Column="0" GroupName="SpeedDetailsRB" Content="Speed"></RadioButton>
-                                <RadioButton Grid.Row="0" Grid.Column="1" GroupName="SpeedDetailsRB" Content="Details"></RadioButton>
-                            </Grid>
-                            <!--<CheckBox Grid.Row="1" Grid.Column="2" Content="-PlaceHolder-" IsChecked="{Binding Master.IncludeEmptyFolders}"></CheckBox>-->
-
-                            <!--<CheckBox Grid.Row="0" Grid.Column="2" Content="Copy ICF 2 Import Directory" IsChecked="{Binding Master.CopyICF2ImportDirectory}"></CheckBox>-->
-                            <!--<TextBox Grid.Row="0" Grid.Column="2"></TextBox>-->
-                            <!--<CheckBox Grid.Row="1" Grid.Column="2" Content="Copy Document 2 Temp Directory" IsChecked="{Binding Master.CopyDocuments2TempDirectory}"></CheckBox>-->
-
-                            <!--<CheckBox Grid.Row="1" Grid.Column="1" Content="Exclusions" IsChecked="{Binding Master.Exclusions}" IsEnabled="False"></CheckBox>
-                                <CheckBox Grid.Row="2" Grid.Column="1" Content="Permissions" IsChecked="{Binding Master.Permissions}" IsEnabled="False"></CheckBox>-->
-
-                            <!--<CheckBox Grid.Row="2" Grid.Column="2" Content="Folder Structure Snapshot" IsChecked="{Binding Master.FolderStructureSnapshot}" IsEnabled="False"></CheckBox>-->
+                            <CheckBox Grid.Row="2" Grid.Column="1" Content="AutoSave Report" IsChecked="True" IsEnabled="False"></CheckBox>
                         </Grid>
                     </GroupBox>
-                    <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="1">
+                    <GroupBox BorderThickness="3" Grid.Column="1" Grid.Row="0" Padding="3">
+                        <GroupBox.Header>
+                            <Span FontWeight="DemiBold">Preference</Span>
+                        </GroupBox.Header>
+                        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Label Grid.Row="0" Grid.Column="1" Content="Min Path Length:"></Label>
+                            <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding Master.MinPathLength}"></TextBox>
+                            <Label Grid.Row="1" Grid.Column="1" Content="Max Path Length:"></Label>
+                            <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding Master.MaxPathLength}" IsEnabled="False"></TextBox>
+
+                            <RadioButton Grid.Row="0" Grid.Column="0" VerticalAlignment="Bottom" GroupName="SpeedDetailsRB" Content="Speed" IsChecked="{Binding Master.Speed}"></RadioButton>
+                            <RadioButton Grid.Row="1" Grid.Column="0" GroupName="SpeedDetailsRB" Content="Details" IsChecked="{Binding Master.Details}"></RadioButton>
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
                         <GroupBox.Header>
                             <Span FontWeight="DemiBold">Logs</Span>
                         </GroupBox.Header>
@@ -206,7 +156,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <GroupBox BorderThickness="3" Grid.Column="2" Grid.Row="0" Padding="3" >
+                    <GroupBox BorderThickness="3" Grid.Column="2" Grid.Row="0" Padding="3" Visibility="{Binding Master.ExpandOptionsStats}">
                         <GroupBox.Header>
                             <Span FontWeight="DemiBold">Statistics</Span>
                         </GroupBox.Header>
@@ -248,9 +198,9 @@
                             <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" FontSize="10" FontWeight="Heavy">
                                 <Run Text="{Binding Master.ValidatorRunningTimePer}"></Run>
                             </TextBlock>
-                            
+
                             <Separator Grid.Row="2" Grid.Column="0"></Separator>
-                            
+
                             <TextBlock Grid.Row="3" Grid.Column="0" Text="Paths Imported:" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Bottom"></TextBlock>
                             <TextBlock Grid.Row="4" Grid.Column="0" HorizontalAlignment="Center" FontSize="10" FontWeight="Heavy">
                                 <Run Text="{Binding Master.PathImportedCount}"></Run>
@@ -310,7 +260,7 @@
                             <TextBlock Grid.Row="25" Grid.Column="0" HorizontalAlignment="Center" FontSize="10" FontWeight="Heavy">
                                 <Run Text="{Binding Master.ErrorCount}"></Run>
                             </TextBlock>
-                            
+
                             <Separator Grid.Row="26" Grid.Column="0"></Separator>
 
                         </Grid>
@@ -324,6 +274,7 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
@@ -331,7 +282,8 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2">
+                        <CheckBox Grid.Row="0" Grid.Column="0" Content="Expanded Components" IsChecked="{Binding Master.ExpandOptionsStatsBool}"></CheckBox>
+                        <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Visibility="{Binding Master.ExpandOptionsStats}">
                             <GroupBox.Header>
                                 <Span FontWeight="DemiBold">Options</Span>
                             </GroupBox.Header>
@@ -343,18 +295,16 @@
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
-                                <CheckBox Grid.Row="0" Grid.Column="0" Content="Omit NDS://HEALTH_TREE prefix" IsChecked="True" IsEnabled="False"></CheckBox>
-                                <CheckBox Grid.Row="0" Grid.Column="1" Content="Expanded Stats" IsChecked="{Binding Master.ExpandOptionsStatsBool}"></CheckBox>
-                                <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Master.PathFileImportTxt}"></TextBox>
-                                <Button Grid.Row="2" Grid.Column="0" Content="Select..." CommandParameter="PathFileImportTxt" Command="{Binding Master.SetFileCommand}" IsEnabled="{Binding Master.SelectBulkFile2ProcessButtonEnabled}"></Button>
-                                <Button Grid.Row="2" Grid.Column="1" Content="Import &amp; Process"  Command="{Binding Master.ImportPathFileCommand}" IsEnabled="{Binding Master.ImportProcessBulkFileButtonEnabled}"></Button>
+                                <CheckBox Grid.Row="0" Grid.Column="1" Content="Omit NDS://HEALTH_TREE prefix" IsChecked="True" IsEnabled="False"></CheckBox>
+                                <TextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Master.PathFileImportTxt}"></TextBox>
+                                <Button Grid.Row="1" Grid.Column="0" Content="Select..." CommandParameter="PathFileImportTxt" Command="{Binding Master.SetFileCommand}" IsEnabled="{Binding Master.SelectBulkFile2ProcessButtonEnabled}"></Button>
+                                <!--<Button Grid.Row="1" Grid.Column="1" Content="Import &amp; Process"  Command="{Binding Master.ImportPathFileCommand}" IsEnabled="{Binding Master.ImportProcessBulkFileButtonEnabled}"></Button>-->
+                                <Button Grid.Row="1" Grid.Column="1" Content="Import &amp; Process" Command="{Binding Master.WhateverStartLongWayCommand}" IsEnabled="{Binding Master.ImportProcessBulkFileButtonEnabled}"></Button>
                             </Grid>
                         </GroupBox>
-                        <GridSplitter Grid.Column="0" Grid.Row="1" Grid.ColumnSpan ="2" Height="3" HorizontalAlignment="Stretch"></GridSplitter>
-                        <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2">
+                        <GridSplitter Grid.Column="0" Grid.Row="2" Grid.ColumnSpan ="2" Height="3" HorizontalAlignment="Stretch"></GridSplitter>
+                        <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2">
                             <GroupBox.Header>
                                 <Span FontWeight="DemiBold">Files</Span>
                             </GroupBox.Header>
@@ -392,8 +342,8 @@
                                 </ListView.View>
                             </ListView>
                         </GroupBox>
-                        <GridSplitter Grid.Column="0" Grid.Row="3" Grid.ColumnSpan ="2" Height="3" HorizontalAlignment="Stretch"></GridSplitter>
-                        <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2">
+                        <GridSplitter Grid.Column="0" Grid.Row="4" Grid.ColumnSpan ="2" Height="3" HorizontalAlignment="Stretch"></GridSplitter>
+                        <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2">
                             <GroupBox.Header>
                                 <Span FontWeight="DemiBold">Folders</Span>
                             </GroupBox.Header>
@@ -431,31 +381,31 @@
                                 </ListView.View>
                             </ListView>
                         </GroupBox>
-                        <GridSplitter Grid.Column="0" Grid.Row="5" Grid.ColumnSpan ="2" Height="3" HorizontalAlignment="Stretch"></GridSplitter>
-                        <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="2" Visibility="{Binding Master.ExpandOptionsStats}">
+                        <GridSplitter Grid.Column="0" Grid.Row="6" Grid.ColumnSpan ="2" Height="3" HorizontalAlignment="Stretch"></GridSplitter>
+                        <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="7" Grid.ColumnSpan="2" Visibility="{Binding Master.ExpandOptionsStats}">
                             <GroupBox.Header>
                                 <Span FontWeight="DemiBold">Status</Span>
                             </GroupBox.Header>
-                           
-                              
-                                <Grid Grid.Row="0" Grid.Column="2">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"></RowDefinition>
-                                        <RowDefinition Height="Auto"></RowDefinition>
-                                    </Grid.RowDefinitions>
 
-                                    <Label Grid.Row="0" Grid.Column="0" Content="Processing:" FontSize="10"></Label>
-                                    <TextBox Grid.Row="0" Grid.Column="1" IsReadOnly ="True" Text="{Binding Master.PathCurrentlyProcessing}"></TextBox>
-                                    <Label Grid.Row="1" Grid.Column="0" Content="Counting:" FontSize="10"></Label>
-                                    <TextBox Grid.Row="1" Grid.Column="1" IsReadOnly ="True" Text="{Binding Master.PathCurrentlyCounting}"></TextBox>
-                                </Grid>
-                           
+
+                            <Grid Grid.Row="0" Grid.Column="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"></RowDefinition>
+                                    <RowDefinition Height="Auto"></RowDefinition>
+                                </Grid.RowDefinitions>
+
+                                <Label Grid.Row="0" Grid.Column="0" Content="Processing:" FontSize="10"></Label>
+                                <TextBox Grid.Row="0" Grid.Column="1" IsReadOnly ="True" Text="{Binding Master.PathCurrentlyProcessing}"></TextBox>
+                                <Label Grid.Row="1" Grid.Column="0" Content="Counting:" FontSize="10"></Label>
+                                <TextBox Grid.Row="1" Grid.Column="1" IsReadOnly ="True" Text="{Binding Master.PathCurrentlyCounting}"></TextBox>
+                            </Grid>
+
                         </GroupBox>
-                        <Grid Grid.Row="7" Grid.Column="1">
+                        <Grid Grid.Row="8" Grid.Column="1">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="50"/>
@@ -465,9 +415,9 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"></RowDefinition>
                             </Grid.RowDefinitions>
-                            <Button Grid.Row="0" Grid.Column="1" Content="Skip"></Button>
-                            <Button Grid.Row="0" Grid.Column="2" Content="Pause" Command="{Binding Master.WhateverStartLongWayCommand}"></Button>
-                            <Button Grid.Row="0" Grid.Column="3" Content="Quit" Command="{Binding Master.WhateverStartCommand}"></Button>
+                            <Button Grid.Row="0" Grid.Column="1" Content="Skip" Command="{Binding Master.SkipPathCommand}"></Button>
+                            <Button Grid.Row="0" Grid.Column="2" Content="Pause" Command="{Binding Master.PauseCommand}" IsEnabled="False"></Button>
+                            <Button Grid.Row="0" Grid.Column="3" Content="Quit" Command="{Binding Master.QuitLoopCommand}"></Button>
                         </Grid>
                     </Grid>
                 </Grid>

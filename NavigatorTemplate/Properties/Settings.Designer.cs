@@ -238,5 +238,29 @@ namespace PathLenghtCrawl.Properties {
                 this["MagikFileSource"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Speed {
+            get {
+                return ((bool)(this["Speed"]));
+            }
+            set {
+                this["Speed"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Details {
+            get {
+                return ((bool)(this["Details"]));
+            }
+            set {
+                this["Details"] = value;
+            }
+        }
     }
 }
