@@ -121,7 +121,7 @@ namespace PathLenghtCrawl.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool IncludeSubFolders {
             get {
                 return ((bool)(this["IncludeSubFolders"]));
@@ -145,7 +145,7 @@ namespace PathLenghtCrawl.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool IncludeEmptyFolders {
             get {
                 return ((bool)(this["IncludeEmptyFolders"]));
@@ -169,7 +169,7 @@ namespace PathLenghtCrawl.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("999999")]
         public int MaxPathLength {
             get {
                 return ((int)(this["MaxPathLength"]));

@@ -27,19 +27,19 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="IncludeSubFolders" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="IncludeDocuments" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="IncludeEmptyFolders" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="MinPathLength" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="MaxPathLength" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">999999</Value>
     </Setting>
     <Setting Name="HorizontalInputRegionSizeDefault" Type="System.Double" Scope="User">
       <Value Profile="(Default)">50</Value>
