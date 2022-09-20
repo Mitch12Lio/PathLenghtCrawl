@@ -194,7 +194,7 @@ namespace NavigatorTemplate.Models
             {
                 if (minPathLength != value)
                 {
-                    minPathLength = value - 1;
+                    minPathLength = value;
                     PathLenghtCrawl.Properties.Settings.Default.MinPathLength = value;
                     SaveProperties();
                     NotifyPropertyChanged("MinPathLength");
@@ -1056,6 +1056,523 @@ namespace NavigatorTemplate.Models
             return retval;
         }
 
+        //private void WhateverCheckFiles(System.IO.DirectoryInfo currentDI)
+        private void WhateverCheckFilesLongWay(string currentDI)
+        {
+            try
+            {
+                IEnumerable<string> fiList = System.IO.Directory.EnumerateFiles(currentDI);
+                int lkj = fiList.Where(x => x.Length > MinPathLength).Count();
+
+                if (lkj > 0)
+                {                    
+                    //some, maybe all, files in this folder are LPFN
+                    //LOG IT
+                    //check parent
+                    ObjectCountTotal += lkj;
+                    FileCountTotal += lkj;
+                }
+            }
+            #region "Catches"
+            catch (ArgumentNullException ex)
+            {
+                ErrorCount++;
+                StatusMessage = ex.Message;
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: Code4");
+            }
+            catch (System.IO.DirectoryNotFoundException ex)
+            {
+                ErrorCount++;
+                StatusMessage = ex.Message;
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: Code4");
+            }
+            catch (System.IO.PathTooLongException ex)
+            {
+                ErrorCount++;
+                StatusMessage = ex.Message;
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: Code4");
+            }
+            catch (System.IO.IOException ex)
+            {
+                ErrorCount++;
+                StatusMessage = ex.Message;
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: Code4");
+            }
+            catch (System.Security.SecurityException ex)
+            {
+                ErrorCount++;
+                StatusMessage = ex.Message;
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: Code4");
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                ErrorCount++;
+                StatusMessage = ex.Message;
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: Code4");
+            }
+            catch (ArgumentException ex)
+            {
+                ErrorCount++;
+                StatusMessage = ex.Message;
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: Code4");
+            }
+            catch (Exception ex)
+            {
+                ErrorCount++;
+                StatusMessage = ex.Message;
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: Code4");
+            }
+            #endregion
+
+
+        }
+
+
+
+        private ICommand whateverStartLongWayCommand;
+        public ICommand WhateverStartLongWayCommand
+        {
+            get
+            {
+                return whateverStartLongWayCommand ?? (whateverStartLongWayCommand = new CommandHandler(() => WhateverStartLongWay(), _canExecute));
+            }
+        }
+
+        private async void WhateverStartLongWay()
+        {
+            StatusMessage = "Processing...";
+            ObjectCountTotal = 0;
+            FolderCountTotal = 0;
+            FileCountTotal = 0;
+            ErrorCount = 0;
+            WarningCount = 0;
+            PathProcessedCount = 0;
+            PathImportedCount = 0;
+            PathCurrentlyCounting = "N/A";
+            PathCurrentlyProcessing = "N/A";
+
+            List<string> uncPathsToScan = new List<string>();
+            string currentDI = CurrentDirectory.FullName;
+            string DateGuid = DateTime.Now.ToString("yyyyMMddHHmmssffff");
+
+            System.IO.FileInfo fi = new System.IO.FileInfo(PathFileImportTxt);
+            PathImportedCountTotal = System.IO.File.ReadLines(fi.FullName).Count();
+
+
+            using (System.IO.StreamReader reader = new System.IO.StreamReader(PathFileImportTxt))
+            {
+                while (!reader.EndOfStream)
+                {
+                    var CSValues = reader.ReadLine().Split(',');
+                    string stringToDitch = "NDS://HEALTH_TREE";
+
+                    string realValue = CSValues.FirstOrDefault().Replace(stringToDitch, "");
+
+                    uncPathsToScan.Add(realValue);
+                    PathImportedCount++;
+                }
+            }
+
+            PathProcessedCountTotal = uncPathsToScan.Count();
+
+            await Task.Run(() =>
+            {
+                foreach (String path in uncPathsToScan)
+                {
+                    CurrentDirectory = new System.IO.DirectoryInfo(path);
+                    PathCurrentlyProcessing = path;
+
+                    //Whatever(@"\\HOGA_HOGUC1S\HOGUC1\Users\JHamrlik");
+                    WhateverLongWay(path);
+
+                    
+
+                    PathProcessedCount++;
+
+                }
+            });
+            StatusMessage = "Completed";
+        }
+        private void WhateverLongWay(string currentDI)
+        {
+            try
+            {
+                PathCurrentlyCounting = currentDI;
+                if (currentDI.Length > MinPathLength)
+                {
+                    ///LOG LP FOLDER NAME
+                    ObjectCountTotal++;
+                    FolderCountTotal++;
+                    try
+                    {
+                        //WhateverCheckFilesLongWay(currentDI);
+
+                        //IEnumerable<string> diList = System.IO.Directory.EnumerateDirectories(currentDI);
+                        //if (diList.Count() > 0)
+                        //{
+                        //    foreach (string di in diList)
+                        //    {
+                        //        WhateverLongWay(di);
+                        //    }
+                        //}
+                        //else
+                        //{
+                        //    //finished this branch
+                        //}
+                    }
+                    #region "Catches"
+                    catch (ArgumentNullException ex)
+                    {
+                        ErrorCount++;
+                        StatusMessage = ex.Message;
+                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: Code1");
+                    }
+                    catch (System.IO.DirectoryNotFoundException ex)
+                    {
+                        ErrorCount++;
+                        StatusMessage = ex.Message;
+                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: Code1");
+                    }
+                    catch (System.IO.PathTooLongException ex)
+                    {
+                        ErrorCount++;
+                        StatusMessage = ex.Message;
+                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: Code1");
+                    }
+                    catch (System.IO.IOException ex)
+                    {
+                        ErrorCount++;
+                        StatusMessage = ex.Message;
+                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: Code1");
+                    }
+                    catch (System.Security.SecurityException ex)
+                    {
+                        ErrorCount++;
+                        StatusMessage = ex.Message;
+                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: Code1");
+                    }
+                    catch (UnauthorizedAccessException ex)
+                    {
+                        ErrorCount++;
+                        StatusMessage = ex.Message;
+                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: Code1");
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        ErrorCount++;
+                        StatusMessage = ex.Message;
+                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: Code1");
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrorCount++;
+                        StatusMessage = ex.Message;
+                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: Code1");
+                    }
+                    #endregion
+                }
+                else
+                {
+                    WhateverCheckFilesLongWay(currentDI);
+
+                    IEnumerable<string> diList = System.IO.Directory.EnumerateDirectories(currentDI);
+                    if (diList.Count() > 0)
+                    {
+                        foreach (string di in diList)
+                        {
+                            WhateverLongWay(di);
+                        }
+                    }
+                    else
+                    {
+                        //finished this branch
+                    }
+
+
+                }
+            }
+            #region "Catches"
+            catch (ArgumentNullException ex)
+            {
+                ErrorCount++;
+                StatusMessage = ex.Message;
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: Code2");
+            }
+            catch (System.IO.DirectoryNotFoundException ex)
+            {
+                ErrorCount++;
+                StatusMessage = ex.Message;
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: Code2");
+            }
+            catch (System.IO.PathTooLongException ex)
+            {
+                ErrorCount++;
+                StatusMessage = ex.Message;
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: Code2");
+            }
+            catch (System.IO.IOException ex)
+            {
+                ErrorCount++;
+                StatusMessage = ex.Message;
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: Code2");
+            }
+            catch (System.Security.SecurityException ex)
+            {
+                ErrorCount++;
+                StatusMessage = ex.Message;
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: Code2");
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                ErrorCount++;
+                StatusMessage = ex.Message;
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: Code2");
+            }
+            catch (ArgumentException ex)
+            {
+                ErrorCount++;
+                StatusMessage = ex.Message;
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: Code2");
+            }
+            catch (Exception ex)
+            {
+                ErrorCount++;
+                StatusMessage = ex.Message;
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: Code2");
+            }
+            #endregion
+
+
+
+
+
+            //if (currentDI.FullName.Length > 255)
+            //{
+            //    //LONG PATH FOLDER NAME, LOG IT
+            //}
+            //else
+            //{
+            //    IEnumerable<System.IO.DirectoryInfo> diList = currentDI.EnumerateDirectories();
+            //    if (diList.Count() > 0)
+            //    {
+            //        foreach (System.IO.DirectoryInfo di in diList)
+            //        {
+            //            Whatever(di);
+            //        }
+            //    }
+            //    else
+            //    {
+            //        WhateverCheckFiles(currentDI);
+            //    }
+            //}
+
+
+
+
+            //if (currentDI.FullName.Length > 255)
+            //{
+            //    //add everything here as LPFN
+            //}
+            //else
+            //{
+            //    IEnumerable<System.IO.FileInfo> fiList = currentDI.EnumerateFiles();
+            //    int lkj = fiList.Where(x => x.FullName.Length > 255).Count();
+
+            //    if (lkj > 0)
+            //    {
+            //        //some, maybe all, files in this folder are LPFN
+            //    }
+            //    else
+            //    {
+            //        IEnumerable<System.IO.DirectoryInfo> diList = currentDI.EnumerateDirectories();
+            //        if (diList.Count() > 0)
+            //        {
+            //            foreach (System.IO.DirectoryInfo di in diList)
+            //            {
+            //                Whatever(di);
+            //            }
+            //        }
+            //    }
+            //}
+
+
+
+        }
+
+        //private void WhateverCheckFiles(System.IO.DirectoryInfo currentDI)
+        private void WhateverCheckFiles(string currentDI)
+        {
+            try
+            {
+                IEnumerable<string> fiList = System.IO.Directory.EnumerateFiles(currentDI);
+                int lkj = fiList.Where(x => x.Length > MinPathLength).Count();
+
+                if (lkj > 0)
+                {
+                    //some, maybe all, files in this folder are LPFN
+                    //LOG IT
+                    //check parent
+                    ObjectCountTotal += lkj;
+                    FileCountTotal += lkj;
+
+                    string fn = System.IO.Directory.GetParent(currentDI).FullName;
+                    WhateverCheckFiles(fn);
+                }
+                else
+                {
+                    //exit this branch, NO LPFN
+                }
+            }
+            catch (Exception ex)
+            {
+                string lsdkjf = ex.Message;
+                throw;
+            }
+
+
+            //IEnumerable<System.IO.FileInfo> fiList = currentDI.EnumerateFiles();
+            //int lkj = fiList.Where(x => x.FullName.Length > 255).Count();
+
+            //if (lkj > 0)
+            //{
+            //    //some, maybe all, files in this folder are LPFN
+            //    //LOG IT
+            //    //check parent
+            //    WhateverCheckFiles(currentDI.Parent);
+            //}
+            //else
+            //{
+            //    //exit this branch, NO LPFN
+            //}
+
+        }
+
+
+
+        private ICommand whateverStartCommand;
+        public ICommand WhateverStartCommand
+        {
+            get
+            {
+                return whateverStartCommand ?? (whateverStartCommand = new CommandHandler(() => WhateverStart(), _canExecute));
+            }
+        }
+
+        private async void WhateverStart()
+        {
+            StatusMessage = "Processing...";
+            ObjectCountTotal = 0;
+            FolderCountTotal = 0;
+            FileCountTotal = 0;
+
+            string currentDI = CurrentDirectory.FullName;
+            await Task.Run(() =>
+            {
+                //Whatever(currentDI);
+
+                //System.IO.DirectoryInfo did = new System.IO.DirectoryInfo(@"\\HOGA_HOGUC1S\HOGUC1\Users\JHamrlik");
+                System.IO.DirectoryInfo did = new System.IO.DirectoryInfo(@"C:\Mitch");
+
+
+                Whatever(@"\\HOGA_HOGUC1S\HOGUC1\Users\JHamrlik");
+                //Whatever(did.FullName);
+
+
+                int lkj = 9;
+            });
+            StatusMessage = "Completed";
+        }
+        private void Whatever(string currentDI)
+        {
+            try
+            {
+                IEnumerable<string> diList = System.IO.Directory.EnumerateDirectories(currentDI);
+                if (diList.Count() > 0)
+                {
+                    foreach (string di in diList)
+                    {
+                        if (di.Length > MinPathLength)
+                        {
+                            //LP FolderNAMe
+                            //LOG IT
+                            ObjectCountTotal++;
+                            FolderCountTotal++;
+                        }
+                        else
+                        {
+                            Whatever(di);
+                        }
+                    }
+                }
+                else
+                {
+                    WhateverCheckFiles(currentDI);
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                string lsdkjf = ex.Message;
+                throw;
+            }
+
+
+
+
+
+            //if (currentDI.FullName.Length > 255)
+            //{
+            //    //LONG PATH FOLDER NAME, LOG IT
+            //}
+            //else
+            //{
+            //    IEnumerable<System.IO.DirectoryInfo> diList = currentDI.EnumerateDirectories();
+            //    if (diList.Count() > 0)
+            //    {
+            //        foreach (System.IO.DirectoryInfo di in diList)
+            //        {
+            //            Whatever(di);
+            //        }
+            //    }
+            //    else
+            //    {
+            //        WhateverCheckFiles(currentDI);
+            //    }
+            //}
+
+
+
+
+            //if (currentDI.FullName.Length > 255)
+            //{
+            //    //add everything here as LPFN
+            //}
+            //else
+            //{
+            //    IEnumerable<System.IO.FileInfo> fiList = currentDI.EnumerateFiles();
+            //    int lkj = fiList.Where(x => x.FullName.Length > 255).Count();
+
+            //    if (lkj > 0)
+            //    {
+            //        //some, maybe all, files in this folder are LPFN
+            //    }
+            //    else
+            //    {
+            //        IEnumerable<System.IO.DirectoryInfo> diList = currentDI.EnumerateDirectories();
+            //        if (diList.Count() > 0)
+            //        {
+            //            foreach (System.IO.DirectoryInfo di in diList)
+            //            {
+            //                Whatever(di);
+            //            }
+            //        }
+            //    }
+            //}
+
+
+
+        }
         private bool ExecuteLPFNBulkList_Linq(string DateGuid)
         {
             System.IO.Directory.CreateDirectory(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Details");

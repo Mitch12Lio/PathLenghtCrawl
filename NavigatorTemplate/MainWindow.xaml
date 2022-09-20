@@ -77,8 +77,8 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="40" />
+                        <ColumnDefinition Width="40" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -196,6 +196,7 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2">
                         <GroupBox.Header>
@@ -213,7 +214,7 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <CheckBox Grid.Row="0" Grid.Column="0" Content="Omit NDS://HEALTH_TREE prefix" IsChecked="True" IsEnabled="False"></CheckBox>
-                            <CheckBox Grid.Row="0" Grid.Column="1" Content="Expand Stats" IsChecked="{Binding Master.ExpandOptionsStatsBool}"></CheckBox>
+                            <CheckBox Grid.Row="0" Grid.Column="1" Content="Expanded Stats" IsChecked="{Binding Master.ExpandOptionsStatsBool}"></CheckBox>
                             <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Master.PathFileImportTxt}"></TextBox>
                             <Button Grid.Row="2" Grid.Column="0" Content="Select..." CommandParameter="PathFileImportTxt" Command="{Binding Master.SetFileCommand}" IsEnabled="{Binding Master.SelectBulkFile2ProcessButtonEnabled}"></Button>
                             <Button Grid.Row="2" Grid.Column="1" Content="Import &amp; Process"  Command="{Binding Master.ImportPathFileCommand}" IsEnabled="{Binding Master.ImportProcessBulkFileButtonEnabled}"></Button>
@@ -405,11 +406,25 @@
 
                                 <Label Grid.Row="0" Grid.Column="0" Content="Processing:" FontSize="10"></Label>
                                 <TextBox Grid.Row="0" Grid.Column="1" IsReadOnly ="True" Text="{Binding Master.PathCurrentlyProcessing}"></TextBox>
-                                <Label Grid.Row="1" Grid.Column="0" Content="Last Counted:" FontSize="10"></Label>
+                                <Label Grid.Row="1" Grid.Column="0" Content="Counting:" FontSize="10"></Label>
                                 <TextBox Grid.Row="1" Grid.Column="1" IsReadOnly ="True" Text="{Binding Master.PathCurrentlyCounting}"></TextBox>
                             </Grid>
                         </Grid>
                     </GroupBox>
+                    <Grid Grid.Row="7" Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Button Grid.Row="0" Grid.Column="1" Content="Skip"></Button>
+                        <Button Grid.Row="0" Grid.Column="2" Content="Pause" Command="{Binding Master.WhateverStartLongWayCommand}"></Button>
+                        <Button Grid.Row="0" Grid.Column="3" Content="Quit" Command="{Binding Master.WhateverStartCommand}"></Button>
+                    </Grid>
                 </Grid>
             </TabItem>
             <TabItem Header="Magik Code" Visibility="Hidden">
