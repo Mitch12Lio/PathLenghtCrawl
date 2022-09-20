@@ -1061,17 +1061,34 @@ namespace NavigatorTemplate.Models
         {
             try
             {
-                IEnumerable<string> fiList = System.IO.Directory.EnumerateFiles(currentDI);
-                int lkj = fiList.Where(x => x.Length > MinPathLength).Count();
+                IEnumerable<string> fiList = System.IO.Directory.EnumerateFiles(currentDI).Where(x => x.Length > MinPathLength);
+                int lkj = fiList.Count();
 
-                if (lkj > 0)
-                {                    
-                    //some, maybe all, files in this folder are LPFN
-                    //LOG IT
-                    //check parent
-                    ObjectCountTotal += lkj;
-                    FileCountTotal += lkj;
+                foreach (string fi in fiList)
+                {
+                    ObjectCount++;
+                    FileCount++;
+                    ObjectCountTotal++;
+                    FileCountTotal++;
+
+                    UNCObject uncObject = new UNCObject() { Count = FileCount, CharacterCount = fi.Length, NameUNC = fi };
+                    App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+                    {
+                        UNCObjectFileLst.Add(uncObject);
+                    });               
+
+
                 }
+                //if (lkj > 0)
+                //{                    
+                //    //some, maybe all, files in this folder are LPFN
+                //    //LOG IT
+                //    //check parent
+                //    ObjectCount += lkj;
+                //    FileCount += lkj;
+                //    ObjectCountTotal += lkj;
+                //    FileCountTotal += lkj;
+                //}
             }
             #region "Catches"
             catch (ArgumentNullException ex)
@@ -1141,9 +1158,9 @@ namespace NavigatorTemplate.Models
         private async void WhateverStartLongWay()
         {
             StatusMessage = "Processing...";
-            ObjectCountTotal = 0;
-            FolderCountTotal = 0;
-            FileCountTotal = 0;
+            ObjectCount = 0;
+            FolderCount = 0;
+            FileCount = 0;
             ErrorCount = 0;
             WarningCount = 0;
             PathProcessedCount = 0;
@@ -1158,6 +1175,8 @@ namespace NavigatorTemplate.Models
             System.IO.FileInfo fi = new System.IO.FileInfo(PathFileImportTxt);
             PathImportedCountTotal = System.IO.File.ReadLines(fi.FullName).Count();
 
+            dtRunningPer.Tick += new EventHandler(dtRunningPer_Tick);
+            dtRunningPer.Interval = new TimeSpan(0, 0, 0, 0, 1);
 
             using (System.IO.StreamReader reader = new System.IO.StreamReader(PathFileImportTxt))
             {
@@ -1179,28 +1198,46 @@ namespace NavigatorTemplate.Models
             {
                 foreach (String path in uncPathsToScan)
                 {
+                    ObjectCountTotal = 0;
+                    FolderCountTotal = 0;
+                    FileCountTotal = 0;
+
+                    dtRunningPer.Start();
+                    ResetTimerPer();
+                    StartTimerPer();
+
                     CurrentDirectory = new System.IO.DirectoryInfo(path);
                     PathCurrentlyProcessing = path;
 
                     //Whatever(@"\\HOGA_HOGUC1S\HOGUC1\Users\JHamrlik");
                     WhateverLongWay(path);
 
-                    
+
+                    StopTimerPer();
+                    dtRunningPer.Stop();
 
                     PathProcessedCount++;
-
                 }
             });
+
             StatusMessage = "Completed";
+            PathCurrentlyProcessing = "N/A";
+            PathCurrentlyCounting = "N/A";
+            ResetTimerPer();
         }
         private void WhateverLongWay(string currentDI)
         {
             try
             {
+                //dtRunningPer.Tick += new EventHandler(dtRunningPer_Tick);
+                //dtRunningPer.Interval = new TimeSpan(0, 0, 0, 0, 1);
+
                 PathCurrentlyCounting = currentDI;
                 if (currentDI.Length > MinPathLength)
                 {
                     ///LOG LP FOLDER NAME
+                    ObjectCount++;
+                    FolderCount++;
                     ObjectCountTotal++;
                     FolderCountTotal++;
                     try

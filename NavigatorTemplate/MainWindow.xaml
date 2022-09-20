@@ -91,6 +91,7 @@
                 </Grid>
             </StatusBarItem>
         </StatusBar>
+
         <TabControl>
             <TabItem Header="Settings">
                 <Grid>
@@ -186,244 +187,269 @@
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2">
+                    <GroupBox BorderThickness="3" Grid.Column="2" Grid.Row="0">
                         <GroupBox.Header>
-                            <Span FontWeight="DemiBold">Options</Span>
+                            <Span FontWeight="DemiBold">Statistics</Span>
                         </GroupBox.Header>
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <CheckBox Grid.Row="0" Grid.Column="0" Content="Omit NDS://HEALTH_TREE prefix" IsChecked="True" IsEnabled="False"></CheckBox>
-                            <CheckBox Grid.Row="0" Grid.Column="1" Content="Expanded Stats" IsChecked="{Binding Master.ExpandOptionsStatsBool}"></CheckBox>
-                            <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Master.PathFileImportTxt}"></TextBox>
-                            <Button Grid.Row="2" Grid.Column="0" Content="Select..." CommandParameter="PathFileImportTxt" Command="{Binding Master.SetFileCommand}" IsEnabled="{Binding Master.SelectBulkFile2ProcessButtonEnabled}"></Button>
-                            <Button Grid.Row="2" Grid.Column="1" Content="Import &amp; Process"  Command="{Binding Master.ImportPathFileCommand}" IsEnabled="{Binding Master.ImportProcessBulkFileButtonEnabled}"></Button>
                         </Grid>
                     </GroupBox>
-                    <GridSplitter Grid.Column="0" Grid.Row="1" Grid.ColumnSpan ="2" Height="3" HorizontalAlignment="Stretch"></GridSplitter>
-                    <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2">
-                        <GroupBox.Header>
-                            <Span FontWeight="DemiBold">Files</Span>
-                        </GroupBox.Header>
-                        <ListView ItemsSource="{Binding Master.UNCObjectFileLst}" VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True">
-                            <ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem">
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
-                                    <Setter Property="VerticalContentAlignment" Value="Stretch"></Setter>
-                                </Style>
-                            </ListView.ItemContainerStyle>
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Header="Count" Width="50">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Text="{Binding Count}" HorizontalAlignment="Center" Foreground="{Binding HomeNameExistForeground}" FontWeight="{Binding HomeNameExistFontWeight}"></TextBlock>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                    <GridViewColumn Header="Length" Width="50">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Text="{Binding CharacterCount}" HorizontalAlignment="Center" Foreground="{Binding HomeNameExistForeground}" FontWeight="{Binding HomeNameExistFontWeight}"></TextBlock>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                    <GridViewColumn Header="UNC Path" Width="Auto">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <TextBox ToolTip="{Binding NameUNC}" Text="{Binding NameUNC}" IsReadOnly ="True" HorizontalAlignment="Left" Foreground="{Binding MemberExistForeground}" FontWeight="{Binding MemberExistFontWeight}"></TextBox>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                    </GroupBox>
-                    <GridSplitter Grid.Column="0" Grid.Row="3" Grid.ColumnSpan ="2" Height="3" HorizontalAlignment="Stretch"></GridSplitter>
-                    <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2">
-                        <GroupBox.Header>
-                            <Span FontWeight="DemiBold">Folders</Span>
-                        </GroupBox.Header>
-                        <ListView Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding Master.UNCObjectFolderLst}" VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True">
-                            <ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem">
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
-                                    <Setter Property="VerticalContentAlignment" Value="Stretch"></Setter>
-                                </Style>
-                            </ListView.ItemContainerStyle>
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Header="Count" Width="50">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Text="{Binding Count}" HorizontalAlignment="Center" Foreground="{Binding HomeNameExistForeground}" FontWeight="{Binding HomeNameExistFontWeight}"></TextBlock>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                    <GridViewColumn Header="Length" Width="50">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Text="{Binding CharacterCount}" HorizontalAlignment="Center" Foreground="{Binding HomeNameExistForeground}" FontWeight="{Binding HomeNameExistFontWeight}"></TextBlock>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                    <GridViewColumn Header="UNC Path" Width="Auto">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <TextBox ToolTip="{Binding NameUNC}" Text="{Binding NameUNC}" IsReadOnly ="True" HorizontalAlignment="Left" Foreground="{Binding MemberExistForeground}" FontWeight="{Binding MemberExistFontWeight}"></TextBox>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                    </GroupBox>
-                    <GridSplitter Grid.Column="0" Grid.Row="5" Grid.ColumnSpan ="2" Height="3" HorizontalAlignment="Stretch"></GridSplitter>
-                    <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="2" Visibility="{Binding Master.ExpandOptionsStats}">
-                        <GroupBox.Header>
-                            <Span FontWeight="DemiBold">Statistics</Span>
-                        </GroupBox.Header>
-                        <Grid Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"></RowDefinition>
-                                <RowDefinition Height="Auto"></RowDefinition>
-                                <RowDefinition Height="Auto"></RowDefinition>
-                                <RowDefinition Height="Auto"></RowDefinition>
-                                <RowDefinition Height="Auto"></RowDefinition>
-                            </Grid.RowDefinitions>
-                            <!--<Label Grid.Row="0" Grid.Column="3" Content="(Path/Batch)" FontSize="8" HorizontalAlignment="Center" FontWeight="Black"></Label>-->
-                            <TextBlock Grid.Row="1" Grid.Column="3" Text="(Path/Batch)" HorizontalAlignment="Center" FontSize="8" FontFamily="Times New Roman"></TextBlock>
-                            <TextBlock Grid.Row="1" Grid.Column="4" Text="(Path/Batch)" HorizontalAlignment="Center" FontSize="8" FontFamily="Times New Roman"></TextBlock>
-                            <TextBlock Grid.Row="1" Grid.Column="5" Text="(Path/Batch)" HorizontalAlignment="Center" FontSize="8" FontFamily="Times New Roman"></TextBlock>
-                            
-                            <!--<Label Grid.Row="0" Grid.Column="0" Content="Per" FontSize="10" HorizontalAlignment="Left"></Label>-->
-                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Per" FontSize="10" HorizontalAlignment="Left" VerticalAlignment="Bottom"></TextBlock>
-                            <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" FontSize="10" FontWeight="Heavy">
-                                <Run Text="{Binding Master.ValidatorRunningTimePer}"></Run>
-                                <!--<Run Text="/"></Run>
-                                <Run Text="{Binding Master.PathProcessedCountTotal}"></Run>-->
-                            </TextBlock>
-                            <!--<Label Grid.Row="2" Grid.Column="0" Content="{Binding Master.ValidatorRunningTimePer}" HorizontalContentAlignment="Left"  HorizontalAlignment="Left" FontSize="10" FontWeight="Heavy"></Label>-->
-
-                            <!--<Label Grid.Row="0" Grid.Column="1" Content="Paths Imported:" FontSize="10" HorizontalAlignment="Center"></Label>-->
-                            <TextBlock Grid.Row="0" Grid.Column="1" Text="Paths Imported:" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Bottom"></TextBlock>
-                            <TextBlock Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" FontSize="10" FontWeight="Heavy">
-                                <Run Text="{Binding Master.PathImportedCount}"></Run>
-                                <Run Text="/"></Run>
-                                <Run Text="{Binding Master.PathImportedCountTotal}"></Run>
-                            </TextBlock>
-                            
-                            <!--<Label Grid.Row="0" Grid.Column="2" Content="Paths Processed:" FontSize="10" HorizontalAlignment="Center"></Label>-->
-                            <TextBlock Grid.Row="0" Grid.Column="2" Text="Paths Processed:" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Bottom"></TextBlock>
-                            <TextBlock Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" FontSize="10" FontWeight="Heavy">
-                                <Run Text="{Binding Master.PathProcessedCount}"></Run>
-                                <Run Text="/"></Run>
-                                <Run Text="{Binding Master.PathProcessedCountTotal}"></Run>
-                            </TextBlock>
-
-                            <!--<Label Grid.Row="0" Grid.Column="5" Content="Total Count" FontSize="10" HorizontalAlignment="Center"></Label>-->
-                            <!--<Label Grid.Row="1" Grid.Column="2" Content="{Binding Master.ObjectCount}" FontSize="10" FontWeight="Heavy"></Label>-->
-                            <TextBlock Grid.Row="0" Grid.Column="5" Text="Total Count" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Bottom"></TextBlock>
-                            <TextBlock Grid.Row="2" Grid.Column="5" HorizontalAlignment="Center" FontSize="10" FontWeight="Heavy">
-                                <Run Text="{Binding Master.ObjectCountTotal}"></Run>
-                                <Run Text="/"></Run>
-                                <Run Text="{Binding Master.ObjectCount}"></Run>
-                            </TextBlock>
-                            <!--<Rectangle Grid.Row="0" Grid.Column="2" VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="Black" />-->
-                            <!--<Label Grid.Row="0" Grid.Column="4" Content="Folder Count" FontSize="10" HorizontalAlignment="Center"></Label>-->
-                            <TextBlock Grid.Row="0" Grid.Column="4" Text="Folder Count" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Bottom"></TextBlock>
-                            <TextBlock Grid.Row="2" Grid.Column="4" HorizontalAlignment="Center" FontSize="10" FontWeight="Heavy">
-                                <Run Text="{Binding Master.FolderCountTotal}"></Run>
-                                <Run Text="/"></Run>
-                                <Run Text="{Binding Master.FolderCount}"></Run>
-                            </TextBlock>
-                            <!--<Label Grid.Row="1" Grid.Column="3" Content="{Binding Master.FolderCount}" FontSize="10" FontWeight="Heavy"></Label>-->
-                            <!--<Rectangle Grid.Row="0" Grid.Column="5" VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="Black" />-->
-                            <!--<Label Grid.Row="0" Grid.Column="3" Content="Document Count" FontSize="10" HorizontalAlignment="Center"></Label>-->
-                            <TextBlock Grid.Row="0" Grid.Column="3" Text="Document Count" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Bottom"></TextBlock>
-                            <!--<Label Grid.Row="1" Grid.Column="4" Content="{Binding Master.FileCount}" FontSize="10" FontWeight="Heavy"></Label>-->
-                            <TextBlock Grid.Row="2" Grid.Column="3" HorizontalAlignment="Center" FontSize="10" FontWeight="Heavy">
-                                <Run Text="{Binding Master.FileCountTotal}"></Run>
-                                <Run Text="/"></Run>
-                                <Run Text="{Binding Master.FileCount}"></Run>
-                            </TextBlock>
-                            <!--<Label Grid.Row="0" Grid.Column="6" Content="Warning Count" FontSize="10" HorizontalAlignment="Center"></Label>-->
-                            <TextBlock Grid.Row="0" Grid.Column="6" Text="Warning Count" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Bottom"></TextBlock>
-                            <!--<Label Grid.Row="1" Grid.Column="4" Content="{Binding Master.FileCount}" FontSize="10" FontWeight="Heavy"></Label>-->
-                            <TextBlock Grid.Row="2" Grid.Column="6" HorizontalAlignment="Center" FontSize="10" FontWeight="Heavy">
-                                <Run Text="{Binding Master.WarningCount}"></Run>
-                                <!--<Run Text="/"></Run>
-                                <Run Text="{Binding Master.FileCountTotal}"></Run>-->
-                            </TextBlock>
-                            <!--<Label Grid.Row="0" Grid.Column="7" Content="Error Count" FontSize="10" HorizontalAlignment="Center"></Label>-->
-                            <TextBlock Grid.Row="0" Grid.Column="7" Text="Error Count" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Bottom"></TextBlock>
-                            <!--<Label Grid.Row="1" Grid.Column="4" Content="{Binding Master.FileCount}" FontSize="10" FontWeight="Heavy"></Label>-->
-                            <TextBlock Grid.Row="2" Grid.Column="7" HorizontalAlignment="Center" FontSize="10" FontWeight="Heavy">
-                                <Run Text="{Binding Master.ErrorCount}"></Run>
-                                <!--<Run Text="/"></Run>
-                                <Run Text="{Binding Master.FileCountTotal}"></Run>-->
-                            </TextBlock>
-                            <Separator Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="8"></Separator>
-                            <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="8">
+                    <GridSplitter Grid.Column="1" Grid.Row="0" Width="3" HorizontalAlignment="Stretch" />
+                    <Grid Grid.Row="0" Grid.Column="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2">
+                            <GroupBox.Header>
+                                <Span FontWeight="DemiBold">Options</Span>
+                            </GroupBox.Header>
+                            <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <CheckBox Grid.Row="0" Grid.Column="0" Content="Omit NDS://HEALTH_TREE prefix" IsChecked="True" IsEnabled="False"></CheckBox>
+                                <CheckBox Grid.Row="0" Grid.Column="1" Content="Expanded Stats" IsChecked="{Binding Master.ExpandOptionsStatsBool}"></CheckBox>
+                                <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Master.PathFileImportTxt}"></TextBox>
+                                <Button Grid.Row="2" Grid.Column="0" Content="Select..." CommandParameter="PathFileImportTxt" Command="{Binding Master.SetFileCommand}" IsEnabled="{Binding Master.SelectBulkFile2ProcessButtonEnabled}"></Button>
+                                <Button Grid.Row="2" Grid.Column="1" Content="Import &amp; Process"  Command="{Binding Master.ImportPathFileCommand}" IsEnabled="{Binding Master.ImportProcessBulkFileButtonEnabled}"></Button>
+                            </Grid>
+                        </GroupBox>
+                        <GridSplitter Grid.Column="0" Grid.Row="1" Grid.ColumnSpan ="2" Height="3" HorizontalAlignment="Stretch"></GridSplitter>
+                        <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2">
+                            <GroupBox.Header>
+                                <Span FontWeight="DemiBold">Files</Span>
+                            </GroupBox.Header>
+                            <ListView ItemsSource="{Binding Master.UNCObjectFileLst}" VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True">
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                        <Setter Property="VerticalContentAlignment" Value="Stretch"></Setter>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn Header="Count" Width="50">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Count}" HorizontalAlignment="Center" Foreground="{Binding HomeNameExistForeground}" FontWeight="{Binding HomeNameExistFontWeight}"></TextBlock>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Length" Width="50">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding CharacterCount}" HorizontalAlignment="Center" Foreground="{Binding HomeNameExistForeground}" FontWeight="{Binding HomeNameExistFontWeight}"></TextBlock>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="UNC Path" Width="Auto">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBox ToolTip="{Binding NameUNC}" Text="{Binding NameUNC}" IsReadOnly ="True" HorizontalAlignment="Left" Foreground="{Binding MemberExistForeground}" FontWeight="{Binding MemberExistFontWeight}"></TextBox>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                        </GroupBox>
+                        <GridSplitter Grid.Column="0" Grid.Row="3" Grid.ColumnSpan ="2" Height="3" HorizontalAlignment="Stretch"></GridSplitter>
+                        <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2">
+                            <GroupBox.Header>
+                                <Span FontWeight="DemiBold">Folders</Span>
+                            </GroupBox.Header>
+                            <ListView Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding Master.UNCObjectFolderLst}" VerticalContentAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True">
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                        <Setter Property="VerticalContentAlignment" Value="Stretch"></Setter>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn Header="Count" Width="50">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Count}" HorizontalAlignment="Center" Foreground="{Binding HomeNameExistForeground}" FontWeight="{Binding HomeNameExistFontWeight}"></TextBlock>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Length" Width="50">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding CharacterCount}" HorizontalAlignment="Center" Foreground="{Binding HomeNameExistForeground}" FontWeight="{Binding HomeNameExistFontWeight}"></TextBlock>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="UNC Path" Width="Auto">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBox ToolTip="{Binding NameUNC}" Text="{Binding NameUNC}" IsReadOnly ="True" HorizontalAlignment="Left" Foreground="{Binding MemberExistForeground}" FontWeight="{Binding MemberExistFontWeight}"></TextBox>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                        </GroupBox>
+                        <GridSplitter Grid.Column="0" Grid.Row="5" Grid.ColumnSpan ="2" Height="3" HorizontalAlignment="Stretch"></GridSplitter>
+                        <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="2" Visibility="{Binding Master.ExpandOptionsStats}">
+                            <GroupBox.Header>
+                                <Span FontWeight="DemiBold">Statistics</Span>
+                            </GroupBox.Header>
+                            <Grid Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"></RowDefinition>
                                     <RowDefinition Height="Auto"></RowDefinition>
+                                    <RowDefinition Height="Auto"></RowDefinition>
+                                    <RowDefinition Height="Auto"></RowDefinition>
+                                    <RowDefinition Height="Auto"></RowDefinition>
                                 </Grid.RowDefinitions>
+                                <!--<Label Grid.Row="0" Grid.Column="3" Content="(Path/Batch)" FontSize="8" HorizontalAlignment="Center" FontWeight="Black"></Label>-->
+                                <TextBlock Grid.Row="1" Grid.Column="3" Text="(Path/Batch)" HorizontalAlignment="Center" FontSize="8" FontFamily="Times New Roman"></TextBlock>
+                                <TextBlock Grid.Row="1" Grid.Column="4" Text="(Path/Batch)" HorizontalAlignment="Center" FontSize="8" FontFamily="Times New Roman"></TextBlock>
+                                <TextBlock Grid.Row="1" Grid.Column="5" Text="(Path/Batch)" HorizontalAlignment="Center" FontSize="8" FontFamily="Times New Roman"></TextBlock>
 
-                                <Label Grid.Row="0" Grid.Column="0" Content="Processing:" FontSize="10"></Label>
-                                <TextBox Grid.Row="0" Grid.Column="1" IsReadOnly ="True" Text="{Binding Master.PathCurrentlyProcessing}"></TextBox>
-                                <Label Grid.Row="1" Grid.Column="0" Content="Counting:" FontSize="10"></Label>
-                                <TextBox Grid.Row="1" Grid.Column="1" IsReadOnly ="True" Text="{Binding Master.PathCurrentlyCounting}"></TextBox>
+                                <!--<Label Grid.Row="0" Grid.Column="0" Content="Per" FontSize="10" HorizontalAlignment="Left"></Label>-->
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Per" FontSize="10" HorizontalAlignment="Left" VerticalAlignment="Bottom"></TextBlock>
+                                <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" FontSize="10" FontWeight="Heavy">
+                                <Run Text="{Binding Master.ValidatorRunningTimePer}"></Run>
+                                <!--<Run Text="/"></Run>
+                                <Run Text="{Binding Master.PathProcessedCountTotal}"></Run>-->
+                                </TextBlock>
+                                <!--<Label Grid.Row="2" Grid.Column="0" Content="{Binding Master.ValidatorRunningTimePer}" HorizontalContentAlignment="Left"  HorizontalAlignment="Left" FontSize="10" FontWeight="Heavy"></Label>-->
+
+                                <!--<Label Grid.Row="0" Grid.Column="1" Content="Paths Imported:" FontSize="10" HorizontalAlignment="Center"></Label>-->
+                                <TextBlock Grid.Row="0" Grid.Column="1" Text="Paths Imported:" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Bottom"></TextBlock>
+                                <TextBlock Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" FontSize="10" FontWeight="Heavy">
+                                <Run Text="{Binding Master.PathImportedCount}"></Run>
+                                <Run Text="/"></Run>
+                                <Run Text="{Binding Master.PathImportedCountTotal}"></Run>
+                                </TextBlock>
+
+                                <!--<Label Grid.Row="0" Grid.Column="2" Content="Paths Processed:" FontSize="10" HorizontalAlignment="Center"></Label>-->
+                                <TextBlock Grid.Row="0" Grid.Column="2" Text="Paths Processed:" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Bottom"></TextBlock>
+                                <TextBlock Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" FontSize="10" FontWeight="Heavy">
+                                <Run Text="{Binding Master.PathProcessedCount}"></Run>
+                                <Run Text="/"></Run>
+                                <Run Text="{Binding Master.PathProcessedCountTotal}"></Run>
+                                </TextBlock>
+
+                                <!--<Label Grid.Row="0" Grid.Column="5" Content="Total Count" FontSize="10" HorizontalAlignment="Center"></Label>-->
+                                <!--<Label Grid.Row="1" Grid.Column="2" Content="{Binding Master.ObjectCount}" FontSize="10" FontWeight="Heavy"></Label>-->
+                                <TextBlock Grid.Row="0" Grid.Column="5" Text="Total Count" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Bottom"></TextBlock>
+                                <TextBlock Grid.Row="2" Grid.Column="5" HorizontalAlignment="Center" FontSize="10" FontWeight="Heavy">
+                                <Run Text="{Binding Master.ObjectCountTotal}"></Run>
+                                <Run Text="/"></Run>
+                                <Run Text="{Binding Master.ObjectCount}"></Run>
+                                </TextBlock>
+                                <!--<Rectangle Grid.Row="0" Grid.Column="2" VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="Black" />-->
+                                <!--<Label Grid.Row="0" Grid.Column="4" Content="Folder Count" FontSize="10" HorizontalAlignment="Center"></Label>-->
+                                <TextBlock Grid.Row="0" Grid.Column="4" Text="Folder Count" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Bottom"></TextBlock>
+                                <TextBlock Grid.Row="2" Grid.Column="4" HorizontalAlignment="Center" FontSize="10" FontWeight="Heavy">
+                                <Run Text="{Binding Master.FolderCountTotal}"></Run>
+                                <Run Text="/"></Run>
+                                <Run Text="{Binding Master.FolderCount}"></Run>
+                                </TextBlock>
+                                <!--<Label Grid.Row="1" Grid.Column="3" Content="{Binding Master.FolderCount}" FontSize="10" FontWeight="Heavy"></Label>-->
+                                <!--<Rectangle Grid.Row="0" Grid.Column="5" VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="Black" />-->
+                                <!--<Label Grid.Row="0" Grid.Column="3" Content="Document Count" FontSize="10" HorizontalAlignment="Center"></Label>-->
+                                <TextBlock Grid.Row="0" Grid.Column="3" Text="Document Count" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Bottom"></TextBlock>
+                                <!--<Label Grid.Row="1" Grid.Column="4" Content="{Binding Master.FileCount}" FontSize="10" FontWeight="Heavy"></Label>-->
+                                <TextBlock Grid.Row="2" Grid.Column="3" HorizontalAlignment="Center" FontSize="10" FontWeight="Heavy">
+                                <Run Text="{Binding Master.FileCountTotal}"></Run>
+                                <Run Text="/"></Run>
+                                <Run Text="{Binding Master.FileCount}"></Run>
+                                </TextBlock>
+                                <!--<Label Grid.Row="0" Grid.Column="6" Content="Warning Count" FontSize="10" HorizontalAlignment="Center"></Label>-->
+                                <TextBlock Grid.Row="0" Grid.Column="6" Text="Warning Count" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Bottom"></TextBlock>
+                                <!--<Label Grid.Row="1" Grid.Column="4" Content="{Binding Master.FileCount}" FontSize="10" FontWeight="Heavy"></Label>-->
+                                <TextBlock Grid.Row="2" Grid.Column="6" HorizontalAlignment="Center" FontSize="10" FontWeight="Heavy">
+                                <Run Text="{Binding Master.WarningCount}"></Run>
+                                <!--<Run Text="/"></Run>
+                                <Run Text="{Binding Master.FileCountTotal}"></Run>-->
+                                </TextBlock>
+                                <!--<Label Grid.Row="0" Grid.Column="7" Content="Error Count" FontSize="10" HorizontalAlignment="Center"></Label>-->
+                                <TextBlock Grid.Row="0" Grid.Column="7" Text="Error Count" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Bottom"></TextBlock>
+                                <!--<Label Grid.Row="1" Grid.Column="4" Content="{Binding Master.FileCount}" FontSize="10" FontWeight="Heavy"></Label>-->
+                                <TextBlock Grid.Row="2" Grid.Column="7" HorizontalAlignment="Center" FontSize="10" FontWeight="Heavy">
+                                <Run Text="{Binding Master.ErrorCount}"></Run>
+                                <!--<Run Text="/"></Run>
+                                <Run Text="{Binding Master.FileCountTotal}"></Run>-->
+                                </TextBlock>
+                                <Separator Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="8"></Separator>
+                                <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"></RowDefinition>
+                                        <RowDefinition Height="Auto"></RowDefinition>
+                                    </Grid.RowDefinitions>
+
+                                    <Label Grid.Row="0" Grid.Column="0" Content="Processing:" FontSize="10"></Label>
+                                    <TextBox Grid.Row="0" Grid.Column="1" IsReadOnly ="True" Text="{Binding Master.PathCurrentlyProcessing}"></TextBox>
+                                    <Label Grid.Row="1" Grid.Column="0" Content="Counting:" FontSize="10"></Label>
+                                    <TextBox Grid.Row="1" Grid.Column="1" IsReadOnly ="True" Text="{Binding Master.PathCurrentlyCounting}"></TextBox>
+                                </Grid>
                             </Grid>
+                        </GroupBox>
+                        <Grid Grid.Row="7" Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="50"/>
+                                <ColumnDefinition Width="50"/>
+                                <ColumnDefinition Width="50"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Button Grid.Row="0" Grid.Column="1" Content="Skip"></Button>
+                            <Button Grid.Row="0" Grid.Column="2" Content="Pause" Command="{Binding Master.WhateverStartLongWayCommand}"></Button>
+                            <Button Grid.Row="0" Grid.Column="3" Content="Quit" Command="{Binding Master.WhateverStartCommand}"></Button>
                         </Grid>
-                    </GroupBox>
-                    <Grid Grid.Row="7" Grid.Column="1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="50"/>
-                            <ColumnDefinition Width="50"/>
-                            <ColumnDefinition Width="50"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                        </Grid.RowDefinitions>
-                        <Button Grid.Row="0" Grid.Column="1" Content="Skip"></Button>
-                        <Button Grid.Row="0" Grid.Column="2" Content="Pause" Command="{Binding Master.WhateverStartLongWayCommand}"></Button>
-                        <Button Grid.Row="0" Grid.Column="3" Content="Quit" Command="{Binding Master.WhateverStartCommand}"></Button>
                     </Grid>
                 </Grid>
             </TabItem>
