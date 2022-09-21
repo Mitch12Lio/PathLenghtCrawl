@@ -360,21 +360,21 @@ namespace NavigatorTemplate.Models
         }
 
 
-        private string dateGuid = DateTime.Now.ToString("yyyyMMddHHmmssffff");
+        private string dateGuid = string.Empty;// DateTime.Now.ToString("yyyyMMddHHmmssffff");
         public string DateGuid
         {
             get
             {
                 return dateGuid;
             }
-            //set
-            //{
-            //    if (dateGuid != value)
-            //    {
-            //        dateGuid = value;
-            //        NotifyPropertyChanged("DateGuid");
-            //    }
-            //}
+            set
+            {
+                if (dateGuid != value)
+                {
+                    dateGuid = value;
+                    NotifyPropertyChanged("DateGuid");
+                }
+            }
         }
 
         private string pathCurrentlyProcessing = "N/A";
@@ -1295,7 +1295,7 @@ namespace NavigatorTemplate.Models
 
         private async void WhateverStartLongWay()
         {
-            //string DateGuid = DateTime.Now.ToString("yyyyMMddHHmmssffff");
+            string DateGuid = DateTime.Now.ToString("yyyyMMddHHmmssffff");
             try
             {
                 if (System.IO.File.Exists(PathFileImportTxt))
@@ -1388,7 +1388,7 @@ namespace NavigatorTemplate.Models
 
                                     PathProcessedCount++;
                                 }
-                                PathLenghtCrawl.POCO.Duration currentDuration = new PathLenghtCrawl.POCO.Duration() { Name = CurrentDirectory.FullName + " (Files)", Time = ValidatorRunningTimePer };
+                                PathLenghtCrawl.POCO.Duration currentDuration = new PathLenghtCrawl.POCO.Duration() { Time = ValidatorRunningTimePer, Name = CurrentDirectory.FullName };
                                 DurationList.Add(currentDuration);
 
                                 if (Details)
