@@ -1235,11 +1235,11 @@ namespace NavigatorTemplate.Models
                 StatusMessage = ex.Message;
                 PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: WhateverCheckFilesLongWay()", DateGuid);
             }
-            catch (System.IO.DirectoryNotFoundException ex)
+            catch (System.IO.FileNotFoundException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: WhateverCheckFilesLongWay()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "FileNotFoundException: WhateverCheckFilesLongWay()", DateGuid);
             }
             catch (System.IO.PathTooLongException ex)
             {
