@@ -1325,6 +1325,7 @@ namespace NavigatorTemplate.Models
                     System.IO.FileInfo fi = new System.IO.FileInfo(PathFileImportTxt);
                     if (Details)
                     {
+                        ExpandOptionsStatsBool = false;
                         PathImportedCountTotal = System.IO.File.ReadLines(fi.FullName).Count();
 
                         dtRunningPer.Tick += new EventHandler(dtRunningPer_Tick);
