@@ -17,8 +17,8 @@
                 <MenuItem Header="_Cut" />
                 <MenuItem Header="_Copy" />
                 <MenuItem Header="_Paste" />
-            </MenuItem>          
-        </Menu>       
+            </MenuItem>
+        </Menu>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
                 <Grid>
@@ -290,17 +290,33 @@
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
-                                <CheckBox Grid.Row="0" Grid.Column="1" Content="Omit NDS://HEALTH_TREE prefix" IsChecked="True" IsEnabled="False"></CheckBox>
-                                <TextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Master.PathFileImportTxt}"></TextBox>
-                                <Button Grid.Row="1" Grid.Column="0" Content="Select..." CommandParameter="PathFileImportTxt" Command="{Binding Master.SetFileCommand}" IsEnabled="{Binding Master.SelectBulkFile2ProcessButtonEnabled}"></Button>
-                                <!--<Button Grid.Row="1" Grid.Column="1" Content="Import &amp; Process"  Command="{Binding Master.ImportPathFileCommand}" IsEnabled="{Binding Master.ImportProcessBulkFileButtonEnabled}"></Button>-->
-                                <Button Grid.Row="1" Grid.Column="1" Content="Import &amp; Process" Command="{Binding Master.WhateverStartLongWayCommand}" IsEnabled="{Binding Master.ImportProcessBulkFileButtonEnabled}"></Button>
+                                <Grid Grid.Row="0" Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <CheckBox Margin="3,0,3,0" Grid.Row="0" Grid.Column="1" Content="Omit NDS://HEALTH_TREE prefix" IsChecked="True" IsEnabled="False"></CheckBox>
+                                    <TextBox Grid.Row="0" Grid.Column="0" Text="{Binding Master.PathFileImportTxt}"></TextBox>
+                                </Grid>
+                                <Grid Grid.Row="1" Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Button Grid.Row="0" Grid.Column="0" Content="Select..." CommandParameter="PathFileImportTxt" Command="{Binding Master.SetFileCommand}" IsEnabled="{Binding Master.SelectBulkFile2ProcessButtonEnabled}"></Button>
+                                    <Button Grid.Row="0" Grid.Column="1" Content="Import &amp; Process" Command="{Binding Master.WhateverStartLongWayCommand}" IsEnabled="{Binding Master.ImportProcessBulkFileButtonEnabled}"></Button>
+                                </Grid>
                             </Grid>
                         </GroupBox>
                         <GridSplitter Grid.Column="0" Grid.Row="2" Grid.ColumnSpan ="2" Height="3" HorizontalAlignment="Stretch"></GridSplitter>

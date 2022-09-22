@@ -1331,7 +1331,7 @@ namespace NavigatorTemplate.Models
                         dtRunningPer.Tick += new EventHandler(dtRunningPer_Tick);
                         dtRunningPer.Interval = new TimeSpan(0, 0, 0, 0, 1);
                     }
-                    else 
+                    else
                     { ExpandOptionsStatsBool = false; }
                     using (System.IO.StreamReader reader = new System.IO.StreamReader(PathFileImportTxt))
                     {
@@ -1440,15 +1440,15 @@ namespace NavigatorTemplate.Models
                             {
                                 ErrorCount++;
                                 StatusMessage = ex.Message;
-                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Exception: WhateverStartLongWay().ForEach",DateGuid);
+                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Exception: WhateverStartLongWay().ForEach", DateGuid);
                             }
                         }
                     });
-                    
+
                     //App.Current.Dispatcher.BeginInvoke((Action)delegate ()
                     //{
-                        UNCObjectFileLst.Clear();
-                        UNCObjectFolderLst.Clear();
+                    UNCObjectFileLst.Clear();
+                    UNCObjectFolderLst.Clear();
                     //});
 
                     Quit = false;
@@ -2869,12 +2869,30 @@ namespace NavigatorTemplate.Models
         public void SetFile(object obj)
         {
             Microsoft.Win32.OpenFileDialog openFD = new Microsoft.Win32.OpenFileDialog();
-            openFD.RestoreDirectory = true;
-            
+
             switch (obj.ToString())
             {
+                case "FilePathTxt":
+                    //N/A - Dummy case
+                    break;
+                case "DatabaseValLocationPath":
+                    if (DatabaseValLocationPath != string.Empty)
+                    {
+                        openFD.InitialDirectory = DatabaseValLocationPath;
+                    }
+                    break;
                 case "PathFileImportTxt":
                     openFD.Filter = "csv files (*.csv)|*.csv";
+                    if (PathFileImportTxt != string.Empty)
+                    {
+                        openFD.InitialDirectory = PathFileImportTxt;
+                    }
+                    break;
+                case "MagikFileSource":
+                    if (MagikFileSource != string.Empty)
+                    {
+                        openFD.InitialDirectory = MagikFileSource;
+                    }
                     break;
                 default:
                     break;
