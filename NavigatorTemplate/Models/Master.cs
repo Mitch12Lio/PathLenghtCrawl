@@ -1301,9 +1301,14 @@ namespace NavigatorTemplate.Models
                 if (System.IO.File.Exists(PathFileImportTxt))
                 {
                     StatusMessage = "Processing...";
+
                     ObjectCount = 0;
                     FolderCount = 0;
                     FileCount = 0;
+                    ObjectCountTotal = 0;
+                    FolderCountTotal = 0;
+                    FileCountTotal = 0;
+
                     ErrorCount = 0;
                     WarningCount = 0;
                     PathProcessedCount = 0;
@@ -1316,7 +1321,6 @@ namespace NavigatorTemplate.Models
 
                     List<string> uncPathsToScan = new List<string>();
                     string currentDI = CurrentDirectory.FullName;
-                    
 
                     System.IO.FileInfo fi = new System.IO.FileInfo(PathFileImportTxt);
                     if (Details)
@@ -2856,7 +2860,8 @@ namespace NavigatorTemplate.Models
         public void SetFile(object obj)
         {
             Microsoft.Win32.OpenFileDialog openFD = new Microsoft.Win32.OpenFileDialog();
-
+            openFD.RestoreDirectory = true;
+            
             switch (obj.ToString())
             {
                 case "PathFileImportTxt":
