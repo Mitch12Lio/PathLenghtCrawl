@@ -1441,6 +1441,12 @@ namespace NavigatorTemplate.Models
                             }
                         }
                     });
+                    
+                    //App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+                    //{
+                        UNCObjectFileLst.Clear();
+                        UNCObjectFolderLst.Clear();
+                    //});
 
                     Quit = false;
                     if (Details)
