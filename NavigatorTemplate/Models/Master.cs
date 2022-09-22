@@ -1325,12 +1325,14 @@ namespace NavigatorTemplate.Models
                     System.IO.FileInfo fi = new System.IO.FileInfo(PathFileImportTxt);
                     if (Details)
                     {
-                        ExpandOptionsStatsBool = false;
+                        //ExpandOptionsStatsBool = true;
                         PathImportedCountTotal = System.IO.File.ReadLines(fi.FullName).Count();
 
                         dtRunningPer.Tick += new EventHandler(dtRunningPer_Tick);
                         dtRunningPer.Interval = new TimeSpan(0, 0, 0, 0, 1);
                     }
+                    else 
+                    { ExpandOptionsStatsBool = false; }
                     using (System.IO.StreamReader reader = new System.IO.StreamReader(PathFileImportTxt))
                     {
                         while (!reader.EndOfStream)
