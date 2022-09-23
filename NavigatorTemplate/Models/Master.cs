@@ -2880,22 +2880,26 @@ namespace NavigatorTemplate.Models
                     //N/A - Dummy case
                     break;
                 case "DatabaseValLocationPath":
-                    if (DatabaseValLocationPath != string.Empty)
+                    openFD.Filter = "db files (*.db)|*.db|All files (*.*)|*.*";
+                    //handles empty strings
+                    if (System.IO.Directory.Exists(System.IO.Path.GetDirectoryName(DatabaseValLocationPath)))
                     {
-                        openFD.InitialDirectory = DatabaseValLocationPath;
+                        openFD.InitialDirectory = System.IO.Path.GetDirectoryName(DatabaseValLocationPath);
                     }
                     break;
                 case "PathFileImportTxt":
-                    openFD.Filter = "csv files (*.csv)|*.csv";
-                    if (PathFileImportTxt != string.Empty)
+                    openFD.Filter = "csv files (*.csv)|*.csv|All files (*.*)|*.*";
+                    //handles empty strings
+                    if (System.IO.Directory.Exists(System.IO.Path.GetDirectoryName(PathFileImportTxt)))
                     {
                         openFD.InitialDirectory = System.IO.Path.GetDirectoryName(PathFileImportTxt);
                     }
                     break;
                 case "MagikFileSource":
-                    if (MagikFileSource != string.Empty)
+                    //handles empty strings
+                    if (System.IO.Directory.Exists(System.IO.Path.GetDirectoryName(MagikFileSource)))
                     {
-                        openFD.InitialDirectory = MagikFileSource;
+                        openFD.InitialDirectory = System.IO.Path.GetDirectoryName(MagikFileSource);
                     }
                     break;
                 default:
