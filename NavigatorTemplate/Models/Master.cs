@@ -1451,6 +1451,10 @@ namespace NavigatorTemplate.Models
                     UNCObjectFolderLst.Clear();
                     //});
 
+                    ObjectCountTotal = 0;
+                    FolderCountTotal = 0;
+                    FileCountTotal = 0;
+
                     Quit = false;
                     if (Details)
                     {
