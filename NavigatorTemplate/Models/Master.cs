@@ -2885,7 +2885,7 @@ namespace NavigatorTemplate.Models
                     openFD.Filter = "csv files (*.csv)|*.csv";
                     if (PathFileImportTxt != string.Empty)
                     {
-                        openFD.InitialDirectory = PathFileImportTxt;
+                        openFD.InitialDirectory = System.IO.Path.GetDirectoryName(PathFileImportTxt);
                     }
                     break;
                 case "MagikFileSource":
