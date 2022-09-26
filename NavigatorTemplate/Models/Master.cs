@@ -658,6 +658,28 @@ namespace NavigatorTemplate.Models
                 }
             }
         }
+
+        //FileToStarTxt
+
+        private string fileToStarTxt = PathLenghtCrawl.Properties.Settings.Default.FileToStarTxt;
+        public string FileToStarTxt
+        {
+            get
+            {
+                return fileToStarTxt;
+            }
+            set
+            {
+                if (fileToStarTxt != value)
+                {
+                    fileToStarTxt = value;
+                    PathLenghtCrawl.Properties.Settings.Default.FileToStarTxt = value;
+                    SaveProperties();
+                    NotifyPropertyChanged("FileToStarTxt");
+                }
+            }
+        }
+
         private string pathFileImportTxt = PathLenghtCrawl.Properties.Settings.Default.PathFileImportTxt;
         public string PathFileImportTxt
         {
@@ -2568,6 +2590,50 @@ namespace NavigatorTemplate.Models
             }
             StatusMessage = "Ready";
         }
+
+
+        private ICommand replaceFirstCommaWithStarCommand;
+        public ICommand ReplaceFirstCommaWithStarCommand
+        {
+            get
+            {
+                return replaceFirstCommaWithStarCommand ?? (replaceFirstCommaWithStarCommand = new CommandHandler(() => ReplaceFirstCommaWithStar(), _canExecute));
+            }
+        }
+        private void ReplaceFirstCommaWithStar()
+        {
+            List<string> destinationStrings = new List<string>();
+
+            using (var reader = new System.IO.StreamReader(FileToStarTxt))
+            {
+                while (!reader.EndOfStream)
+                {
+                    string oneS = reader.ReadLine();
+                    int twoI = oneS.IndexOf(',');
+                    string threeS = oneS.Substring(twoI + 1);
+                    int fourI = threeS.IndexOf(',');
+                    string fiveS = threeS.Substring(0, fourI);
+                    string sixS = threeS.Substring(fourI + 1);
+                    string sevenS = fiveS + "*" + sixS;
+
+                    destinationStrings.Add(sixS);
+                }
+            }
+
+            using (System.IO.StreamWriter writetext = new System.IO.StreamWriter(FileToStarTxt + @"Star_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".txt"))
+            {
+                int cnt = 2;
+                writetext.WriteLine("Length*Path");
+                foreach (string s in destinationStrings)
+                {
+                    writetext.WriteLine("=LEN(B" + cnt.ToString() + ")*" + s);
+                    cnt++;
+                }
+            }
+
+        }
+
+
         private ICommand executeLPFNListCommand;
         public ICommand ExecuteLPFNListCommand
         {
@@ -2740,6 +2806,170 @@ namespace NavigatorTemplate.Models
             int s = 9;
         }
 
+
+        private ICommand comparePathCommand;
+        public ICommand ComparePathCommand
+        {
+            get
+            {
+                return comparePathCommand ?? (comparePathCommand = new CommandHandler(() => ComparePath(), _canExecute));
+            }
+        }
+        private void ComparePath()
+        {
+            //SAVE LOGS AS UNICODE
+            List<string> CrawlerList = new List<string>();
+            List<string> CheckerList = new List<string>();
+
+            using (var reader = new System.IO.StreamReader(@"C:\Mitch\New folder\Paths\CrawlerUnicode.txt"))
+            {
+                while (!reader.EndOfStream)
+                {
+                    string fullString = reader.ReadLine();
+                    if (fullString.Contains("TRS release v.5.5.8 Sunday April 7 2019 starting at 700 am EST RAPPEL nou"))
+                    {
+                        int lkj = 8;
+                    }
+
+                    int indexOfFirstSeperatorChar = fullString.IndexOf(@"\\");
+                    string pathOnly = fullString.Substring(indexOfFirstSeperatorChar);
+                    //TRS release v.5.5.8 Sunday April 7 2019 starting at 700 am EST RAPPEL nou
+
+                    if (pathOnly.Contains("TRS release v.5.5.8 Sunday April 7 2019 starting at 700 am EST RAPPEL nou"))
+                    {
+                        int lkj = 8;
+                    }
+
+                    CrawlerList.Add(pathOnly);
+                }
+            }
+
+            using (var reader = new System.IO.StreamReader(@"C:\Mitch\New folder\Paths\CheckerUnicode.txt"))
+            {
+                while (!reader.EndOfStream)
+                {
+                    string fullString = reader.ReadLine();
+                    if (fullString.Contains("TRS release v.5.5.8 Sunday April 7 2019 starting at 700 am EST RAPPEL nou"))
+                    {
+                        int lkj = 8;
+                    }
+
+
+                    int indexOfFirstSeperatorChar = fullString.IndexOf(@"\\");
+                    string pathWQuotes = fullString.Substring(indexOfFirstSeperatorChar);
+                    string pathOnly = pathWQuotes.Substring(0, pathWQuotes.Length - 1);
+
+                    if (pathOnly.Contains("TRS release v.5.5.8 Sunday April 7 2019 starting at 700 am EST RAPPEL nou"))
+                    {
+                        int lkj = 8;
+                    }
+
+                    CheckerList.Add(pathOnly);
+                }
+            }
+
+            CrawlerList.Sort();
+            CheckerList.Sort();
+
+            using (System.IO.StreamWriter writetext = new System.IO.StreamWriter(@"C:\Mitch\New folder\Paths\Results_Crawler_AlphaOrder_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".txt"))
+            {
+                foreach (string item in CrawlerList)
+                {
+                    writetext.WriteLine(item);
+                }
+
+            }
+
+            using (System.IO.StreamWriter writetext = new System.IO.StreamWriter(@"C:\Mitch\New folder\Paths\Results_Checker_AlphaOrder_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".txt"))
+            {
+                foreach (string item in CheckerList)
+                {
+                    writetext.WriteLine(item);
+                }
+            }
+
+            IEnumerable<string> inFirstOnly = CrawlerList.Distinct().Except(CheckerList, StringComparer.OrdinalIgnoreCase).ToList();
+            IEnumerable<string> inSecondOnly = CheckerList.Distinct().Except(CrawlerList, StringComparer.OrdinalIgnoreCase).ToList();
+
+            IEnumerable<string> alsoInFirst = CrawlerList.Distinct().Intersect(CheckerList, StringComparer.OrdinalIgnoreCase).ToList();
+            IEnumerable<string> alsoInSecond = CheckerList.Distinct().Intersect(CrawlerList, StringComparer.OrdinalIgnoreCase).ToList();
+
+
+            using (System.IO.StreamWriter writetext = new System.IO.StreamWriter(@"C:\Mitch\New folder\Paths\Results_PathInCrawlerListButNotInCheckerList_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".txt"))
+            {
+                foreach (string item in inFirstOnly)
+                {
+                    writetext.WriteLine(item);
+                }
+
+            }
+
+            using (System.IO.StreamWriter writetext = new System.IO.StreamWriter(@"C:\Mitch\New folder\Paths\Results_PathInCheckerListButNotInCrawlerList_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".txt"))
+            {
+                foreach (string item in inSecondOnly)
+                {
+                    writetext.WriteLine(item);
+                }
+
+            }
+
+
+            int count = 0;
+
+            //foreach (string item in inSecondOnly)
+            foreach (string item in CrawlerList)
+            {
+
+                int lkj = inSecondOnly.Where(x => x.StartsWith(item)).Count();
+                if (lkj > 0) 
+                {
+                    string lskdjf = item;
+                    string lsdkfjls = inSecondOnly.Where(x => x.StartsWith(item)).FirstOrDefault();
+
+                    int werweweerw = 0;
+
+                }
+                count += lkj;
+
+            }
+
+
+            //int count = 0;
+            //foreach (string crawlerInput in CrawlerList)
+            //{
+            //    foreach (string item in inSecondOnly)
+            //    {
+            //        bool lkj = item.StartsWith(crawlerInput);
+            //        if (lkj)
+            //        {
+            //            count++;
+            //            break;
+            //        }
+            //    }
+            //}
+
+
+
+            int totalCntUserList1 = CrawlerList.Count();
+            int totalCntUserList2 = CheckerList.Count();
+
+            int totalList1WOutDupes = CrawlerList.Distinct().Count();
+            int totalList2WOutDupes = CheckerList.Distinct().Count();
+
+            //int totalList1WOutDupes = userList1.Distinct().Count();
+            //int totalList2WOutDupes = userList2.Distinct().Count();
+
+            int usersThatAreInTheFirstListButNotInTheSecondList = inFirstOnly.Count();
+            int usersThatAreInTheSecondListButNotInTheFirstList = inSecondOnly.Count();
+
+            int usersThatAreBothInTheFirstAndSecondList = totalCntUserList2 - usersThatAreInTheSecondListButNotInTheFirstList;
+            int usersThatAreBothInTheSecondAndFirstList = totalCntUserList1 - usersThatAreInTheFirstListButNotInTheSecondList;
+
+
+
+            int s = 9;
+        }
+
         public void SetCurrentUNCObject()
         {
             UNCObject xUNCObject = new UNCObject();
@@ -2879,6 +3109,14 @@ namespace NavigatorTemplate.Models
                 case "FilePathTxt":
                     //N/A - Dummy case
                     break;
+                case "FileToStarTxt":
+                    openFD.Filter = "csv files (*.csv)|*.csv|All files (*.*)|*.*";
+                    //handles empty strings
+                    if (System.IO.Directory.Exists(System.IO.Path.GetDirectoryName(FileToStarTxt)))
+                    {
+                        openFD.InitialDirectory = System.IO.Path.GetDirectoryName(FileToStarTxt);
+                    }
+                    break;
                 case "DatabaseValLocationPath":
                     openFD.Filter = "db files (*.db)|*.db|All files (*.*)|*.*";
                     //handles empty strings
@@ -2914,18 +3152,21 @@ namespace NavigatorTemplate.Models
                     case "FilePathTxt":
                         FilePath = pathName;
                         break;
+                    case "FileToStarTxt":
+                        FileToStarTxt = pathName;
+                        break;
                     case "DatabaseValLocationPath":
                         DatabaseValLocationPath = pathName;
                         break;
                     case "PathFileImportTxt":
-                        if (System.IO.Path.GetExtension(pathName) != ".csv")
-                        {
-                            StatusMessage = ".csv format required.";
-                        }
-                        else
-                        {
-                            PathFileImportTxt = pathName;
-                        }
+                        //if (System.IO.Path.GetExtension(pathName) != ".csv")
+                        //{
+                        //    StatusMessage = ".csv format required.";
+                        //}
+                        //else
+                        //{
+                        PathFileImportTxt = pathName;
+                        //}
                         break;
                     case "MagikFileSource":
                         MagikFileSource = pathName;

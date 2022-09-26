@@ -438,7 +438,49 @@
                     </Grid>
                 </Grid>
             </TabItem>
-            <TabItem Header="Magik Code" Visibility="Hidden">
+            <TabItem Header="Star" Visibility="Collapsed">
+                <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Visibility="{Binding Master.ExpandOptionsStats}">
+                    <GroupBox.Header>
+                        <Span FontWeight="DemiBold">File</Span>
+                    </GroupBox.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" Grid.Column="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBox Grid.Row="0" Grid.Column="0" Text="{Binding Master.FileToStarTxt}"></TextBox>
+                        </Grid>
+                        <Grid Grid.Row="1" Grid.Column="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Button Grid.Row="0" Grid.Column="0" Content="Select..." CommandParameter="FileToStarTxt" Command="{Binding Master.SetFileCommand}"></Button>
+                            <Button Grid.Row="0" Grid.Column="1" Content="Process &amp; Save" Command="{Binding Master.ReplaceFirstCommaWithStarCommand}"></Button>
+                        </Grid>
+                    </Grid>
+                </GroupBox>
+            </TabItem>
+            <TabItem Header="Path Compare" Visibility="Collapsed">
+                <StackPanel>
+                    <Button Content="Compare" Command="{Binding Master.ComparePathCommand}"></Button>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Magik Code" Visibility="Collapsed">
                 <StackPanel>
                     <Label Content="Source"></Label>
                     <TextBox Text="{Binding Master.MagikFileSource}"></TextBox>
@@ -454,7 +496,7 @@
                     <Label Content="N/A"></Label>
                 </StackPanel>
             </TabItem>
-            <TabItem Header="Rest" Visibility="Hidden">
+            <TabItem Header="Rest" Visibility="Collapsed">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />

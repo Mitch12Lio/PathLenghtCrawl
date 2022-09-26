@@ -262,5 +262,17 @@ namespace PathLenghtCrawl.Properties {
                 this["Details"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string FileToStarTxt {
+            get {
+                return ((string)(this["FileToStarTxt"]));
+            }
+            set {
+                this["FileToStarTxt"] = value;
+            }
+        }
     }
 }
