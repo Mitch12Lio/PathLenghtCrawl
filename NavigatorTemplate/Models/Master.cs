@@ -306,6 +306,40 @@ namespace NavigatorTemplate.Models
             }
         }
 
+        private int csvReadCount = 0;
+        public int CSVReadCount
+        {
+            get
+            {
+                return csvReadCount;
+            }
+            set
+            {
+                if (csvReadCount != value)
+                {
+                    csvReadCount = value;
+                    NotifyPropertyChanged("CSVReadCount");
+                }
+            }
+        }
+
+        private int csvWriteCount = 0;
+        public int CSVWriteCount
+        {
+            get
+            {
+                return csvWriteCount;
+            }
+            set
+            {
+                if (csvWriteCount != value)
+                {
+                    csvWriteCount = value;
+                    NotifyPropertyChanged("CSVWriteCount");
+                }
+            }
+        }
+
         private bool copyAsCSVEnabled = true;
         public bool CopyAsCSVEnabled
         {
@@ -2600,9 +2634,15 @@ namespace NavigatorTemplate.Models
                 return replaceFirstCommaWithStarCommand ?? (replaceFirstCommaWithStarCommand = new CommandHandler(() => ReplaceFirstCommaWithStar(), _canExecute));
             }
         }
-        private void ReplaceFirstCommaWithStar()
+        private async void ReplaceFirstCommaWithStar()
         {
-            List<string> destinationStrings = new List<string>();
+            await Task.Run(() =>
+            {
+                StatusMessage = "Ready";
+            CSVReadCount = 0;
+            CSVWriteCount = 0;
+
+                List<string> destinationStrings = new List<string>();
 
             using (var reader = new System.IO.StreamReader(FileToStarTxt))
             {
@@ -2617,6 +2657,7 @@ namespace NavigatorTemplate.Models
                     string sevenS = fiveS + "*" + sixS;
 
                     destinationStrings.Add(sixS);
+                    CSVReadCount++;
                 }
             }
 
@@ -2628,9 +2669,12 @@ namespace NavigatorTemplate.Models
                 {
                     writetext.WriteLine("=LEN(B" + cnt.ToString() + ")*" + s);
                     cnt++;
+                    CSVWriteCount++;
                 }
             }
 
+            StatusMessage = "Complete";
+            });
         }
 
 

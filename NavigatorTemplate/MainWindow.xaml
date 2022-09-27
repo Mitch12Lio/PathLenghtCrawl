@@ -438,42 +438,59 @@
                     </Grid>
                 </Grid>
             </TabItem>
-            <TabItem Header="Star" Visibility="Collapsed">
-                <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Visibility="{Binding Master.ExpandOptionsStats}">
-                    <GroupBox.Header>
-                        <Span FontWeight="DemiBold">File</Span>
-                    </GroupBox.Header>
-                    <Grid>
+            <TabItem Header="Star">
+                <DockPanel LastChildFill="True">
+                    <Grid DockPanel.Dock="Bottom">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Grid Grid.Row="0" Grid.Column="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <TextBox Grid.Row="0" Grid.Column="0" Text="{Binding Master.FileToStarTxt}"></TextBox>
-                        </Grid>
-                        <Grid Grid.Row="1" Grid.Column="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <Button Grid.Row="0" Grid.Column="0" Content="Select..." CommandParameter="FileToStarTxt" Command="{Binding Master.SetFileCommand}"></Button>
-                            <Button Grid.Row="0" Grid.Column="1" Content="Process &amp; Save" Command="{Binding Master.ReplaceFirstCommaWithStarCommand}"></Button>
-                        </Grid>
+                        </Grid.RowDefinitions>          
+                        <Label Grid.Row="0" Grid.Column="0" Content="Read:"></Label>
+                        <Label Grid.Row="0" Grid.Column="1" Content="{Binding Master.CSVReadCount}"></Label>
+                        <Label Grid.Row="0" Grid.Column="2" Content="Write:"></Label>
+                        <Label Grid.Row="0" Grid.Column="3" Content="{Binding Master.CSVWriteCount}"></Label>
                     </Grid>
-                </GroupBox>
+                    <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Visibility="{Binding Master.ExpandOptionsStats}">
+                        <GroupBox.Header>
+                            <Span FontWeight="DemiBold">File</Span>
+                        </GroupBox.Header>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0" Grid.Column="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <TextBox Grid.Row="0" Grid.Column="0" Text="{Binding Master.FileToStarTxt}"></TextBox>
+                            </Grid>
+                            <Grid Grid.Row="1" Grid.Column="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Button Grid.Row="0" Grid.Column="0" Content="Select..." CommandParameter="FileToStarTxt" Command="{Binding Master.SetFileCommand}"></Button>
+                                <Button Grid.Row="0" Grid.Column="1" Content="Process &amp; Save" Command="{Binding Master.ReplaceFirstCommaWithStarCommand}"></Button>
+                            </Grid>
+                        </Grid>
+                    </GroupBox>
+                </DockPanel>
             </TabItem>
             <TabItem Header="Path Compare" Visibility="Collapsed">
                 <StackPanel>
