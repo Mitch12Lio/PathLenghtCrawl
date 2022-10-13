@@ -2639,41 +2639,64 @@ namespace NavigatorTemplate.Models
             await Task.Run(() =>
             {
                 StatusMessage = "Ready";
-            CSVReadCount = 0;
-            CSVWriteCount = 0;
+                CSVReadCount = 0;
+                CSVWriteCount = 0;
 
                 List<string> destinationStrings = new List<string>();
 
-            using (var reader = new System.IO.StreamReader(FileToStarTxt))
-            {
-                while (!reader.EndOfStream)
+                using (var reader = new System.IO.StreamReader(FileToStarTxt))
                 {
-                    string oneS = reader.ReadLine();
-                    int twoI = oneS.IndexOf(',');
-                    string threeS = oneS.Substring(twoI + 1);
-                    int fourI = threeS.IndexOf(',');
-                    string fiveS = threeS.Substring(0, fourI);
-                    string sixS = threeS.Substring(fourI + 1);
-                    string sevenS = fiveS + "*" + sixS;
+                    while (!reader.EndOfStream)
+                    {
+                        string oneS = reader.ReadLine();
+                        int twoI = oneS.IndexOf(',');
+                        string threeS = oneS.Substring(twoI + 1);
+                        int fourI = threeS.IndexOf(',');
+                        string fiveS = threeS.Substring(0, fourI);
+                        string sixS = threeS.Substring(fourI + 1);
+                        string sevenS = fiveS + "*" + sixS;
 
-                    destinationStrings.Add(sixS);
-                    CSVReadCount++;
+                        destinationStrings.Add(sixS);
+                        CSVReadCount++;
+                    }
                 }
-            }
 
-            using (System.IO.StreamWriter writetext = new System.IO.StreamWriter(FileToStarTxt + @"Star_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".txt"))
-            {
-                int cnt = 2;
-                writetext.WriteLine("Length*Path");
-                foreach (string s in destinationStrings)
+                using (System.IO.StreamWriter writetext = new System.IO.StreamWriter(FileToStarTxt + @"_Star_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".csv"))
                 {
-                    writetext.WriteLine("=LEN(B" + cnt.ToString() + ")*" + s);
-                    cnt++;
-                    CSVWriteCount++;
+                    int cnt = 2;
+                    writetext.WriteLine("Length*Path");
+                    foreach (string s in destinationStrings)
+                    {
+                        writetext.WriteLine("=LEN(B" + cnt.ToString() + ")*" + s);
+                        cnt++;
+                        CSVWriteCount++;
+                    }
                 }
-            }
 
-            StatusMessage = "Complete";
+                //try
+                //{
+
+               
+                //    //System.IO.File.Create(FileToStarTxt + ".xlsx");
+                //    Microsoft.Office.Interop.Excel.Application excelApplication = new Microsoft.Office.Interop.Excel.Application();
+                //    Microsoft.Office.Interop.Excel.Workbook excelWorkbook = new Microsoft.Office.Interop.Excel.Workbook();
+                //    Microsoft.Office.Interop.Excel.Worksheet excelWorksheet = new Microsoft.Office.Interop.Excel.Worksheet();
+
+                //    excelApplication.Workbooks.Add(excelWorksheet);
+                //    excelWorkbook.SaveAs(FileToStarTxt + ".xlsx");
+                //    excelWorkbook.Close();
+                //    excelApplication.Quit();
+
+                //}
+                //catch (Exception ex)
+                //{
+
+                //    StatusMessage = ex.Message;
+                //    int ddd = 9;
+                //}
+
+
+                StatusMessage = "Complete";
             });
         }
 
@@ -2965,7 +2988,7 @@ namespace NavigatorTemplate.Models
             {
 
                 int lkj = inSecondOnly.Where(x => x.StartsWith(item)).Count();
-                if (lkj > 0) 
+                if (lkj > 0)
                 {
                     string lskdjf = item;
                     string lsdkfjls = inSecondOnly.Where(x => x.StartsWith(item)).FirstOrDefault();

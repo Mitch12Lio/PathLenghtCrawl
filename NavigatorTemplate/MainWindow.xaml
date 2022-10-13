@@ -513,7 +513,7 @@
                     <Label Content="N/A"></Label>
                 </StackPanel>
             </TabItem>
-            <TabItem Header="Rest" Visibility="Collapsed">
+            <TabItem Header="Rest">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
