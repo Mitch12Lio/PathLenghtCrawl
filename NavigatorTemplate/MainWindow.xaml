@@ -438,6 +438,46 @@
                     </Grid>
                 </Grid>
             </TabItem>
+            <TabItem Header="NDS Process">
+                <DockPanel LastChildFill="True">
+                    <Grid DockPanel.Dock="Bottom">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" Grid.Column="0" Content="Read:"></Label>
+                        <Label Grid.Row="0" Grid.Column="1" Content="{Binding Master.CSVReadCount}"></Label>
+                        <Label Grid.Row="0" Grid.Column="2" Content="Write:"></Label>
+                        <Label Grid.Row="0" Grid.Column="3" Content="{Binding Master.CSVWriteCount}"></Label>
+                    </Grid>
+                    <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Visibility="{Binding Master.ExpandOptionsStats}">
+                        <GroupBox.Header>
+                            <Span FontWeight="DemiBold">NDS Log</Span>
+                        </GroupBox.Header>
+                        <StackPanel>
+                            <GroupBox>
+                                <StackPanel>
+                            <RadioButton Content="Files" GroupName="NDSLogType" IsChecked="{Binding Master.NDSLogFileType}"></RadioButton>
+                                    <RadioButton Content="Folders" GroupName="NDSLogType" IsChecked="{Binding Master.NDSLogFolderType}"></RadioButton>
+                                </StackPanel>
+                            </GroupBox>
+                            <Label Content="Log to process:"></Label>
+                            <TextBox Text="{Binding Master.NDSLog2Process}"></TextBox>
+                            <Button Content="Select..." CommandParameter="NDSLog2Process" Command="{Binding Master.SetFileCommand}"></Button>
+                            <Label Content="Destination"></Label>
+                            <TextBox Text="{Binding Master.NDSLogDestination}"></TextBox>
+                            <Button Content="Save To..." CommandParameter="NDSLogDestination" Command="{Binding Master.SetFolderCommand}"></Button>
+                            <Separator></Separator>
+                            <Button Content="Process" Command="{Binding Master.ProcessNDSLogCommand}"></Button>
+                        </StackPanel>
+                    </GroupBox>
+                </DockPanel>
+            </TabItem>
             <TabItem Header="Star">
                 <DockPanel LastChildFill="True">
                     <Grid DockPanel.Dock="Bottom">
@@ -449,7 +489,7 @@
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>          
+                        </Grid.RowDefinitions>
                         <Label Grid.Row="0" Grid.Column="0" Content="Read:"></Label>
                         <Label Grid.Row="0" Grid.Column="1" Content="{Binding Master.CSVReadCount}"></Label>
                         <Label Grid.Row="0" Grid.Column="2" Content="Write:"></Label>

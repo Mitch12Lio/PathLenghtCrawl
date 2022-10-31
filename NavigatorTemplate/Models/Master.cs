@@ -445,8 +445,82 @@ namespace NavigatorTemplate.Models
                 }
             }
         }
+        #region "NDS Processing"
+        private bool ndsLogFolderType = PathLenghtCrawl.Properties.Settings.Default.NDSLogFolderType;
+        public bool NDSLogFolderType
+        {
+            get
+            {
+                return ndsLogFolderType;
+            }
+            set
+            {
+                if (ndsLogFolderType != value)
+                {
+                    ndsLogFolderType = value;
+                    PathLenghtCrawl.Properties.Settings.Default.NDSLogFolderType = value;
+                    SaveProperties();
+                    NotifyPropertyChanged("NDSLogFolderType");
+                }
+            }
+        }
+        //NDSLogFileType
+        private bool ndsLogFileType = PathLenghtCrawl.Properties.Settings.Default.NDSLogFileType;
+        public bool NDSLogFileType
+        {
+            get
+            {
+                return ndsLogFileType;
+            }
+            set
+            {
+                if (ndsLogFileType != value)
+                {
+                    ndsLogFileType = value;
+                    PathLenghtCrawl.Properties.Settings.Default.NDSLogFileType = value;
+                    SaveProperties();
+                    NotifyPropertyChanged("NDSLogFileType");
+                }
+            }
+        }
+        private string ndsLogDestination = PathLenghtCrawl.Properties.Settings.Default.NDSLogDestination;
+        public string NDSLogDestination
+        {
+            get
+            {
+                return ndsLogDestination;
+            }
+            set
+            {
+                if (ndsLogDestination != value)
+                {
+                    ndsLogDestination = value;
+                    PathLenghtCrawl.Properties.Settings.Default.NDSLogDestination = value;
+                    SaveProperties();
+                    NotifyPropertyChanged("NDSLogDestination");
+                }
+            }
+        }
+        private string ndsLog2Process = PathLenghtCrawl.Properties.Settings.Default.NDSLog2Process;
+        public string NDSLog2Process
+        {
+            get
+            {
+                return ndsLog2Process;
+            }
+            set
+            {
+                if (ndsLog2Process != value)
+                {
+                    ndsLog2Process = value;
+                    PathLenghtCrawl.Properties.Settings.Default.NDSLog2Process = value;
+                    SaveProperties();
+                    NotifyPropertyChanged("NDSLog2Process");
+                }
+            }
+        }
 
-
+        #endregion
         private string magikFileSource = PathLenghtCrawl.Properties.Settings.Default.MagikFileSource;
         public string MagikFileSource
         {
@@ -2676,7 +2750,7 @@ namespace NavigatorTemplate.Models
                 //try
                 //{
 
-               
+
                 //    //System.IO.File.Create(FileToStarTxt + ".xlsx");
                 //    Microsoft.Office.Interop.Excel.Application excelApplication = new Microsoft.Office.Interop.Excel.Application();
                 //    Microsoft.Office.Interop.Excel.Workbook excelWorkbook = new Microsoft.Office.Interop.Excel.Workbook();
@@ -2700,7 +2774,47 @@ namespace NavigatorTemplate.Models
             });
         }
 
+        private ICommand processNDSLogCommand;
+        public ICommand ProcessNDSLogCommand
+        {
+            get
+            {
+                return processNDSLogCommand ?? (processNDSLogCommand = new CommandHandler(() => ProcessNDSLog(), _canExecute));
+            }
+        }
+        private void ProcessNDSLog()
+        {
+            List<string> newList = new List<string>();
 
+            using (var reader = new System.IO.StreamReader(NDSLog2Process))
+            {
+                while (!reader.EndOfStream)
+                {
+                    CSVReadCount++;
+                    if (NDSLogFileType)
+                    {
+                        string line = reader.ReadLine();
+                        int indexOfGuillements = line.IndexOf('"');
+                        if (indexOfGuillements > -1)
+                        {
+                            string newLine = line.Substring(indexOfGuillements+1);
+                            string newnewLine = newLine.Substring(0, newLine.Length - 1);
+                            int s = 9;
+                        }
+
+                        int y = 9;
+
+                        //newList.Add(reader.ReadLine())
+
+                    }
+                }
+            }
+
+            using (System.IO.StreamWriter writetext = new System.IO.StreamWriter(FileToStarTxt + @"_Star_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".csv"))
+            {
+
+            }
+        }
         private ICommand executeLPFNListCommand;
         public ICommand ExecuteLPFNListCommand
         {
@@ -3207,6 +3321,12 @@ namespace NavigatorTemplate.Models
                         openFD.InitialDirectory = System.IO.Path.GetDirectoryName(MagikFileSource);
                     }
                     break;
+                case "NDSLog2Process":
+                    if (System.IO.Directory.Exists(System.IO.Path.GetDirectoryName(NDSLog2Process)))
+                    {
+                        openFD.InitialDirectory = System.IO.Path.GetDirectoryName(NDSLog2Process);
+                    }
+                    break;
                 default:
                     break;
             }
@@ -3237,6 +3357,9 @@ namespace NavigatorTemplate.Models
                         break;
                     case "MagikFileSource":
                         MagikFileSource = pathName;
+                        break;
+                    case "NDSLog2Process":
+                        NDSLog2Process = pathName;
                         break;
                     default:
                         StatusMessage = "Save Incomplete.";
@@ -3314,6 +3437,12 @@ namespace NavigatorTemplate.Models
                         folderBrowserDialog.SelectedPath = MagikFolderDestination;
                     }
                     break;
+                case "NDSLogDestination":
+                    if (NDSLogDestination != string.Empty)
+                    {
+                        folderBrowserDialog.SelectedPath = NDSLogDestination;
+                    }
+                    break;
                 default:
                     break;
             }
@@ -3332,6 +3461,9 @@ namespace NavigatorTemplate.Models
                         break;
                     case "MagikFolderDestination":
                         MagikFolderDestination = pathName;
+                        break;
+                    case "NDSLogDestination":
+                        NDSLogDestination = pathName;
                         break;
                     default:
                         StatusMessage = "Save Incomplete.";
@@ -3745,6 +3877,8 @@ namespace NavigatorTemplate.Models
         }
 
         #endregion
+
+
 
         private ICommand magikCopyCommand;
         public ICommand MagikCopyCommand
