@@ -322,5 +322,17 @@ namespace PathLenghtCrawl.Properties {
                 this["NDSLogFolderType"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool NDSSamePathAsAbove {
+            get {
+                return ((bool)(this["NDSSamePathAsAbove"]));
+            }
+            set {
+                this["NDSSamePathAsAbove"] = value;
+            }
+        }
     }
 }

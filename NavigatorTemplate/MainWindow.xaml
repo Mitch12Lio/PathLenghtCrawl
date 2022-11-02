@@ -134,7 +134,7 @@
                             </Grid.RowDefinitions>
                             <CheckBox Grid.Row="0" Grid.Column="0"  Content="Create Logs" IsChecked="True" IsEnabled="False"></CheckBox>
                             <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="Location"></Label>
-                            <TextBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Master.LogLocationTxt}"></TextBox>
+                            <TextBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Master.LogLocationTxt}"></TextBox>                            
                             <Button Grid.Row="3" Grid.Column="0" Content="Folder..." CommandParameter="LogLocationTxt" Command="{Binding Master.SetFolderCommand}"></Button>
                             <Button Grid.Row="3" Grid.Column="1" Content="Folder (via TreeView)..." CommandParameter="LogLocationTxt" Command="{Binding Master.SetFolderViaTVCommand}" IsEnabled="False"></Button>
                             <!--<Separator Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"></Separator>
@@ -466,10 +466,21 @@
                                     <RadioButton Content="Folders" GroupName="NDSLogType" IsChecked="{Binding Master.NDSLogFolderType}"></RadioButton>
                                 </StackPanel>
                             </GroupBox>
+                            
                             <Label Content="Log to process:"></Label>
                             <TextBox Text="{Binding Master.NDSLog2Process}"></TextBox>
                             <Button Content="Select..." CommandParameter="NDSLog2Process" Command="{Binding Master.SetFileCommand}"></Button>
-                            <Label Content="Destination"></Label>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Content="Destination"></Label>
+                                <CheckBox Grid.Row="0" Grid.Column="1" Content="Same path as above" IsChecked="{Binding Master.NDSSamePathAsAbove}"></CheckBox>
+                            </Grid>
                             <TextBox Text="{Binding Master.NDSLogDestination}"></TextBox>
                             <Button Content="Save To..." CommandParameter="NDSLogDestination" Command="{Binding Master.SetFolderCommand}"></Button>
                             <Separator></Separator>
