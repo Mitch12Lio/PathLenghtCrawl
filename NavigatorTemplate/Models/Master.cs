@@ -7,6 +7,26 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
+
+namespace WhateverExtensions
+{
+    public static class ExtensionsAreMe
+    {
+        public static List<int> AllIndexesOf(this string str, string value)
+        {
+            if (String.IsNullOrEmpty(value))
+                throw new ArgumentException("the string to find may not be empty", "value");
+            List<int> indexes = new List<int>();
+            for (int index = 0; ; index += value.Length)
+            {
+                index = str.IndexOf(value, index);
+                if (index == -1)
+                    return indexes;
+                indexes.Add(index);
+            }
+        }
+    }
+}
 namespace NavigatorTemplate.Models
 {
     public class Master : mvvmHandlers
@@ -2699,6 +2719,57 @@ namespace NavigatorTemplate.Models
             StatusMessage = "Ready";
         }
 
+        private ICommand replaceFirstCommaWithStarCSVWAYCommand;
+        public ICommand ReplaceFirstCommaWithStarCSVWAYCommand
+        {
+            get
+            {
+                return replaceFirstCommaWithStarCSVWAYCommand ?? (replaceFirstCommaWithStarCSVWAYCommand = new CommandHandler(() => ReplaceFirstCommaWithStarCSVWAY(), _canExecute));
+            }
+        }
+        private async void ReplaceFirstCommaWithStarCSVWAY()
+        {
+            await Task.Run(() =>
+            {
+                StatusMessage = "Ready";
+                CSVReadCount = 0;
+                CSVWriteCount = 0;
+
+                List<string> destinationStrings = new List<string>();
+
+                using (var reader = new System.IO.StreamReader(FileToStarTxt))
+                {
+                    while (!reader.EndOfStream)
+                    {
+                        string oneS = reader.ReadLine();
+                        int twoI = oneS.IndexOf(',');
+                        string threeS = oneS.Substring(twoI + 1);
+                        int fourI = threeS.IndexOf(',');
+                        string fiveS = threeS.Substring(0, fourI);
+                        string sixS = threeS.Substring(fourI + 1);
+                        string sevenS = fiveS + "*" + sixS;
+
+                        destinationStrings.Add(sixS);
+                        CSVReadCount++;
+                    }
+                }
+
+                using (System.IO.StreamWriter writetext = new System.IO.StreamWriter(FileToStarTxt + @"CSV_Star_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".csv"))
+                {
+                    int cnt = 2;
+                    writetext.WriteLine("Length*Path");
+                    foreach (string s in destinationStrings)
+                    {
+                        //writetext.WriteLine("=LEN(B" + cnt.ToString() + ")*" + s);
+                        writetext.WriteLine(s.Length.ToString() + "*" + s);
+                        cnt++;
+                        CSVWriteCount++;
+                    }
+                }
+
+                StatusMessage = "Complete";
+            });
+        }
 
         private ICommand replaceFirstCommaWithStarCommand;
         public ICommand ReplaceFirstCommaWithStarCommand
@@ -2784,30 +2855,50 @@ namespace NavigatorTemplate.Models
         }
         private void ProcessNDSLog()
         {
-            List<string> newList = new List<string>();
-
-            using (var reader = new System.IO.StreamReader(NDSLog2Process))
+            if (NDSLogFileType)
             {
-                while (!reader.EndOfStream)
+                string fileName = string.Empty;
+                string sourceFolder = string.Empty;
+                string destinationFolder = string.Empty;
+
+                using (var reader = new System.IO.StreamReader(NDSLog2Process))
                 {
-                    CSVReadCount++;
-                    if (NDSLogFileType)
+                    while (!reader.EndOfStream)
                     {
-                        string line = reader.ReadLine();
-                        int indexOfGuillements = line.IndexOf('"');
-                        if (indexOfGuillements > -1)
-                        {
-                            string newLine = line.Substring(indexOfGuillements+1);
-                            string newnewLine = newLine.Substring(0, newLine.Length - 1);
-                            int s = 9;
-                        }
+                        CSVReadCount++;
 
-                        int y = 9;
-
-                        //newList.Add(reader.ReadLine())
-
+                            string line = reader.ReadLine();
+                            List<int> guillements = WhateverExtensions.ExtensionsAreMe.AllIndexesOf(line, "\"");
+                            if (guillements.Count > 0)
+                            {
+                                fileName = line.Substring(guillements[0] + 1, guillements[1] - guillements[0] - 1);
+                                sourceFolder = line.Substring(guillements[2] + 1, guillements[3] - guillements[2] - 1);
+                                destinationFolder = line.Substring(guillements[4] + 1, guillements[5] - guillements[4] - 1);
+                            }
+                            string fullFileName = sourceFolder + System.IO.Path.DirectorySeparatorChar + fileName;
+                       
                     }
                 }
+            }
+            else //folder
+            {
+                using (var reader = new System.IO.StreamReader(NDSLog2Process))
+                {
+                    while (!reader.EndOfStream)
+                    {
+                        string line = reader.ReadLine();
+                        string lskdjfsdf = "\\\\?\\UNC";
+                        string lskdjfsddf = @"\\?\UNC";
+                        string lsksdjfsdf = @"\*";
+                        string lskadjfsdf = "\\*";
+                        int indexOfTheThingyAtTheFront = line.IndexOf(@"\\?\UNC");
+                        int indexOfTheThingyAtTheBack = line.IndexOf(\"\*");
+                        string whatever = line.Substring(indexOfTheThingyAtTheFront, indexOfTheThingyAtTheBack);
+                        int lkj = 3;
+                    }
+                }
+
+
             }
 
             using (System.IO.StreamWriter writetext = new System.IO.StreamWriter(FileToStarTxt + @"_Star_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".csv"))
@@ -2815,6 +2906,9 @@ namespace NavigatorTemplate.Models
 
             }
         }
+
+
+
         private ICommand executeLPFNListCommand;
         public ICommand ExecuteLPFNListCommand
         {

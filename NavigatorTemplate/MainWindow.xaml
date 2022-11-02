@@ -474,6 +474,7 @@
                             <Button Content="Save To..." CommandParameter="NDSLogDestination" Command="{Binding Master.SetFolderCommand}"></Button>
                             <Separator></Separator>
                             <Button Content="Process" Command="{Binding Master.ProcessNDSLogCommand}"></Button>
+                            
                         </StackPanel>
                     </GroupBox>
                 </DockPanel>
@@ -524,9 +525,11 @@
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
                                 <Button Grid.Row="0" Grid.Column="0" Content="Select..." CommandParameter="FileToStarTxt" Command="{Binding Master.SetFileCommand}"></Button>
                                 <Button Grid.Row="0" Grid.Column="1" Content="Process &amp; Save" Command="{Binding Master.ReplaceFirstCommaWithStarCommand}"></Button>
+                                <Button Grid.Row="1" Grid.Column="0" Content="Process &amp; Save (CSV WAY)" Command="{Binding Master.ReplaceFirstCommaWithStarCSVWAYCommand}"></Button>
                             </Grid>
                         </Grid>
                     </GroupBox>
