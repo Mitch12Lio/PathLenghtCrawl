@@ -134,7 +134,7 @@
                             </Grid.RowDefinitions>
                             <CheckBox Grid.Row="0" Grid.Column="0"  Content="Create Logs" IsChecked="True" IsEnabled="False"></CheckBox>
                             <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="Location"></Label>
-                            <TextBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Master.LogLocationTxt}"></TextBox>                            
+                            <TextBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Master.LogLocationTxt}"></TextBox>
                             <Button Grid.Row="3" Grid.Column="0" Content="Folder..." CommandParameter="LogLocationTxt" Command="{Binding Master.SetFolderCommand}"></Button>
                             <Button Grid.Row="3" Grid.Column="1" Content="Folder (via TreeView)..." CommandParameter="LogLocationTxt" Command="{Binding Master.SetFolderViaTVCommand}" IsEnabled="False"></Button>
                             <!--<Separator Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"></Separator>
@@ -287,37 +287,43 @@
                             <GroupBox.Header>
                                 <Span FontWeight="DemiBold">Options</Span>
                             </GroupBox.Header>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
-                                <Grid Grid.Row="0" Grid.Column="0">
+                            <StackPanel>
+                                <!--<StackPanel Orientation="Horizontal">
+                                    <RadioButton Content="Read File" GroupName="FileOrDrive" Margin="10,0,10,0"></RadioButton>
+                                    <RadioButton Content="Read Drive" GroupName="FileOrDrive"></RadioButton>
+                                </StackPanel>-->
+                                <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
-                                    <CheckBox Margin="3,0,3,0" Grid.Row="0" Grid.Column="1" Content="Omit NDS://HEALTH_TREE prefix" IsChecked="True" IsEnabled="False"></CheckBox>
-                                    <TextBox Grid.Row="0" Grid.Column="0" Text="{Binding Master.PathFileImportTxt}"></TextBox>
-                                </Grid>
-                                <Grid Grid.Row="1" Grid.Column="0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
-                                    <Button Grid.Row="0" Grid.Column="0" Content="Select..." CommandParameter="PathFileImportTxt" Command="{Binding Master.SetFileCommand}" IsEnabled="{Binding Master.SelectBulkFile2ProcessButtonEnabled}"></Button>
-                                    <Button Grid.Row="0" Grid.Column="1" Content="Import &amp; Process" Command="{Binding Master.WhateverStartLongWayCommand}" IsEnabled="{Binding Master.ImportProcessBulkFileButtonEnabled}"></Button>
+                                    <Grid Grid.Row="0" Grid.Column="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <TextBox Grid.Row="0" Grid.Column="0" Text="{Binding Master.PathFileImportTxt}"></TextBox>
+                                        <CheckBox Margin="3,0,3,0" Grid.Row="0" Grid.Column="1" Content="Omit NDS://HEALTH_TREE prefix" IsChecked="True" IsEnabled="False"></CheckBox>
+                                    </Grid>
+                                    <Grid Grid.Row="1" Grid.Column="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Button Grid.Row="0" Grid.Column="0" Content="Select..." CommandParameter="PathFileImportTxt" Command="{Binding Master.SetFileCommand}" IsEnabled="{Binding Master.SelectBulkFile2ProcessButtonEnabled}"></Button>
+                                        <Button Grid.Row="0" Grid.Column="1" Content="Import &amp; Process" Command="{Binding Master.WhateverStartLongWayCommand}" IsEnabled="{Binding Master.ImportProcessBulkFileButtonEnabled}"></Button>
+                                    </Grid>
                                 </Grid>
-                            </Grid>
+                            </StackPanel>
                         </GroupBox>
                         <GridSplitter Grid.Column="0" Grid.Row="2" Grid.ColumnSpan ="2" Height="3" HorizontalAlignment="Stretch"></GridSplitter>
                         <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2">
@@ -438,136 +444,143 @@
                     </Grid>
                 </Grid>
             </TabItem>
-            <TabItem Header="NDS Process">
-                <DockPanel LastChildFill="True">
-                    <Grid DockPanel.Dock="Bottom">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Label Grid.Row="0" Grid.Column="0" Content="Read:"></Label>
-                        <Label Grid.Row="0" Grid.Column="1" Content="{Binding Master.CSVReadCount}"></Label>
-                        <Label Grid.Row="0" Grid.Column="2" Content="Write:"></Label>
-                        <Label Grid.Row="0" Grid.Column="3" Content="{Binding Master.CSVWriteCount}"></Label>
-                    </Grid>
-                    <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Visibility="{Binding Master.ExpandOptionsStats}">
-                        <GroupBox.Header>
-                            <Span FontWeight="DemiBold">NDS Log</Span>
-                        </GroupBox.Header>
-                        <StackPanel>
-                            <GroupBox>
+            <TabItem Header="Other">
+                <TabControl>
+
+                    <TabItem Header="NDS Process">
+                        <DockPanel LastChildFill="True">
+                            <Grid DockPanel.Dock="Bottom">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Content="Read:"></Label>
+                                <Label Grid.Row="0" Grid.Column="1" Content="{Binding Master.CSVReadCount}"></Label>
+                                <Label Grid.Row="0" Grid.Column="2" Content="Write:"></Label>
+                                <Label Grid.Row="0" Grid.Column="3" Content="{Binding Master.CSVWriteCount}"></Label>
+                            </Grid>
+                            <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Visibility="{Binding Master.ExpandOptionsStats}">
+                                <GroupBox.Header>
+                                    <Span FontWeight="DemiBold">NDS Log</Span>
+                                </GroupBox.Header>
                                 <StackPanel>
-                            <RadioButton Content="Files" GroupName="NDSLogType" IsChecked="{Binding Master.NDSLogFileType}"></RadioButton>
-                                    <RadioButton Content="Folders" GroupName="NDSLogType" IsChecked="{Binding Master.NDSLogFolderType}"></RadioButton>
+                                    <GroupBox>
+                                        <StackPanel>
+                                            <RadioButton Content="Files" GroupName="NDSLogType" IsChecked="{Binding Master.NDSLogFileType}"></RadioButton>
+                                            <RadioButton Content="Folders" GroupName="NDSLogType" IsChecked="{Binding Master.NDSLogFolderType}"></RadioButton>
+                                        </StackPanel>
+                                    </GroupBox>
+
+                                    <Label Content="Log to process:"></Label>
+                                    <TextBox Text="{Binding Master.NDSLog2Process}"></TextBox>
+                                    <Button Content="Select..." CommandParameter="NDSLog2Process" Command="{Binding Master.SetFileCommand}"></Button>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Label Grid.Row="0" Grid.Column="0" Content="Destination"></Label>
+                                        <CheckBox Grid.Row="0" Grid.Column="1" Content="Same path as above" IsChecked="{Binding Master.NDSSamePathAsAbove}"></CheckBox>
+                                    </Grid>
+                                    <TextBox Text="{Binding Master.NDSLogDestination}"></TextBox>
+                                    <Button Content="Save To..." CommandParameter="NDSLogDestination" Command="{Binding Master.SetFolderCommand}"></Button>
+                                    <Separator></Separator>
+                                    <Button Content="Process" Command="{Binding Master.ProcessNDSLogCommand}"></Button>
+
                                 </StackPanel>
                             </GroupBox>
-                            
-                            <Label Content="Log to process:"></Label>
-                            <TextBox Text="{Binding Master.NDSLog2Process}"></TextBox>
-                            <Button Content="Select..." CommandParameter="NDSLog2Process" Command="{Binding Master.SetFileCommand}"></Button>
-                            <Grid>
+                        </DockPanel>
+                    </TabItem>
+                    <TabItem Header="Star">
+                        <DockPanel LastChildFill="True">
+                            <Grid DockPanel.Dock="Bottom">
                                 <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
-                                <Label Grid.Row="0" Grid.Column="0" Content="Destination"></Label>
-                                <CheckBox Grid.Row="0" Grid.Column="1" Content="Same path as above" IsChecked="{Binding Master.NDSSamePathAsAbove}"></CheckBox>
+                                <Label Grid.Row="0" Grid.Column="0" Content="Read:"></Label>
+                                <Label Grid.Row="0" Grid.Column="1" Content="{Binding Master.CSVReadCount}"></Label>
+                                <Label Grid.Row="0" Grid.Column="2" Content="Write:"></Label>
+                                <Label Grid.Row="0" Grid.Column="3" Content="{Binding Master.CSVWriteCount}"></Label>
                             </Grid>
-                            <TextBox Text="{Binding Master.NDSLogDestination}"></TextBox>
-                            <Button Content="Save To..." CommandParameter="NDSLogDestination" Command="{Binding Master.SetFolderCommand}"></Button>
-                            <Separator></Separator>
-                            <Button Content="Process" Command="{Binding Master.ProcessNDSLogCommand}"></Button>
-                            
+                            <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Visibility="{Binding Master.ExpandOptionsStats}">
+                                <GroupBox.Header>
+                                    <Span FontWeight="DemiBold">File</Span>
+                                </GroupBox.Header>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid Grid.Row="0" Grid.Column="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <TextBox Grid.Row="0" Grid.Column="0" Text="{Binding Master.FileToStarTxt}"></TextBox>
+                                    </Grid>
+                                    <Grid Grid.Row="1" Grid.Column="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Button Grid.Row="0" Grid.Column="0" Content="Select..." CommandParameter="FileToStarTxt" Command="{Binding Master.SetFileCommand}"></Button>
+                                        <Button Grid.Row="0" Grid.Column="1" Content="Process &amp; Save" Command="{Binding Master.ReplaceFirstCommaWithStarCommand}"></Button>
+                                        <Button Grid.Row="1" Grid.Column="0" Content="Process &amp; Save (CSV WAY)" Command="{Binding Master.ReplaceFirstCommaWithStarCSVWAYCommand}"></Button>
+                                    </Grid>
+                                </Grid>
+                            </GroupBox>
+                        </DockPanel>
+                    </TabItem>
+
+
+                    <TabItem Header="Path Compare">
+                        <StackPanel>
+                            <Button Content="Compare" Command="{Binding Master.ComparePathCommand}"></Button>
                         </StackPanel>
-                    </GroupBox>
-                </DockPanel>
+                    </TabItem>
+                    <TabItem Header="Magik Code">
+                        <StackPanel>
+                            <Label Content="Source"></Label>
+                            <TextBox Text="{Binding Master.MagikFileSource}"></TextBox>
+                            <Button Content="File..." CommandParameter="MagikFileSource" Command="{Binding Master.SetFileCommand}"></Button>
+                            <Separator></Separator>
+                            <Label Content="Destination"></Label>
+                            <TextBox Text="{Binding Master.MagikFolderDestination}"></TextBox>
+                            <Button Content="Folder..." CommandParameter="MagikFolderDestination" Command="{Binding Master.SetFolderCommand}"></Button>
+                            <Separator></Separator>
+                            <Button Content="Copy" Command="{Binding Master.MagikCopyCommand}"></Button>
+                            <Separator></Separator>
+                            <Label Content="Status"></Label>
+                            <Label Content="N/A"></Label>
+                        </StackPanel>
+                    </TabItem>
+                </TabControl>
             </TabItem>
-            <TabItem Header="Star">
-                <DockPanel LastChildFill="True">
-                    <Grid DockPanel.Dock="Bottom">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Label Grid.Row="0" Grid.Column="0" Content="Read:"></Label>
-                        <Label Grid.Row="0" Grid.Column="1" Content="{Binding Master.CSVReadCount}"></Label>
-                        <Label Grid.Row="0" Grid.Column="2" Content="Write:"></Label>
-                        <Label Grid.Row="0" Grid.Column="3" Content="{Binding Master.CSVWriteCount}"></Label>
-                    </Grid>
-                    <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Visibility="{Binding Master.ExpandOptionsStats}">
-                        <GroupBox.Header>
-                            <Span FontWeight="DemiBold">File</Span>
-                        </GroupBox.Header>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <Grid Grid.Row="0" Grid.Column="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
-                                <TextBox Grid.Row="0" Grid.Column="0" Text="{Binding Master.FileToStarTxt}"></TextBox>
-                            </Grid>
-                            <Grid Grid.Row="1" Grid.Column="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
-                                <Button Grid.Row="0" Grid.Column="0" Content="Select..." CommandParameter="FileToStarTxt" Command="{Binding Master.SetFileCommand}"></Button>
-                                <Button Grid.Row="0" Grid.Column="1" Content="Process &amp; Save" Command="{Binding Master.ReplaceFirstCommaWithStarCommand}"></Button>
-                                <Button Grid.Row="1" Grid.Column="0" Content="Process &amp; Save (CSV WAY)" Command="{Binding Master.ReplaceFirstCommaWithStarCSVWAYCommand}"></Button>
-                            </Grid>
-                        </Grid>
-                    </GroupBox>
-                </DockPanel>
-            </TabItem>
-            <TabItem Header="Path Compare" Visibility="Collapsed">
-                <StackPanel>
-                    <Button Content="Compare" Command="{Binding Master.ComparePathCommand}"></Button>
-                </StackPanel>
-            </TabItem>
-            <TabItem Header="Magik Code" Visibility="Collapsed">
-                <StackPanel>
-                    <Label Content="Source"></Label>
-                    <TextBox Text="{Binding Master.MagikFileSource}"></TextBox>
-                    <Button Content="File..." CommandParameter="MagikFileSource" Command="{Binding Master.SetFileCommand}"></Button>
-                    <Separator></Separator>
-                    <Label Content="Destination"></Label>
-                    <TextBox Text="{Binding Master.MagikFolderDestination}"></TextBox>
-                    <Button Content="Folder..." CommandParameter="MagikFolderDestination" Command="{Binding Master.SetFolderCommand}"></Button>
-                    <Separator></Separator>
-                    <Button Content="Copy" Command="{Binding Master.MagikCopyCommand}"></Button>
-                    <Separator></Separator>
-                    <Label Content="Status"></Label>
-                    <Label Content="N/A"></Label>
-                </StackPanel>
-            </TabItem>
-            <TabItem Header="Rest">
+            <TabItem Header="Rest" Visibility="Hidden">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />

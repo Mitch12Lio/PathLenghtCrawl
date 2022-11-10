@@ -1587,7 +1587,7 @@ namespace NavigatorTemplate.Models
                                 {
                                     string fileNamePath = CurrentDirectory.FullName.Substring(2).Replace("\\", "_");
 
-                                    string logFileName = "Files_" + fileNamePath + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + "lpfn.csv";
+                                    string logFileName = "Files_" + fileNamePath + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + "lpfn.txt";
                                     using (System.IO.StreamWriter resultsFileByPathType = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Details" + System.IO.Path.DirectorySeparatorChar + logFileName, false, Encoding.Unicode))
                                     {
                                         foreach (UNCObject uncFileObject in UNCObjectFileList)
@@ -1596,7 +1596,7 @@ namespace NavigatorTemplate.Models
                                         }
                                     }
 
-                                    string logFolderName = "Folders" + fileNamePath + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + "lpfn.csv";
+                                    string logFolderName = "Folders" + fileNamePath + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + "lpfn.txt";
                                     using (System.IO.StreamWriter resultsFolderByPathType = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Details" + System.IO.Path.DirectorySeparatorChar + logFolderName, false, Encoding.Unicode))
                                     {
                                         foreach (UNCObject uncFolderObject in UNCObjectFolderList)
@@ -1607,7 +1607,7 @@ namespace NavigatorTemplate.Models
                                 }
 
                                 string masterFileNameWOXtension = System.IO.Path.GetFileNameWithoutExtension(PathFileImportTxt);
-                                string masterFileLogName = masterFileNameWOXtension + "_" + DateGuid + "_" + "lpfn.csv";
+                                string masterFileLogName = masterFileNameWOXtension + "_" + DateGuid + "_" + "lpfn.txt";
                                 using (System.IO.StreamWriter resultsFileGlobal = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + masterFileLogName, true, Encoding.Unicode))
                                 {
                                     foreach (UNCObject uncFileObject in UNCObjectFileList)
@@ -1643,7 +1643,7 @@ namespace NavigatorTemplate.Models
                     Quit = false;
                     if (Details)
                     {
-                        using (System.IO.StreamWriter resultsFile = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Statistics_" + DateGuid + ".csv", true, Encoding.Unicode))
+                        using (System.IO.StreamWriter resultsFile = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Statistics_" + DateGuid + ".txt", true, Encoding.Unicode))
                         {
                             foreach (PathLenghtCrawl.POCO.Duration duration in DurationList)
                             {
