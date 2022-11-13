@@ -1477,7 +1477,6 @@ namespace NavigatorTemplate.Models
                 return whateverStartLongWayCommand ?? (whateverStartLongWayCommand = new CommandHandler(() => WhateverStartLongWay(), _canExecute));
             }
         }
-
         private async void WhateverStartLongWay()
         {
             string DateGuid = DateTime.Now.ToString("yyyyMMddHHmmssffff");
