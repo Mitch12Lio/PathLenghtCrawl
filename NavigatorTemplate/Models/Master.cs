@@ -1617,7 +1617,6 @@ namespace NavigatorTemplate.Models
                                     {
                                         resultsFileGlobal.WriteLine(uncFolderObject.Count + "," + uncFolderObject.CharacterCount + "," + uncFolderObject.NameUNC);
                                     }
-
                                 }
                             }
                             catch (Exception ex)
