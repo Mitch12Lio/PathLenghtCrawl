@@ -549,7 +549,7 @@
                                         </Grid.RowDefinitions>
                                         <Button Grid.Row="0" Grid.Column="0" Content="Select..." CommandParameter="FileToStarTxt" Command="{Binding Master.SetFileCommand}"></Button>
                                         <Button Grid.Row="0" Grid.Column="1" Content="Process &amp; Save" Command="{Binding Master.ReplaceFirstCommaWithStarCommand}"></Button>
-                                        <Button Grid.Row="1" Grid.Column="0" Content="Process &amp; Save (CSV WAY)" Command="{Binding Master.ReplaceFirstCommaWithStarCSVWAYCommand}"></Button>
+                                        <Button Grid.Row="1" Grid.Column="0" Content="Process &amp; Save (CSV WAY) -(DEKETE NE)" Command="{Binding Master.ReplaceFirstCommaWithStarCSVWAYCommand}" IsEnabled="False"></Button>
                                     </Grid>
                                 </Grid>
                             </GroupBox>

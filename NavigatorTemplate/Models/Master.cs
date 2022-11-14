@@ -2840,7 +2840,7 @@ namespace NavigatorTemplate.Models
                     }
                 }
 
-                using (System.IO.StreamWriter writetext = new System.IO.StreamWriter(FileToStarTxt + @"_Star_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".csv"))
+                using (System.IO.StreamWriter writetext = new System.IO.StreamWriter(FileToStarTxt + @"_Star_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".txt"))
                 {
                     int cnt = 2;
                     writetext.WriteLine("Length*Path");
@@ -3466,7 +3466,7 @@ namespace NavigatorTemplate.Models
                     //N/A - Dummy case
                     break;
                 case "FileToStarTxt":
-                    openFD.Filter = "csv files (*.csv)|*.csv|All files (*.*)|*.*";
+                    openFD.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
                     //handles empty strings
                     if (System.IO.Directory.Exists(System.IO.Path.GetDirectoryName(FileToStarTxt)))
                     {
