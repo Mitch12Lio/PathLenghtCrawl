@@ -59,7 +59,7 @@ namespace NavigatorTemplate.Models
         #region "************************************************************************************************* Global Properties"
         //NDSSamePathAsAbove
         private bool ndsSamePathAsAbove = PathLenghtCrawl.Properties.Settings.Default.NDSSamePathAsAbove;
-        
+
 
 
         private string expandOptionsStats = "Visible";
@@ -1141,145 +1141,134 @@ namespace NavigatorTemplate.Models
 
         #region "************************************************************************************************* Bread & Butter"
 
-
-        private ICommand importPathFileCommand;
-        public ICommand ImportPathFileCommand
-        {
-            get
-            {
-                return importPathFileCommand ?? (importPathFileCommand = new CommandHandler(() => ImportPathFile(), _canExecute));
-            }
-        }
+        #region "LPFN Process"
+        
+        //private ICommand importPathFileCommand;
+        //public ICommand ImportPathFileCommand
+        //{
+        //    get
+        //    {
+        //        return importPathFileCommand ?? (importPathFileCommand = new CommandHandler(() => ImportPathFile(), _canExecute));
+        //    }
+        //}
         //private async void ImportPathFile()
-        private async void ImportPathFile()
-        {
-            SelectBulkFile2ProcessButtonEnabled = false;
-            ImportProcessBulkFileButtonEnabled = false;
-            StatusMessage = "Ready";
+        //{
+        //    SelectBulkFile2ProcessButtonEnabled = false;
+        //    ImportProcessBulkFileButtonEnabled = false;
+        //    StatusMessage = "Ready";
 
-            PathImportedCount = 0;
-            PathImportedCountTotal = 0;
-            PathProcessedCount = 0;
-            PathProcessedCountTotal = 0;
-            PathCurrentlyProcessing = "N/A";
+        //    PathImportedCount = 0;
+        //    PathImportedCountTotal = 0;
+        //    PathProcessedCount = 0;
+        //    PathProcessedCountTotal = 0;
+        //    PathCurrentlyProcessing = "N/A";
 
-            ObjectCount = 0;
-            FolderCount = 0;
-            FileCount = 0;
-            ObjectCountTotal = 0;
-            FolderCountTotal = 0;
-            FileCountTotal = 0;
-            WarningCount = 0;
-            ErrorCount = 0;
+        //    ObjectCount = 0;
+        //    FolderCount = 0;
+        //    FileCount = 0;
+        //    ObjectCountTotal = 0;
+        //    FolderCountTotal = 0;
+        //    FileCountTotal = 0;
+        //    WarningCount = 0;
+        //    ErrorCount = 0;
 
-            //UNCObjectFileList.Clear();
-            //UNCObjectFolderList.Clear();
-            //UNCObjectFileLst.Clear();
-            //UNCObjectFolderLst.Clear();
+        //    List<string> uncPathsToScan = new List<string>();
 
-            List<string> uncPathsToScan = new List<string>();
-
-            System.IO.FileInfo fi = new System.IO.FileInfo(PathFileImportTxt);
-            PathImportedCountTotal = System.IO.File.ReadLines(fi.FullName).Count();
+        //    System.IO.FileInfo fi = new System.IO.FileInfo(PathFileImportTxt);
+        //    PathImportedCountTotal = System.IO.File.ReadLines(fi.FullName).Count();
 
 
-            using (System.IO.StreamReader reader = new System.IO.StreamReader(PathFileImportTxt))
-            {
-                while (!reader.EndOfStream)
-                {
-                    var CSValues = reader.ReadLine().Split(',');
-                    string stringToDitch = "NDS://HEALTH_TREE";
+        //    using (System.IO.StreamReader reader = new System.IO.StreamReader(PathFileImportTxt))
+        //    {
+        //        while (!reader.EndOfStream)
+        //        {
+        //            var CSValues = reader.ReadLine().Split(',');
+        //            string stringToDitch = "NDS://HEALTH_TREE";
 
-                    string realValue = CSValues.FirstOrDefault().Replace(stringToDitch, "");
+        //            string realValue = CSValues.FirstOrDefault().Replace(stringToDitch, "");
 
-                    uncPathsToScan.Add(realValue);
-                    PathImportedCount++;
-                }
-            }
+        //            uncPathsToScan.Add(realValue);
+        //            PathImportedCount++;
+        //        }
+        //    }
 
-            PathProcessedCountTotal = uncPathsToScan.Count();
-            //UNCObjectFileLst.Clear();
-            //UNCObjectFolderLst.Clear();
-            UNCObjectFileList.Clear();
+        //    PathProcessedCountTotal = uncPathsToScan.Count();
+        //    //UNCObjectFileLst.Clear();
+        //    //UNCObjectFolderLst.Clear();
+        //    UNCObjectFileList.Clear();
 
-            string DateGuid = DateTime.Now.ToString("yyyyMMddHHmmssffff");
-            //List<PathLenghtCrawl.POCO.Duration> durations = new List<PathLenghtCrawl.POCO.Duration>();
-            DurationList.Clear();
-
-
-            await Task.Run(() =>
-            {
-                foreach (String path in uncPathsToScan)
-                {
-                    UNCObjectFileList.Clear();
-                    UNCObjectFolderList.Clear();
-
-                    ObjectCountTotal = 0;
-                    FolderCountTotal = 0;
-                    FileCountTotal = 0;
-
-                    App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                    {
-                        UNCObjectFileLst.Clear();
-                        UNCObjectFolderLst.Clear();
-                    });
-
-                    dtRunningPer.Start();
-                    ResetTimerPer();
-                    StartTimerPer();
-
-                    try
-                    {
-                        CurrentDirectory = new System.IO.DirectoryInfo(path);
-                        PathCurrentlyProcessing = path;
-                        //Thread.Sleep(100);
-
-                        bool success = ExecuteLPFNBulkList_Linq(DateGuid);
-                        PathProcessedCount++;
-
-                        StopTimerPer();
-                        dtRunningPer.Stop();
-                        AverageRunningTimePer = String.Format("{0:0.00}", Math.Round(AverageRunningTimePerLst.Average(), 2));
-                        try
-                        {
-                            //AverageRunningTimePer = String.Format("{0:00}:{1:00}:{2:00}:{3:00}", Math.Round(AverageRunningTimePerLst.Average(), 2));
-                        }
-                        catch (Exception ex)
-                        {
-                            PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "AvrRunTImePer Error: line 875");
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Line 855");
-                    }
-                }
-            });
-
-            ObjectCountTotal = 0;
-            FolderCountTotal = 0;
-            FileCountTotal = 0;
-
-            using (System.IO.StreamWriter resultsFile = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Statistics_" + DateGuid + ".csv", true, Encoding.Unicode))
-            {
-                foreach (PathLenghtCrawl.POCO.Duration duration in DurationList)
-                {
-                    resultsFile.WriteLine(duration.Name + "," + duration.Time);
-                }
-            }
-
-            PathCurrentlyProcessing = "N/A";
-            SelectBulkFile2ProcessButtonEnabled = true;
-            ImportProcessBulkFileButtonEnabled = true;
-
-        }
+        //    string DateGuid = DateTime.Now.ToString("yyyyMMddHHmmssffff");
+        //    //List<PathLenghtCrawl.POCO.Duration> durations = new List<PathLenghtCrawl.POCO.Duration>();
+        //    DurationList.Clear();
 
 
-        private void NewAlgorithm()
-        {
+        //    await Task.Run(() =>
+        //    {
+        //        foreach (String path in uncPathsToScan)
+        //        {
+        //            UNCObjectFileList.Clear();
+        //            UNCObjectFolderList.Clear();
 
+        //            ObjectCountTotal = 0;
+        //            FolderCountTotal = 0;
+        //            FileCountTotal = 0;
 
-        }
+        //            App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+        //            {
+        //                UNCObjectFileLst.Clear();
+        //                UNCObjectFolderLst.Clear();
+        //            });
+
+        //            dtRunningPer.Start();
+        //            ResetTimerPer();
+        //            StartTimerPer();
+
+        //            try
+        //            {
+        //                CurrentDirectory = new System.IO.DirectoryInfo(path);
+        //                PathCurrentlyProcessing = path;
+        //                //Thread.Sleep(100);
+
+        //                bool success = ExecuteLPFNBulkList_Linq(DateGuid);
+        //                PathProcessedCount++;
+
+        //                StopTimerPer();
+        //                dtRunningPer.Stop();
+        //                AverageRunningTimePer = String.Format("{0:0.00}", Math.Round(AverageRunningTimePerLst.Average(), 2));
+        //                try
+        //                {
+        //                    //AverageRunningTimePer = String.Format("{0:00}:{1:00}:{2:00}:{3:00}", Math.Round(AverageRunningTimePerLst.Average(), 2));
+        //                }
+        //                catch (Exception ex)
+        //                {
+        //                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "AvrRunTImePer Error: line 875");
+        //                }
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Line 855");
+        //            }
+        //        }
+        //    });
+
+        //    ObjectCountTotal = 0;
+        //    FolderCountTotal = 0;
+        //    FileCountTotal = 0;
+
+        //    using (System.IO.StreamWriter resultsFile = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Statistics_" + DateGuid + ".csv", true, Encoding.Unicode))
+        //    {
+        //        foreach (PathLenghtCrawl.POCO.Duration duration in DurationList)
+        //        {
+        //            resultsFile.WriteLine(duration.Name + "," + duration.Time);
+        //        }
+        //    }
+
+        //    PathCurrentlyProcessing = "N/A";
+        //    SelectBulkFile2ProcessButtonEnabled = true;
+        //    ImportProcessBulkFileButtonEnabled = true;
+
+        //}
+
 
         static long GetFileLength(System.IO.FileInfo fi)
         {
@@ -1344,6 +1333,8 @@ namespace NavigatorTemplate.Models
             return retval;
         }
 
+    
+
         private ICommand quitLoopCommand;
         public ICommand QuitLoopCommand
         {
@@ -1352,11 +1343,12 @@ namespace NavigatorTemplate.Models
                 return quitLoopCommand ?? (quitLoopCommand = new CommandHandler(() => QuitLoop(), _canExecute));
             }
         }
-
         private void QuitLoop()
         {
             Quit = true;
         }
+
+
         private ICommand skipPathCommand;
         public ICommand SkipPathCommand
         {
@@ -1365,13 +1357,12 @@ namespace NavigatorTemplate.Models
                 return skipPathCommand ?? (skipPathCommand = new CommandHandler(() => SkipPath(), _canExecute));
             }
         }
-
         private void SkipPath()
         {
             Skip = true;
         }
-        //private void WhateverCheckFiles(System.IO.DirectoryInfo currentDI)
-        private void WhateverCheckFilesLongWay(string currentDI)
+
+        private void LoopFiles(string currentDI)
         {
             try
             {
@@ -1466,18 +1457,138 @@ namespace NavigatorTemplate.Models
 
 
         }
+        private void LoopDirectories(string currentDI)
+        {
+            try
+            {
+                System.IO.Directory.CreateDirectory(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Details");
+                bool success = true;
 
+                if (Details)
+                {
+                    PathCurrentlyCounting = currentDI;
+                }
+                if (currentDI.Length > MinPathLength)
+                {
+                    if (IncludeFolders)
+                    {
+                        if (Details)
+                        {
+                            ///LOG LP FOLDER NAME
+                            ObjectCount++;
+                            FolderCount++;
+                            ObjectCountTotal++;
+                            FolderCountTotal++;
 
+                            UNCObject uncObject = new UNCObject() { Count = FolderCount, CharacterCount = currentDI.Length, NameUNC = currentDI };
+                            UNCObjectFolderList.Add(uncObject);
+                            App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+                            {
+                                UNCObjectFolderLst.Add(uncObject);
+                            });
+                        }
+                    }
+                }
+                else
+                {
+                    if (IncludeDocuments)
+                    {
+                        LoopFiles(currentDI);
+                    }
 
-        private ICommand whateverStartLongWayCommand;
-        public ICommand WhateverStartLongWayCommand
+                    IEnumerable<string> diList = System.IO.Directory.EnumerateDirectories(currentDI);
+                    if (diList.Count() > 0)
+                    {
+                        foreach (string di in diList)
+                        {
+                            try
+                            {
+                                if (Quit) { return; }
+                                if (Skip) { break; }
+                                else
+                                {
+                                    LoopDirectories(di);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                ErrorCount++;
+                                StatusMessage = ex.Message;
+                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Exception: WhateverLongWay().ForEach", DateGuid);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //finished this branch
+                    }
+                }
+            }
+            #region "Catches"
+            catch (ArgumentNullException ex)
+            {
+                ErrorCount++;
+                StatusMessage = ex.Message;
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: WhateverLongWay()", DateGuid);
+            }
+            catch (System.IO.DirectoryNotFoundException ex)
+            {
+                ErrorCount++;
+                StatusMessage = ex.Message;
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: WhateverLongWay()", DateGuid);
+            }
+            catch (System.IO.PathTooLongException ex)
+            {
+                ErrorCount++;
+                StatusMessage = ex.Message;
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: WhateverLongWay()", DateGuid);
+            }
+            catch (System.IO.IOException ex)
+            {
+                ErrorCount++;
+                StatusMessage = ex.Message;
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: WhateverLongWay()", DateGuid);
+            }
+            catch (System.Security.SecurityException ex)
+            {
+                ErrorCount++;
+                StatusMessage = ex.Message;
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: WhateverLongWay()", DateGuid);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                ErrorCount++;
+                StatusMessage = ex.Message;
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: WhateverLongWay()", DateGuid);
+            }
+            catch (ArgumentException ex)
+            {
+                ErrorCount++;
+                StatusMessage = ex.Message;
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: WhateverLongWay()", DateGuid);
+            }
+            catch (Exception ex)
+            {
+                ErrorCount++;
+                StatusMessage = ex.Message;
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: WhateverLongWay()", DateGuid);
+            }
+            #endregion
+
+        }
+
+        /// <summary>
+        /// Being Used in BULK tab
+        /// </summary>
+        private ICommand fetchLPFNsCommand;
+        public ICommand FetchLPFNsCommand
         {
             get
             {
-                return whateverStartLongWayCommand ?? (whateverStartLongWayCommand = new CommandHandler(() => WhateverStartLongWay(), _canExecute));
+                return fetchLPFNsCommand ?? (fetchLPFNsCommand = new CommandHandler(() => FetchLPFNs(), _canExecute));
             }
         }
-        private async void WhateverStartLongWay()
+        private async void FetchLPFNs()
         {
             string DateGuid = DateTime.Now.ToString("yyyyMMddHHmmssffff");
             try
@@ -1570,7 +1681,7 @@ namespace NavigatorTemplate.Models
                                     PathCurrentlyProcessing = path;
                                 }
                                 //Whatever(@"\\HOGA_HOGUC1S\HOGUC1\Users\JHamrlik");
-                                WhateverLongWay(path);
+                                LoopDirectories(path);
 
                                 if (Details)
                                 {
@@ -1712,1107 +1823,248 @@ namespace NavigatorTemplate.Models
             }
             #endregion
         }
-        private void WhateverLongWay(string currentDI)
-        {
-            try
-            {
-                System.IO.Directory.CreateDirectory(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Details");
-                bool success = true;
-
-                if (Details)
-                {
-                    PathCurrentlyCounting = currentDI;
-                }
-                if (currentDI.Length > MinPathLength)
-                {
-                    if (IncludeFolders)
-                    {
-                        if (Details)
-                        {
-                            ///LOG LP FOLDER NAME
-                            ObjectCount++;
-                            FolderCount++;
-                            ObjectCountTotal++;
-                            FolderCountTotal++;
-
-                            UNCObject uncObject = new UNCObject() { Count = FolderCount, CharacterCount = currentDI.Length, NameUNC = currentDI };
-                            UNCObjectFolderList.Add(uncObject);
-                            App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                            {
-                                UNCObjectFolderLst.Add(uncObject);
-                            });
-                        }
-                    }
-                }
-                else
-                {
-                    if (IncludeDocuments)
-                    {
-                        WhateverCheckFilesLongWay(currentDI);
-                    }
-
-                    IEnumerable<string> diList = System.IO.Directory.EnumerateDirectories(currentDI);
-                    if (diList.Count() > 0)
-                    {
-                        foreach (string di in diList)
-                        {
-                            try
-                            {
-                                if (Quit) { return; }
-                                if (Skip) { break; }
-                                else
-                                {
-                                    WhateverLongWay(di);
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                ErrorCount++;
-                                StatusMessage = ex.Message;
-                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Exception: WhateverLongWay().ForEach", DateGuid);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        //finished this branch
-                    }
-                }
-            }
-            #region "Catches"
-            catch (ArgumentNullException ex)
-            {
-                ErrorCount++;
-                StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: WhateverLongWay()", DateGuid);
-            }
-            catch (System.IO.DirectoryNotFoundException ex)
-            {
-                ErrorCount++;
-                StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: WhateverLongWay()", DateGuid);
-            }
-            catch (System.IO.PathTooLongException ex)
-            {
-                ErrorCount++;
-                StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: WhateverLongWay()", DateGuid);
-            }
-            catch (System.IO.IOException ex)
-            {
-                ErrorCount++;
-                StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: WhateverLongWay()", DateGuid);
-            }
-            catch (System.Security.SecurityException ex)
-            {
-                ErrorCount++;
-                StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: WhateverLongWay()", DateGuid);
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                ErrorCount++;
-                StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: WhateverLongWay()", DateGuid);
-            }
-            catch (ArgumentException ex)
-            {
-                ErrorCount++;
-                StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: WhateverLongWay()", DateGuid);
-            }
-            catch (Exception ex)
-            {
-                ErrorCount++;
-                StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: WhateverLongWay()", DateGuid);
-            }
-            #endregion
-
-        }
-
-        //private void WhateverCheckFiles(System.IO.DirectoryInfo currentDI)
-        private void WhateverCheckFiles(string currentDI)
-        {
-            try
-            {
-                IEnumerable<string> fiList = System.IO.Directory.EnumerateFiles(currentDI);
-                int lkj = fiList.Where(x => x.Length > MinPathLength).Count();
-
-                if (lkj > 0)
-                {
-                    //some, maybe all, files in this folder are LPFN
-                    //LOG IT
-                    //check parent
-                    ObjectCountTotal += lkj;
-                    FileCountTotal += lkj;
-
-                    string fn = System.IO.Directory.GetParent(currentDI).FullName;
-                    WhateverCheckFiles(fn);
-                }
-                else
-                {
-                    //exit this branch, NO LPFN
-                }
-            }
-            catch (Exception ex)
-            {
-                string lsdkjf = ex.Message;
-                throw;
-            }
-
-
-            //IEnumerable<System.IO.FileInfo> fiList = currentDI.EnumerateFiles();
-            //int lkj = fiList.Where(x => x.FullName.Length > 255).Count();
-
-            //if (lkj > 0)
-            //{
-            //    //some, maybe all, files in this folder are LPFN
-            //    //LOG IT
-            //    //check parent
-            //    WhateverCheckFiles(currentDI.Parent);
-            //}
-            //else
-            //{
-            //    //exit this branch, NO LPFN
-            //}
-
-        }
-
-
-
-        private ICommand whateverStartCommand;
-        public ICommand WhateverStartCommand
-        {
-            get
-            {
-                return whateverStartCommand ?? (whateverStartCommand = new CommandHandler(() => WhateverStart(), _canExecute));
-            }
-        }
-
-        private async void WhateverStart()
-        {
-            StatusMessage = "Processing...";
-            ObjectCountTotal = 0;
-            FolderCountTotal = 0;
-            FileCountTotal = 0;
-
-            string currentDI = CurrentDirectory.FullName;
-            await Task.Run(() =>
-            {
-                //Whatever(currentDI);
-
-                //System.IO.DirectoryInfo did = new System.IO.DirectoryInfo(@"\\HOGA_HOGUC1S\HOGUC1\Users\JHamrlik");
-                System.IO.DirectoryInfo did = new System.IO.DirectoryInfo(@"C:\Mitch");
-
-
-                Whatever(@"\\HOGA_HOGUC1S\HOGUC1\Users\JHamrlik");
-                //Whatever(did.FullName);
-
-
-                int lkj = 9;
-            });
-            StatusMessage = "Completed";
-        }
-        private void Whatever(string currentDI)
-        {
-            try
-            {
-                IEnumerable<string> diList = System.IO.Directory.EnumerateDirectories(currentDI);
-                if (diList.Count() > 0)
-                {
-                    foreach (string di in diList)
-                    {
-                        if (di.Length > MinPathLength)
-                        {
-                            //LP FolderNAMe
-                            //LOG IT
-                            ObjectCountTotal++;
-                            FolderCountTotal++;
-                        }
-                        else
-                        {
-                            Whatever(di);
-                        }
-                    }
-                }
-                else
-                {
-                    WhateverCheckFiles(currentDI);
-
-                }
-
-            }
-            catch (Exception ex)
-            {
-                string lsdkjf = ex.Message;
-                throw;
-            }
-
-
-
-
-
-            //if (currentDI.FullName.Length > 255)
-            //{
-            //    //LONG PATH FOLDER NAME, LOG IT
-            //}
-            //else
-            //{
-            //    IEnumerable<System.IO.DirectoryInfo> diList = currentDI.EnumerateDirectories();
-            //    if (diList.Count() > 0)
-            //    {
-            //        foreach (System.IO.DirectoryInfo di in diList)
-            //        {
-            //            Whatever(di);
-            //        }
-            //    }
-            //    else
-            //    {
-            //        WhateverCheckFiles(currentDI);
-            //    }
-            //}
-
-
-
-
-            //if (currentDI.FullName.Length > 255)
-            //{
-            //    //add everything here as LPFN
-            //}
-            //else
-            //{
-            //    IEnumerable<System.IO.FileInfo> fiList = currentDI.EnumerateFiles();
-            //    int lkj = fiList.Where(x => x.FullName.Length > 255).Count();
-
-            //    if (lkj > 0)
-            //    {
-            //        //some, maybe all, files in this folder are LPFN
-            //    }
-            //    else
-            //    {
-            //        IEnumerable<System.IO.DirectoryInfo> diList = currentDI.EnumerateDirectories();
-            //        if (diList.Count() > 0)
-            //        {
-            //            foreach (System.IO.DirectoryInfo di in diList)
-            //            {
-            //                Whatever(di);
-            //            }
-            //        }
-            //    }
-            //}
-
-
-
-        }
-        private bool ExecuteLPFNBulkList_Linq(string DateGuid)
-        {
-            System.IO.Directory.CreateDirectory(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Details");
-            bool success = true;
-
-            //CurrentDirectory = new System.IO.DirectoryInfo(@"Z:\Users\JHamrlik");
-            //CurrentDirectory = new System.IO.DirectoryInfo(@"C:\");
-            if (!System.IO.File.Exists(PathFileImportTxt))
-            {
-                StatusMessage = "File does not exists.";
-            }
-            else
-            {
-                bool alreadyUNC = false;
-                if (CurrentDirectory.FullName.StartsWith("\\"))
-                {
-                    alreadyUNC = true;
-                }
-                try
-                {
-                    dtRunningPer.Tick += new EventHandler(dtRunningPer_Tick);
-                    dtRunningPer.Interval = new TimeSpan(0, 0, 0, 0, 1);
-
-                    if (IncludeDocuments)
-                    {
-                        try
-                        {
-                            StatusMessage = "Processing Files...";
-                            string fileNamePath = CurrentDirectory.FullName.Substring(2).Replace("\\", "_");
-                            string logFileName = "Files_" + fileNamePath + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + "lpfn.csv";
-                            using (System.IO.StreamWriter resultsFileByPathType = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Details" + System.IO.Path.DirectorySeparatorChar + logFileName, false, Encoding.Unicode))
-                            {
-                                string masterFileNameWOXtension = System.IO.Path.GetFileNameWithoutExtension(PathFileImportTxt);
-                                string masterFileLogName = masterFileNameWOXtension + "_" + DateGuid + "_" + "lpfn.csv";
-                                using (System.IO.StreamWriter resultsFileGlobal = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + masterFileLogName, true, Encoding.Unicode))
-                                {
-                                    StatusMessage = "Processing Files...";
-                                    try
-                                    {
-                                        foreach (String fi in System.IO.Directory.EnumerateFiles(CurrentDirectory.FullName, "*.*", System.IO.SearchOption.AllDirectories).Where(x => x.Length > MinPathLength))
-                                        {
-                                            try
-                                            {
-                                                PathCurrentlyCounting = fi;
-                                                //if (!System.IO.File.Exists(fi))
-                                                //{ 
-                                                //    WarningCount++;
-                                                //    PathLenghtCrawl.Log.Log.Write2WarningLog(LogLocationTxt, DateTime.Now, "File does Not Exists.", fi);
-                                                //}
-                                                ObjectCountTotal++;
-                                                FileCountTotal++;
-                                                ObjectCount++;
-                                                FileCount++;
-                                                try
-                                                {
-                                                    resultsFileByPathType.WriteLine(FileCount + "," + fi.Length + "," + fi);
-                                                }
-                                                catch (Exception ex)
-                                                {
-                                                    StatusMessage = ex.Message;
-                                                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Error while writing to " + fileNamePath);
-                                                }
-                                                try
-                                                {
-                                                    resultsFileGlobal.WriteLine(FolderCount + "," + fi.Length + "," + fi);
-                                                }
-                                                catch (Exception ex)
-                                                {
-                                                    StatusMessage = ex.Message;
-                                                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Error while writing to " + masterFileLogName);
-                                                }
-
-                                                UNCObject uncObject = new UNCObject() { Count = FileCount, CharacterCount = fi.Length, NameUNC = fi };
-
-                                                UNCObjectFileList.Add(uncObject);
-                                                App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                                                {
-                                                    UNCObjectFileLst.Add(uncObject);
-                                                });
-                                            }
-                                            #region "Catches"
-                                            catch (ArgumentNullException ex)
-                                            {
-                                                ErrorCount++;
-                                                StatusMessage = ex.Message;
-                                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: Error in Files inside ForEach with " + fi);
-                                            }
-                                            catch (System.IO.DirectoryNotFoundException ex)
-                                            {
-                                                ErrorCount++;
-                                                StatusMessage = ex.Message;
-                                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: Error in Files inside ForEach with " + fi);
-                                            }
-                                            catch (System.IO.PathTooLongException ex)
-                                            {
-                                                ErrorCount++;
-                                                StatusMessage = ex.Message;
-                                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: Error in Files inside ForEach with " + fi);
-                                            }
-                                            catch (System.IO.IOException ex)
-                                            {
-                                                ErrorCount++;
-                                                StatusMessage = ex.Message;
-                                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: Error in Files inside ForEach with " + fi);
-                                            }
-                                            catch (System.Security.SecurityException ex)
-                                            {
-                                                ErrorCount++;
-                                                StatusMessage = ex.Message;
-                                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: Error in Files inside ForEach with " + fi);
-                                            }
-                                            catch (UnauthorizedAccessException ex)
-                                            {
-                                                ErrorCount++;
-                                                StatusMessage = ex.Message;
-                                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: Error in Files inside ForEach with " + fi);
-                                            }
-                                            catch (ArgumentException ex)
-                                            {
-                                                ErrorCount++;
-                                                StatusMessage = ex.Message;
-                                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: Error in Files inside ForEach with " + fi);
-                                            }
-                                            catch (Exception ex)
-                                            {
-                                                ErrorCount++;
-                                                StatusMessage = ex.Message;
-                                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: Error in Files inside ForEach with " + fi);
-                                            }
-                                            #endregion
-                                        }
-                                    }
-                                    #region "Catches"
-                                    catch (ArgumentNullException ex)
-                                    {
-                                        ErrorCount++;
-                                        StatusMessage = ex.Message;
-                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: Error in Files outside ForEach");
-                                    }
-                                    catch (System.IO.DirectoryNotFoundException ex)
-                                    {
-                                        ErrorCount++;
-                                        StatusMessage = ex.Message;
-                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: Error in Files outside ForEach");
-                                    }
-                                    catch (System.IO.PathTooLongException ex)
-                                    {
-                                        ErrorCount++;
-                                        StatusMessage = ex.Message;
-                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: Error in Files outside ForEach");
-                                    }
-                                    catch (System.IO.IOException ex)
-                                    {
-                                        ErrorCount++;
-                                        StatusMessage = ex.Message;
-                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: Error in Files outside ForEach");
-                                    }
-                                    catch (System.Security.SecurityException ex)
-                                    {
-                                        ErrorCount++;
-                                        StatusMessage = ex.Message;
-                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: Error in Files outside ForEach");
-                                    }
-                                    catch (UnauthorizedAccessException ex)
-                                    {
-                                        ErrorCount++;
-                                        StatusMessage = ex.Message;
-                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: Error in Files outside ForEach");
-                                    }
-                                    catch (ArgumentException ex)
-                                    {
-                                        ErrorCount++;
-                                        StatusMessage = ex.Message;
-                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: Error in Files outside ForEach");
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        ErrorCount++;
-                                        StatusMessage = ex.Message;
-                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: Error in Files outside ForEach");
-                                    }
-                                    #endregion
-
-                                    PathLenghtCrawl.POCO.Duration currentDuration = new PathLenghtCrawl.POCO.Duration() { Name = CurrentDirectory.FullName + " (Files)", Time = ValidatorRunningTimePer };
-                                    DurationList.Add(currentDuration);
-
-                                }
-                            }
-                        }
-                        #region "Catches"
-                        catch (ArgumentNullException ex)
-                        {
-                            ErrorCount++;
-                            StatusMessage = ex.Message;
-                            PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: Error while gathering files");
-                        }
-                        catch (System.IO.DirectoryNotFoundException ex)
-                        {
-                            ErrorCount++;
-                            StatusMessage = ex.Message;
-                            PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: Error while gathering files");
-                        }
-                        catch (System.IO.PathTooLongException ex)
-                        {
-                            ErrorCount++;
-                            StatusMessage = ex.Message;
-                            PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: Error while gathering files");
-                        }
-                        catch (System.IO.IOException ex)
-                        {
-                            ErrorCount++;
-                            StatusMessage = ex.Message;
-                            PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: Error while gathering files");
-                        }
-                        catch (System.Security.SecurityException ex)
-                        {
-                            ErrorCount++;
-                            StatusMessage = ex.Message;
-                            PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: Error while gathering files");
-                        }
-                        catch (UnauthorizedAccessException ex)
-                        {
-                            ErrorCount++;
-                            StatusMessage = ex.Message;
-                            PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: Error while gathering files");
-                        }
-                        catch (ArgumentException ex)
-                        {
-                            ErrorCount++;
-                            StatusMessage = ex.Message;
-                            PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: Error while gathering files");
-                        }
-                        catch (Exception ex)
-                        {
-                            ErrorCount++;
-                            StatusMessage = ex.Message;
-                            PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: Error while gathering files");
-                        }
-                        #endregion
-                        finally
-                        {
-                            //StatusMessage = "Creating Reports...";
-
-                            //string fileNamePath = CurrentDirectory.FullName.Substring(2).Replace("\\", "_");
-                            //using (System.IO.StreamWriter resultsFile = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Files_" + fileNamePath + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + "results.csv", false, Encoding.Unicode))
-                            //{
-                            //    try
-                            //    {
-                            //        foreach (UNCObject path in UNCObjectFileList)
-                            //        {
-                            //            resultsFile.WriteLine(path.Count + "," + path.CharacterCount + "," + path.NameUNC);
-                            //        }
-                            //    }
-                            //    catch (Exception ex)
-                            //    {
-                            //        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Error while writing log (files)");
-                            //    }
-                            //}
-                            //string masterFileNameWOXtension = System.IO.Path.GetFileNameWithoutExtension(PathFileImportTxt);
-                            //using (System.IO.StreamWriter resultsFile = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + masterFileNameWOXtension + "_" + DateGuid + "_" + "lpfn.csv", true, Encoding.Unicode))
-                            //{
-                            //    try
-                            //    {
-                            //        foreach (UNCObject path in UNCObjectFileList)
-                            //        {
-                            //            resultsFile.WriteLine(path.Count + "," + path.CharacterCount + "," + path.NameUNC);
-                            //        }
-                            //    }
-                            //    catch (Exception ex)
-                            //    {
-                            //        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Error while writing master log (files)");
-                            //    }
-                            //}
-                        }
-                    }
-
-                    if (IncludeFolders)
-                    {
-                        try
-                        {
-                            string fileNamePath = CurrentDirectory.FullName.Substring(2).Replace("\\", "_");
-                            string logFileName = "Folders_" + fileNamePath + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + "lpfn.csv";
-                            using (System.IO.StreamWriter resultsFileByPathType = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Details" + System.IO.Path.DirectorySeparatorChar + logFileName, false, Encoding.Unicode))
-                            {
-                                string masterFileNameWOXtension = System.IO.Path.GetFileNameWithoutExtension(PathFileImportTxt);
-                                string masterFileLogName = masterFileNameWOXtension + "_" + DateGuid + "_" + "lpfn.csv";
-                                using (System.IO.StreamWriter resultsFileGlobal = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + masterFileNameWOXtension + "_" + DateGuid + "_" + "lpfn.csv", true, Encoding.Unicode))
-                                {
-                                    StatusMessage = "Processing Folders...";
-                                    try
-                                    {
-                                        foreach (String di in System.IO.Directory.EnumerateDirectories(CurrentDirectory.FullName, "*", System.IO.SearchOption.AllDirectories).Where(x => x.Length > MinPathLength))
-                                        {
-                                            try
-                                            {
-                                                PathCurrentlyCounting = di;
-                                                //if (!System.IO.Directory.Exists(di))
-                                                //{
-                                                //    WarningCount++;
-                                                //    PathLenghtCrawl.Log.Log.Write2WarningLog(LogLocationTxt, DateTime.Now, "Directory does Not Exists.", di);
-                                                //}
-                                                ObjectCountTotal++;
-                                                FolderCountTotal++;
-                                                ObjectCount++;
-                                                FolderCount++;
-
-                                                try
-                                                {
-                                                    resultsFileByPathType.WriteLine(FolderCount + "," + di.Length + "," + di);
-                                                }
-                                                catch (Exception ex)
-                                                {
-                                                    StatusMessage = ex.Message;
-                                                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Error while writing to " + logFileName);
-                                                }
-                                                try
-                                                {
-                                                    resultsFileGlobal.WriteLine(FolderCount + "," + di.Length + "," + di);
-                                                }
-                                                catch (Exception ex)
-                                                {
-                                                    StatusMessage = ex.Message;
-                                                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Error while writing to " + masterFileLogName);
-                                                }
-
-                                                UNCObject uncObject = new UNCObject() { Count = FolderCount, CharacterCount = di.Length, NameUNC = di };
-                                                UNCObjectFolderList.Add(uncObject);
-
-                                                App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                                                {
-                                                    UNCObjectFolderLst.Add(uncObject);
-                                                });
-                                            }
-                                            #region "Catches"
-                                            catch (ArgumentNullException ex)
-                                            {
-                                                ErrorCount++;
-                                                StatusMessage = ex.Message;
-                                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: Error in Directory inside ForEach with " + di);
-                                            }
-                                            catch (System.IO.DirectoryNotFoundException ex)
-                                            {
-                                                ErrorCount++;
-                                                StatusMessage = ex.Message;
-                                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: Error in Directory inside ForEach with " + di);
-                                            }
-                                            catch (System.IO.PathTooLongException ex)
-                                            {
-                                                ErrorCount++;
-                                                StatusMessage = ex.Message;
-                                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: Error in Directory inside ForEach with " + di);
-                                            }
-                                            catch (System.IO.IOException ex)
-                                            {
-                                                ErrorCount++;
-                                                StatusMessage = ex.Message;
-                                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: Error in Directory inside ForEach with " + di);
-                                            }
-                                            catch (System.Security.SecurityException ex)
-                                            {
-                                                ErrorCount++;
-                                                StatusMessage = ex.Message;
-                                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: Error in Directory inside ForEach with " + di);
-                                            }
-                                            catch (UnauthorizedAccessException ex)
-                                            {
-                                                ErrorCount++;
-                                                StatusMessage = ex.Message;
-                                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: Error in Directory inside ForEach with " + di);
-                                            }
-                                            catch (ArgumentException ex)
-                                            {
-                                                ErrorCount++;
-                                                StatusMessage = ex.Message;
-                                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: Error in Directory inside ForEach with " + di);
-                                            }
-                                            catch (Exception ex)
-                                            {
-                                                ErrorCount++;
-                                                StatusMessage = ex.Message;
-                                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: Error in Directory inside ForEach with " + di);
-                                            }
-                                            #endregion
-                                        }
-                                    }
-                                    #region "Catches"
-                                    catch (ArgumentNullException ex)
-                                    {
-                                        ErrorCount++;
-                                        StatusMessage = ex.Message;
-                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: Error in Directory outside ForEach");
-                                    }
-                                    catch (System.IO.DirectoryNotFoundException ex)
-                                    {
-                                        ErrorCount++;
-                                        StatusMessage = ex.Message;
-                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: Error in Directory outside ForEach");
-                                    }
-                                    catch (System.IO.PathTooLongException ex)
-                                    {
-                                        ErrorCount++;
-                                        StatusMessage = ex.Message;
-                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: Error in Directory outside ForEach");
-                                    }
-                                    catch (System.IO.IOException ex)
-                                    {
-                                        ErrorCount++;
-                                        StatusMessage = ex.Message;
-                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: Error in Directory outside ForEach");
-                                    }
-                                    catch (System.Security.SecurityException ex)
-                                    {
-                                        ErrorCount++;
-                                        StatusMessage = ex.Message;
-                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: Error in Directory outside ForEach");
-                                    }
-                                    catch (UnauthorizedAccessException ex)
-                                    {
-                                        ErrorCount++;
-                                        StatusMessage = ex.Message;
-                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: Error in Directory outside ForEach");
-                                    }
-                                    catch (ArgumentException ex)
-                                    {
-                                        ErrorCount++;
-                                        StatusMessage = ex.Message;
-                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: Error in Directory outside ForEach");
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        ErrorCount++;
-                                        StatusMessage = ex.Message;
-                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: Error in Directory outside ForEach");
-                                    }
-                                    #endregion
-
-                                    PathLenghtCrawl.POCO.Duration currentDuration = new PathLenghtCrawl.POCO.Duration() { Name = CurrentDirectory.FullName + " (+ Folders)", Time = ValidatorRunningTimePer };
-                                    DurationList.Add(currentDuration);
-                                }
-                            }
-                        }
-                        #region "Catches"
-                        catch (ArgumentNullException ex)
-                        {
-                            ErrorCount++;
-                            StatusMessage = ex.Message;
-                            PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: Error while gathering directories");
-                        }
-                        catch (System.IO.DirectoryNotFoundException ex)
-                        {
-                            ErrorCount++;
-                            StatusMessage = ex.Message;
-                            PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: Error while gathering directories");
-                        }
-                        catch (System.IO.PathTooLongException ex)
-                        {
-                            ErrorCount++;
-                            StatusMessage = ex.Message;
-                            PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: Error while gathering directories");
-                        }
-                        catch (System.IO.IOException ex)
-                        {
-                            ErrorCount++;
-                            StatusMessage = ex.Message;
-                            PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: Error while gathering directories");
-                        }
-                        catch (System.Security.SecurityException ex)
-                        {
-                            ErrorCount++;
-                            StatusMessage = ex.Message;
-                            PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: Error while gathering directories");
-                        }
-                        catch (UnauthorizedAccessException ex)
-                        {
-                            ErrorCount++;
-                            StatusMessage = ex.Message;
-                            PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: Error while gathering directories");
-                        }
-                        catch (ArgumentException ex)
-                        {
-                            ErrorCount++;
-                            StatusMessage = ex.Message;
-                            PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: Error while gathering directories");
-                        }
-                        catch (Exception ex)
-                        {
-                            ErrorCount++;
-                            StatusMessage = ex.Message;
-                            PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: Error while gathering directories");
-                        }
-                        #endregion
-                        finally
-                        {
-                            //StatusMessage = "Creating Reports...";
-
-                            //string fileNamePath = CurrentDirectory.FullName.Substring(2).Replace("\\", "_");
-                            //using (System.IO.StreamWriter resultsFile = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Folders_" + fileNamePath + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + "lpfn.csv", false, Encoding.Unicode))
-                            //{
-                            //    try
-                            //    {
-                            //        foreach (UNCObject path in UNCObjectFolderList)
-                            //        {
-                            //            resultsFile.WriteLine(path.Count + "," + path.CharacterCount + "," + path.NameUNC);
-                            //        }
-                            //    }
-                            //    catch (Exception ex)
-                            //    {
-                            //        StatusMessage = ex.Message;
-                            //        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Error while writing log (folders)");
-                            //    }
-                            //}
-                            //string masterFileNameWOXtension = System.IO.Path.GetFileNameWithoutExtension(PathFileImportTxt);
-                            //using (System.IO.StreamWriter resultsFile = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + masterFileNameWOXtension + "_" + DateGuid + "_" + "lpfn.csv", true, Encoding.Unicode))
-                            //{
-                            //    try
-                            //    {
-                            //        foreach (UNCObject path in UNCObjectFolderList)
-                            //        {
-                            //            resultsFile.WriteLine(path.Count + "," + path.CharacterCount + "," + path.NameUNC);
-                            //        }
-                            //    }
-                            //    catch (Exception ex)
-                            //    {
-                            //        StatusMessage = ex.Message;
-                            //        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Error while writing master log (folders)");
-                            //    }
-                            //}
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    ErrorCount++;
-                    StatusMessage = ex.Message;
-                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "General error in ExecuteLPFNBulkList_Linq()");
-                }
-                finally
-                { PathCurrentlyCounting = "N/A"; }
-
-
-            }
-            if (ErrorCount > 0)
-            {
-                success = false;
-                StatusMessage = "Check Error Logs";
-
-            }
-            else
-            {
-                StatusMessage = "Ready";
-            }
-            return success;
-        }
-
-        private void ExecuteLPFNBulkList()
-        {
-
-            bool alreadyUNC = false;
-            if (CurrentDirectory.FullName.StartsWith("\\")) { alreadyUNC = true; }
-            try
-            {
-                dtRunningPer.Tick += new EventHandler(dtRunningPer_Tick);
-                dtRunningPer.Interval = new TimeSpan(0, 0, 0, 0, 1);
-
-                StatusMessage = "Gathering Information (Files)...";
-                System.IO.FileInfo[] fileInfos = CurrentDirectory.GetFiles();
-                IEnumerable<System.IO.FileInfo> fileList = CurrentDirectory.GetFiles("*.*", System.IO.SearchOption.AllDirectories);
-                StatusMessage = "Processing Files...";
-
-                try
-                {
-                    foreach (System.IO.FileInfo fi in fileInfos)
-                    {
-                        string fiInUNC = String.Empty;
-                        if (!alreadyUNC)
-                        {
-                            try
-                            {
-                                fiInUNC = MappedDriveResolver.ResolveToUNC(fi.FullName);
-                            }
-                            catch (Exception)
-                            {
-                                throw;
-                            }
-
-                        }
-                        else
-                        {
-                            fiInUNC = fi.FullName;
-                        }
-                        try
-                        {
-
-                            int fileLenght = fiInUNC.Length;
-                            if (fileLenght > MinPathLength)
-                            {
-                                UNCObject uncObject = new UNCObject() { CharacterCount = fileLenght, NameUNC = fiInUNC };
-                                ObjectCount++;
-                                FileCount++;
-                                UNCObjectFileLst.Add(uncObject);
-                            }
-                        }
-                        catch (Exception)
-                        {
-
-                            throw;
-                        }
-                    }
-                }
-                catch (Exception)
-                {
-
-                    throw;
-                }
-                StatusMessage = "Gathering Information (Folders)...";
-                System.IO.DirectoryInfo[] directoryInfos = CurrentDirectory.GetDirectories("*.*", System.IO.SearchOption.AllDirectories);
-                StatusMessage = "Processing Folders...";
-                try
-                {
-
-
-                    foreach (System.IO.DirectoryInfo di in directoryInfos)
-                    {
-                        string diInUNC = String.Empty;
-                        if (!alreadyUNC)
-                        {
-                            try
-                            {
-                                diInUNC = MappedDriveResolver.ResolveToUNC(di.FullName);
-                            }
-                            catch (Exception)
-                            {
-                                throw;
-                            }
-
-                        }
-                        else
-                        {
-                            diInUNC = di.FullName;
-                        }
-
-
-
-                        int directoryLenght = diInUNC.Length;
-                        if (directoryLenght > MinPathLength)
-                        {
-                            try
-                            {
-                                UNCObject uncObject = new UNCObject() { CharacterCount = directoryLenght, NameUNC = diInUNC };
-                                ObjectCount++;
-                                FolderCount++;
-                                UNCObjectFileLst.Add(uncObject);
-                            }
-                            catch (Exception)
-                            {
-                                throw;
-                            }
-
-                        }
-                        try
-                        {
-                            System.IO.FileInfo[] fileInfos1;
-                            try
-                            {
-                                fileInfos1 = di.GetFiles();
-                            }
-                            catch (Exception ex)
-                            {
-
-                                throw;
-                            }
-
-                            foreach (System.IO.FileInfo fi in fileInfos1)
-                            {
-                                try
-                                {
-
-
-                                    string fiInUNC = String.Empty;
-                                    if (!alreadyUNC)
-                                    {
-                                        try
-                                        {
-                                            fiInUNC = MappedDriveResolver.ResolveToUNC(fi.FullName);
-                                        }
-                                        catch (Exception ex)
-                                        {
-
-                                            throw;
-                                        }
-
-                                    }
-                                    else
-                                    {
-                                        fiInUNC = fi.FullName;
-                                    }
-                                    try
-                                    {
-                                        int fileLenght = fiInUNC.Length;
-                                        if (fileLenght > MinPathLength)
-                                        {
-                                            UNCObject uncObject = new UNCObject() { CharacterCount = fileLenght, NameUNC = fiInUNC };
-                                            ObjectCount++;
-                                            FileCount++;
-                                            UNCObjectFileLst.Add(uncObject);
-
-                                        }
-                                    }
-                                    catch (Exception ex)
-                                    {
-
-                                        throw;
-                                    }
-                                }
-                                catch (Exception ex)
-                                {
-                                    throw;
-                                }
-                            }
-                        }
-                        catch (Exception es)
-                        {
-                            //break was here the last time
-                            throw;
-                        }
-                    }
-                }
-                catch (Exception)
-                {
-
-                    throw;
-                }
-            }
-            catch (UnauthorizedAccessException uae)
-            {
-                StatusMessage = "Unauthorized Access";
-                //success = false;
-            }
-            catch (Exception ex)
-            {
-                StatusMessage = "Problem detected";
-                //success = false;
-            }
-            StatusMessage = "Ready";
-        }
-
-        private ICommand replaceFirstCommaWithStarCSVWAYCommand;
-        public ICommand ReplaceFirstCommaWithStarCSVWAYCommand
+
+
+      
+
+
+        //private void WhateverCheckFiles(string currentDI)
+        //{
+        //    try
+        //    {
+        //        IEnumerable<string> fiList = System.IO.Directory.EnumerateFiles(currentDI);
+        //        int lkj = fiList.Where(x => x.Length > MinPathLength).Count();
+
+        //        if (lkj > 0)
+        //        {
+        //            //some, maybe all, files in this folder are LPFN
+        //            //LOG IT
+        //            //check parent
+        //            ObjectCountTotal += lkj;
+        //            FileCountTotal += lkj;
+
+        //            string fn = System.IO.Directory.GetParent(currentDI).FullName;
+        //            WhateverCheckFiles(fn);
+        //        }
+        //        else
+        //        {
+        //            //exit this branch, NO LPFN
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        string lsdkjf = ex.Message;
+        //        throw;
+        //    }
+
+
+        //    //IEnumerable<System.IO.FileInfo> fiList = currentDI.EnumerateFiles();
+        //    //int lkj = fiList.Where(x => x.FullName.Length > 255).Count();
+
+        //    //if (lkj > 0)
+        //    //{
+        //    //    //some, maybe all, files in this folder are LPFN
+        //    //    //LOG IT
+        //    //    //check parent
+        //    //    WhateverCheckFiles(currentDI.Parent);
+        //    //}
+        //    //else
+        //    //{
+        //    //    //exit this branch, NO LPFN
+        //    //}
+
+        //}
+
+
+
+        //private ICommand whateverStartCommand;
+        //public ICommand WhateverStartCommand
+        //{
+        //    get
+        //    {
+        //        return whateverStartCommand ?? (whateverStartCommand = new CommandHandler(() => WhateverStart(), _canExecute));
+        //    }
+        //}
+        //private async void WhateverStart()
+        //{
+        //    StatusMessage = "Processing...";
+        //    ObjectCountTotal = 0;
+        //    FolderCountTotal = 0;
+        //    FileCountTotal = 0;
+
+        //    string currentDI = CurrentDirectory.FullName;
+        //    await Task.Run(() =>
+        //    {
+        //        //Whatever(currentDI);
+
+        //        //System.IO.DirectoryInfo did = new System.IO.DirectoryInfo(@"\\HOGA_HOGUC1S\HOGUC1\Users\JHamrlik");
+        //        System.IO.DirectoryInfo did = new System.IO.DirectoryInfo(@"C:\Mitch");
+
+
+        //        Whatever(@"\\HOGA_HOGUC1S\HOGUC1\Users\JHamrlik");
+        //        //Whatever(did.FullName);
+
+
+        //        int lkj = 9;
+        //    });
+        //    StatusMessage = "Completed";
+        //}
+
+        //private void Whatever(string currentDI)
+        //{
+        //    try
+        //    {
+        //        IEnumerable<string> diList = System.IO.Directory.EnumerateDirectories(currentDI);
+        //        if (diList.Count() > 0)
+        //        {
+        //            foreach (string di in diList)
+        //            {
+        //                if (di.Length > MinPathLength)
+        //                {
+        //                    //LP FolderNAMe
+        //                    //LOG IT
+        //                    ObjectCountTotal++;
+        //                    FolderCountTotal++;
+        //                }
+        //                else
+        //                {
+        //                    Whatever(di);
+        //                }
+        //            }
+        //        }
+        //        else
+        //        {
+        //            WhateverCheckFiles(currentDI);
+
+        //        }
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        string lsdkjf = ex.Message;
+        //        throw;
+        //    }
+
+
+
+
+
+        //    //if (currentDI.FullName.Length > 255)
+        //    //{
+        //    //    //LONG PATH FOLDER NAME, LOG IT
+        //    //}
+        //    //else
+        //    //{
+        //    //    IEnumerable<System.IO.DirectoryInfo> diList = currentDI.EnumerateDirectories();
+        //    //    if (diList.Count() > 0)
+        //    //    {
+        //    //        foreach (System.IO.DirectoryInfo di in diList)
+        //    //        {
+        //    //            Whatever(di);
+        //    //        }
+        //    //    }
+        //    //    else
+        //    //    {
+        //    //        WhateverCheckFiles(currentDI);
+        //    //    }
+        //    //}
+
+
+
+
+        //    //if (currentDI.FullName.Length > 255)
+        //    //{
+        //    //    //add everything here as LPFN
+        //    //}
+        //    //else
+        //    //{
+        //    //    IEnumerable<System.IO.FileInfo> fiList = currentDI.EnumerateFiles();
+        //    //    int lkj = fiList.Where(x => x.FullName.Length > 255).Count();
+
+        //    //    if (lkj > 0)
+        //    //    {
+        //    //        //some, maybe all, files in this folder are LPFN
+        //    //    }
+        //    //    else
+        //    //    {
+        //    //        IEnumerable<System.IO.DirectoryInfo> diList = currentDI.EnumerateDirectories();
+        //    //        if (diList.Count() > 0)
+        //    //        {
+        //    //            foreach (System.IO.DirectoryInfo di in diList)
+        //    //            {
+        //    //                Whatever(di);
+        //    //            }
+        //    //        }
+        //    //    }
+        //    //}
+
+
+
+        //}
+
+
+        //private ICommand replaceFirstCommaWithStarCSVWAYCommand;
+        //public ICommand ReplaceFirstCommaWithStarCSVWAYCommand
+        //{
+        //    get
+        //    {
+        //        return replaceFirstCommaWithStarCSVWAYCommand ?? (replaceFirstCommaWithStarCSVWAYCommand = new CommandHandler(() => ReplaceFirstCommaWithStarCSVWAY(), _canExecute));
+        //    }
+        //}
+        //private async void ReplaceFirstCommaWithStarCSVWAY()
+        //{
+        //    await Task.Run(() =>
+        //    {
+        //        StatusMessage = "Ready";
+        //        CSVReadCount = 0;
+        //        CSVWriteCount = 0;
+
+        //        List<string> destinationStrings = new List<string>();
+
+        //        using (var reader = new System.IO.StreamReader(FileToStarTxt))
+        //        {
+        //            while (!reader.EndOfStream)
+        //            {
+        //                string oneS = reader.ReadLine();
+        //                int twoI = oneS.IndexOf(',');
+        //                string threeS = oneS.Substring(twoI + 1);
+        //                int fourI = threeS.IndexOf(',');
+        //                string fiveS = threeS.Substring(0, fourI);
+        //                string sixS = threeS.Substring(fourI + 1);
+        //                string sevenS = fiveS + "*" + sixS;
+
+        //                destinationStrings.Add(sixS);
+        //                CSVReadCount++;
+        //            }
+        //        }
+
+        //        using (System.IO.StreamWriter writetext = new System.IO.StreamWriter(FileToStarTxt + @"CSV_Star_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".csv"))
+        //        {
+        //            int cnt = 2;
+        //            writetext.WriteLine("Length*Path");
+        //            foreach (string s in destinationStrings)
+        //            {
+        //                //writetext.WriteLine("=LEN(B" + cnt.ToString() + ")*" + s);
+        //                writetext.WriteLine(s.Length.ToString() + "*" + s);
+        //                cnt++;
+        //                CSVWriteCount++;
+        //            }
+        //        }
+
+        //        StatusMessage = "Complete";
+        //    });
+        //}
+
+
+        private ICommand morph2StarCommand;
+        public ICommand Morph2StarCommand
         {
             get
             {
-                return replaceFirstCommaWithStarCSVWAYCommand ?? (replaceFirstCommaWithStarCSVWAYCommand = new CommandHandler(() => ReplaceFirstCommaWithStarCSVWAY(), _canExecute));
+                return morph2StarCommand ?? (morph2StarCommand = new CommandHandler(() => Morph2Star(), _canExecute));
             }
         }
-        private async void ReplaceFirstCommaWithStarCSVWAY()
-        {
-            await Task.Run(() =>
-            {
-                StatusMessage = "Ready";
-                CSVReadCount = 0;
-                CSVWriteCount = 0;
-
-                List<string> destinationStrings = new List<string>();
-
-                using (var reader = new System.IO.StreamReader(FileToStarTxt))
-                {
-                    while (!reader.EndOfStream)
-                    {
-                        string oneS = reader.ReadLine();
-                        int twoI = oneS.IndexOf(',');
-                        string threeS = oneS.Substring(twoI + 1);
-                        int fourI = threeS.IndexOf(',');
-                        string fiveS = threeS.Substring(0, fourI);
-                        string sixS = threeS.Substring(fourI + 1);
-                        string sevenS = fiveS + "*" + sixS;
-
-                        destinationStrings.Add(sixS);
-                        CSVReadCount++;
-                    }
-                }
-
-                using (System.IO.StreamWriter writetext = new System.IO.StreamWriter(FileToStarTxt + @"CSV_Star_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".csv"))
-                {
-                    int cnt = 2;
-                    writetext.WriteLine("Length*Path");
-                    foreach (string s in destinationStrings)
-                    {
-                        //writetext.WriteLine("=LEN(B" + cnt.ToString() + ")*" + s);
-                        writetext.WriteLine(s.Length.ToString() + "*" + s);
-                        cnt++;
-                        CSVWriteCount++;
-                    }
-                }
-
-                StatusMessage = "Complete";
-            });
-        }
-
-        private ICommand replaceFirstCommaWithStarCommand;
-        public ICommand ReplaceFirstCommaWithStarCommand
-        {
-            get
-            {
-                return replaceFirstCommaWithStarCommand ?? (replaceFirstCommaWithStarCommand = new CommandHandler(() => ReplaceFirstCommaWithStar(), _canExecute));
-            }
-        }
-        private async void ReplaceFirstCommaWithStar()
+        private async void Morph2Star()
         {
             await Task.Run(() =>
             {
@@ -2851,33 +2103,13 @@ namespace NavigatorTemplate.Models
                     }
                 }
 
-                //try
-                //{
-
-
-                //    //System.IO.File.Create(FileToStarTxt + ".xlsx");
-                //    Microsoft.Office.Interop.Excel.Application excelApplication = new Microsoft.Office.Interop.Excel.Application();
-                //    Microsoft.Office.Interop.Excel.Workbook excelWorkbook = new Microsoft.Office.Interop.Excel.Workbook();
-                //    Microsoft.Office.Interop.Excel.Worksheet excelWorksheet = new Microsoft.Office.Interop.Excel.Worksheet();
-
-                //    excelApplication.Workbooks.Add(excelWorksheet);
-                //    excelWorkbook.SaveAs(FileToStarTxt + ".xlsx");
-                //    excelWorkbook.Close();
-                //    excelApplication.Quit();
-
-                //}
-                //catch (Exception ex)
-                //{
-
-                //    StatusMessage = ex.Message;
-                //    int ddd = 9;
-                //}
-
-
                 StatusMessage = "Complete";
             });
         }
 
+        #endregion
+
+        #region "Checker vs Crawler Path Compare"
         private ICommand processNDSLogCommand;
         public ICommand ProcessNDSLogCommand
         {
@@ -2946,7 +2178,7 @@ namespace NavigatorTemplate.Models
                     {
                         while (!reader.EndOfStream)
                         {
-                            
+
                             string line = reader.ReadLine();
                             //string lskdjfsdf = "\\\\?\\UNC";
                             string theFrontOne = @"\\?\UNC";
@@ -2955,7 +2187,7 @@ namespace NavigatorTemplate.Models
                             int theFrontOneIndex = line.IndexOf(theFrontOne);
                             string theBackOne = @"\*:";
                             int theBackOneIndex = line.IndexOf(theBackOne);
-                            if ((theFrontOneIndex > -1) && ((theBackOneIndex > -1))) 
+                            if ((theFrontOneIndex > -1) && ((theBackOneIndex > -1)))
                             {
                                 //int indexOfTheThingyAtTheFront = line.IndexOf(@"\\?\UNC");
                                 //int indexOfTheThingyAtTheBack = line.IndexOf(\"\*");
@@ -2963,12 +2195,12 @@ namespace NavigatorTemplate.Models
                                 string eeee = line.Substring(0, theBackOneIndex);
                                 string eeeqwww = line.Substring(theFrontOneIndex);
 
-                                string whatever = line.Substring(theFrontOneIndex, theBackOneIndex- theFrontOneIndex);
+                                string whatever = line.Substring(theFrontOneIndex, theBackOneIndex - theFrontOneIndex);
                                 string whateverV2 = whatever.Replace(@"\\?\UNC", @"\");
 
                                 CSVReadCount++;
                                 folderNames.Add(whateverV2);
-                            }                            
+                            }
                         }
                     }
                     string logName = System.IO.Path.GetFileNameWithoutExtension(ndsLog2Process);
@@ -2987,99 +2219,850 @@ namespace NavigatorTemplate.Models
 
         }
 
+        #endregion
+
+        //private bool ExecuteLPFNBulkList_Linq(string DateGuid)
+        //{
+        //    System.IO.Directory.CreateDirectory(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Details");
+        //    bool success = true;
+
+        //    //CurrentDirectory = new System.IO.DirectoryInfo(@"Z:\Users\JHamrlik");
+        //    //CurrentDirectory = new System.IO.DirectoryInfo(@"C:\");
+        //    if (!System.IO.File.Exists(PathFileImportTxt))
+        //    {
+        //        StatusMessage = "File does not exists.";
+        //    }
+        //    else
+        //    {
+        //        bool alreadyUNC = false;
+        //        if (CurrentDirectory.FullName.StartsWith("\\"))
+        //        {
+        //            alreadyUNC = true;
+        //        }
+        //        try
+        //        {
+        //            dtRunningPer.Tick += new EventHandler(dtRunningPer_Tick);
+        //            dtRunningPer.Interval = new TimeSpan(0, 0, 0, 0, 1);
+
+        //            if (IncludeDocuments)
+        //            {
+        //                try
+        //                {
+        //                    StatusMessage = "Processing Files...";
+        //                    string fileNamePath = CurrentDirectory.FullName.Substring(2).Replace("\\", "_");
+        //                    string logFileName = "Files_" + fileNamePath + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + "lpfn.csv";
+        //                    using (System.IO.StreamWriter resultsFileByPathType = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Details" + System.IO.Path.DirectorySeparatorChar + logFileName, false, Encoding.Unicode))
+        //                    {
+        //                        string masterFileNameWOXtension = System.IO.Path.GetFileNameWithoutExtension(PathFileImportTxt);
+        //                        string masterFileLogName = masterFileNameWOXtension + "_" + DateGuid + "_" + "lpfn.csv";
+        //                        using (System.IO.StreamWriter resultsFileGlobal = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + masterFileLogName, true, Encoding.Unicode))
+        //                        {
+        //                            StatusMessage = "Processing Files...";
+        //                            try
+        //                            {
+        //                                foreach (String fi in System.IO.Directory.EnumerateFiles(CurrentDirectory.FullName, "*.*", System.IO.SearchOption.AllDirectories).Where(x => x.Length > MinPathLength))
+        //                                {
+        //                                    try
+        //                                    {
+        //                                        PathCurrentlyCounting = fi;
+        //                                        //if (!System.IO.File.Exists(fi))
+        //                                        //{ 
+        //                                        //    WarningCount++;
+        //                                        //    PathLenghtCrawl.Log.Log.Write2WarningLog(LogLocationTxt, DateTime.Now, "File does Not Exists.", fi);
+        //                                        //}
+        //                                        ObjectCountTotal++;
+        //                                        FileCountTotal++;
+        //                                        ObjectCount++;
+        //                                        FileCount++;
+        //                                        try
+        //                                        {
+        //                                            resultsFileByPathType.WriteLine(FileCount + "," + fi.Length + "," + fi);
+        //                                        }
+        //                                        catch (Exception ex)
+        //                                        {
+        //                                            StatusMessage = ex.Message;
+        //                                            PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Error while writing to " + fileNamePath);
+        //                                        }
+        //                                        try
+        //                                        {
+        //                                            resultsFileGlobal.WriteLine(FolderCount + "," + fi.Length + "," + fi);
+        //                                        }
+        //                                        catch (Exception ex)
+        //                                        {
+        //                                            StatusMessage = ex.Message;
+        //                                            PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Error while writing to " + masterFileLogName);
+        //                                        }
+
+        //                                        UNCObject uncObject = new UNCObject() { Count = FileCount, CharacterCount = fi.Length, NameUNC = fi };
+
+        //                                        UNCObjectFileList.Add(uncObject);
+        //                                        App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+        //                                        {
+        //                                            UNCObjectFileLst.Add(uncObject);
+        //                                        });
+        //                                    }
+        //                                    #region "Catches"
+        //                                    catch (ArgumentNullException ex)
+        //                                    {
+        //                                        ErrorCount++;
+        //                                        StatusMessage = ex.Message;
+        //                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: Error in Files inside ForEach with " + fi);
+        //                                    }
+        //                                    catch (System.IO.DirectoryNotFoundException ex)
+        //                                    {
+        //                                        ErrorCount++;
+        //                                        StatusMessage = ex.Message;
+        //                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: Error in Files inside ForEach with " + fi);
+        //                                    }
+        //                                    catch (System.IO.PathTooLongException ex)
+        //                                    {
+        //                                        ErrorCount++;
+        //                                        StatusMessage = ex.Message;
+        //                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: Error in Files inside ForEach with " + fi);
+        //                                    }
+        //                                    catch (System.IO.IOException ex)
+        //                                    {
+        //                                        ErrorCount++;
+        //                                        StatusMessage = ex.Message;
+        //                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: Error in Files inside ForEach with " + fi);
+        //                                    }
+        //                                    catch (System.Security.SecurityException ex)
+        //                                    {
+        //                                        ErrorCount++;
+        //                                        StatusMessage = ex.Message;
+        //                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: Error in Files inside ForEach with " + fi);
+        //                                    }
+        //                                    catch (UnauthorizedAccessException ex)
+        //                                    {
+        //                                        ErrorCount++;
+        //                                        StatusMessage = ex.Message;
+        //                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: Error in Files inside ForEach with " + fi);
+        //                                    }
+        //                                    catch (ArgumentException ex)
+        //                                    {
+        //                                        ErrorCount++;
+        //                                        StatusMessage = ex.Message;
+        //                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: Error in Files inside ForEach with " + fi);
+        //                                    }
+        //                                    catch (Exception ex)
+        //                                    {
+        //                                        ErrorCount++;
+        //                                        StatusMessage = ex.Message;
+        //                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: Error in Files inside ForEach with " + fi);
+        //                                    }
+        //                                    #endregion
+        //                                }
+        //                            }
+        //                            #region "Catches"
+        //                            catch (ArgumentNullException ex)
+        //                            {
+        //                                ErrorCount++;
+        //                                StatusMessage = ex.Message;
+        //                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: Error in Files outside ForEach");
+        //                            }
+        //                            catch (System.IO.DirectoryNotFoundException ex)
+        //                            {
+        //                                ErrorCount++;
+        //                                StatusMessage = ex.Message;
+        //                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: Error in Files outside ForEach");
+        //                            }
+        //                            catch (System.IO.PathTooLongException ex)
+        //                            {
+        //                                ErrorCount++;
+        //                                StatusMessage = ex.Message;
+        //                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: Error in Files outside ForEach");
+        //                            }
+        //                            catch (System.IO.IOException ex)
+        //                            {
+        //                                ErrorCount++;
+        //                                StatusMessage = ex.Message;
+        //                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: Error in Files outside ForEach");
+        //                            }
+        //                            catch (System.Security.SecurityException ex)
+        //                            {
+        //                                ErrorCount++;
+        //                                StatusMessage = ex.Message;
+        //                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: Error in Files outside ForEach");
+        //                            }
+        //                            catch (UnauthorizedAccessException ex)
+        //                            {
+        //                                ErrorCount++;
+        //                                StatusMessage = ex.Message;
+        //                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: Error in Files outside ForEach");
+        //                            }
+        //                            catch (ArgumentException ex)
+        //                            {
+        //                                ErrorCount++;
+        //                                StatusMessage = ex.Message;
+        //                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: Error in Files outside ForEach");
+        //                            }
+        //                            catch (Exception ex)
+        //                            {
+        //                                ErrorCount++;
+        //                                StatusMessage = ex.Message;
+        //                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: Error in Files outside ForEach");
+        //                            }
+        //                            #endregion
+
+        //                            PathLenghtCrawl.POCO.Duration currentDuration = new PathLenghtCrawl.POCO.Duration() { Name = CurrentDirectory.FullName + " (Files)", Time = ValidatorRunningTimePer };
+        //                            DurationList.Add(currentDuration);
+
+        //                        }
+        //                    }
+        //                }
+        //                #region "Catches"
+        //                catch (ArgumentNullException ex)
+        //                {
+        //                    ErrorCount++;
+        //                    StatusMessage = ex.Message;
+        //                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: Error while gathering files");
+        //                }
+        //                catch (System.IO.DirectoryNotFoundException ex)
+        //                {
+        //                    ErrorCount++;
+        //                    StatusMessage = ex.Message;
+        //                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: Error while gathering files");
+        //                }
+        //                catch (System.IO.PathTooLongException ex)
+        //                {
+        //                    ErrorCount++;
+        //                    StatusMessage = ex.Message;
+        //                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: Error while gathering files");
+        //                }
+        //                catch (System.IO.IOException ex)
+        //                {
+        //                    ErrorCount++;
+        //                    StatusMessage = ex.Message;
+        //                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: Error while gathering files");
+        //                }
+        //                catch (System.Security.SecurityException ex)
+        //                {
+        //                    ErrorCount++;
+        //                    StatusMessage = ex.Message;
+        //                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: Error while gathering files");
+        //                }
+        //                catch (UnauthorizedAccessException ex)
+        //                {
+        //                    ErrorCount++;
+        //                    StatusMessage = ex.Message;
+        //                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: Error while gathering files");
+        //                }
+        //                catch (ArgumentException ex)
+        //                {
+        //                    ErrorCount++;
+        //                    StatusMessage = ex.Message;
+        //                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: Error while gathering files");
+        //                }
+        //                catch (Exception ex)
+        //                {
+        //                    ErrorCount++;
+        //                    StatusMessage = ex.Message;
+        //                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: Error while gathering files");
+        //                }
+        //                #endregion
+        //                finally
+        //                {
+        //                    //StatusMessage = "Creating Reports...";
+
+        //                    //string fileNamePath = CurrentDirectory.FullName.Substring(2).Replace("\\", "_");
+        //                    //using (System.IO.StreamWriter resultsFile = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Files_" + fileNamePath + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + "results.csv", false, Encoding.Unicode))
+        //                    //{
+        //                    //    try
+        //                    //    {
+        //                    //        foreach (UNCObject path in UNCObjectFileList)
+        //                    //        {
+        //                    //            resultsFile.WriteLine(path.Count + "," + path.CharacterCount + "," + path.NameUNC);
+        //                    //        }
+        //                    //    }
+        //                    //    catch (Exception ex)
+        //                    //    {
+        //                    //        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Error while writing log (files)");
+        //                    //    }
+        //                    //}
+        //                    //string masterFileNameWOXtension = System.IO.Path.GetFileNameWithoutExtension(PathFileImportTxt);
+        //                    //using (System.IO.StreamWriter resultsFile = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + masterFileNameWOXtension + "_" + DateGuid + "_" + "lpfn.csv", true, Encoding.Unicode))
+        //                    //{
+        //                    //    try
+        //                    //    {
+        //                    //        foreach (UNCObject path in UNCObjectFileList)
+        //                    //        {
+        //                    //            resultsFile.WriteLine(path.Count + "," + path.CharacterCount + "," + path.NameUNC);
+        //                    //        }
+        //                    //    }
+        //                    //    catch (Exception ex)
+        //                    //    {
+        //                    //        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Error while writing master log (files)");
+        //                    //    }
+        //                    //}
+        //                }
+        //            }
+
+        //            if (IncludeFolders)
+        //            {
+        //                try
+        //                {
+        //                    string fileNamePath = CurrentDirectory.FullName.Substring(2).Replace("\\", "_");
+        //                    string logFileName = "Folders_" + fileNamePath + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + "lpfn.csv";
+        //                    using (System.IO.StreamWriter resultsFileByPathType = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Details" + System.IO.Path.DirectorySeparatorChar + logFileName, false, Encoding.Unicode))
+        //                    {
+        //                        string masterFileNameWOXtension = System.IO.Path.GetFileNameWithoutExtension(PathFileImportTxt);
+        //                        string masterFileLogName = masterFileNameWOXtension + "_" + DateGuid + "_" + "lpfn.csv";
+        //                        using (System.IO.StreamWriter resultsFileGlobal = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + masterFileNameWOXtension + "_" + DateGuid + "_" + "lpfn.csv", true, Encoding.Unicode))
+        //                        {
+        //                            StatusMessage = "Processing Folders...";
+        //                            try
+        //                            {
+        //                                foreach (String di in System.IO.Directory.EnumerateDirectories(CurrentDirectory.FullName, "*", System.IO.SearchOption.AllDirectories).Where(x => x.Length > MinPathLength))
+        //                                {
+        //                                    try
+        //                                    {
+        //                                        PathCurrentlyCounting = di;
+        //                                        //if (!System.IO.Directory.Exists(di))
+        //                                        //{
+        //                                        //    WarningCount++;
+        //                                        //    PathLenghtCrawl.Log.Log.Write2WarningLog(LogLocationTxt, DateTime.Now, "Directory does Not Exists.", di);
+        //                                        //}
+        //                                        ObjectCountTotal++;
+        //                                        FolderCountTotal++;
+        //                                        ObjectCount++;
+        //                                        FolderCount++;
+
+        //                                        try
+        //                                        {
+        //                                            resultsFileByPathType.WriteLine(FolderCount + "," + di.Length + "," + di);
+        //                                        }
+        //                                        catch (Exception ex)
+        //                                        {
+        //                                            StatusMessage = ex.Message;
+        //                                            PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Error while writing to " + logFileName);
+        //                                        }
+        //                                        try
+        //                                        {
+        //                                            resultsFileGlobal.WriteLine(FolderCount + "," + di.Length + "," + di);
+        //                                        }
+        //                                        catch (Exception ex)
+        //                                        {
+        //                                            StatusMessage = ex.Message;
+        //                                            PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Error while writing to " + masterFileLogName);
+        //                                        }
+
+        //                                        UNCObject uncObject = new UNCObject() { Count = FolderCount, CharacterCount = di.Length, NameUNC = di };
+        //                                        UNCObjectFolderList.Add(uncObject);
+
+        //                                        App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+        //                                        {
+        //                                            UNCObjectFolderLst.Add(uncObject);
+        //                                        });
+        //                                    }
+        //                                    #region "Catches"
+        //                                    catch (ArgumentNullException ex)
+        //                                    {
+        //                                        ErrorCount++;
+        //                                        StatusMessage = ex.Message;
+        //                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: Error in Directory inside ForEach with " + di);
+        //                                    }
+        //                                    catch (System.IO.DirectoryNotFoundException ex)
+        //                                    {
+        //                                        ErrorCount++;
+        //                                        StatusMessage = ex.Message;
+        //                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: Error in Directory inside ForEach with " + di);
+        //                                    }
+        //                                    catch (System.IO.PathTooLongException ex)
+        //                                    {
+        //                                        ErrorCount++;
+        //                                        StatusMessage = ex.Message;
+        //                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: Error in Directory inside ForEach with " + di);
+        //                                    }
+        //                                    catch (System.IO.IOException ex)
+        //                                    {
+        //                                        ErrorCount++;
+        //                                        StatusMessage = ex.Message;
+        //                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: Error in Directory inside ForEach with " + di);
+        //                                    }
+        //                                    catch (System.Security.SecurityException ex)
+        //                                    {
+        //                                        ErrorCount++;
+        //                                        StatusMessage = ex.Message;
+        //                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: Error in Directory inside ForEach with " + di);
+        //                                    }
+        //                                    catch (UnauthorizedAccessException ex)
+        //                                    {
+        //                                        ErrorCount++;
+        //                                        StatusMessage = ex.Message;
+        //                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: Error in Directory inside ForEach with " + di);
+        //                                    }
+        //                                    catch (ArgumentException ex)
+        //                                    {
+        //                                        ErrorCount++;
+        //                                        StatusMessage = ex.Message;
+        //                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: Error in Directory inside ForEach with " + di);
+        //                                    }
+        //                                    catch (Exception ex)
+        //                                    {
+        //                                        ErrorCount++;
+        //                                        StatusMessage = ex.Message;
+        //                                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: Error in Directory inside ForEach with " + di);
+        //                                    }
+        //                                    #endregion
+        //                                }
+        //                            }
+        //                            #region "Catches"
+        //                            catch (ArgumentNullException ex)
+        //                            {
+        //                                ErrorCount++;
+        //                                StatusMessage = ex.Message;
+        //                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: Error in Directory outside ForEach");
+        //                            }
+        //                            catch (System.IO.DirectoryNotFoundException ex)
+        //                            {
+        //                                ErrorCount++;
+        //                                StatusMessage = ex.Message;
+        //                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: Error in Directory outside ForEach");
+        //                            }
+        //                            catch (System.IO.PathTooLongException ex)
+        //                            {
+        //                                ErrorCount++;
+        //                                StatusMessage = ex.Message;
+        //                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: Error in Directory outside ForEach");
+        //                            }
+        //                            catch (System.IO.IOException ex)
+        //                            {
+        //                                ErrorCount++;
+        //                                StatusMessage = ex.Message;
+        //                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: Error in Directory outside ForEach");
+        //                            }
+        //                            catch (System.Security.SecurityException ex)
+        //                            {
+        //                                ErrorCount++;
+        //                                StatusMessage = ex.Message;
+        //                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: Error in Directory outside ForEach");
+        //                            }
+        //                            catch (UnauthorizedAccessException ex)
+        //                            {
+        //                                ErrorCount++;
+        //                                StatusMessage = ex.Message;
+        //                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: Error in Directory outside ForEach");
+        //                            }
+        //                            catch (ArgumentException ex)
+        //                            {
+        //                                ErrorCount++;
+        //                                StatusMessage = ex.Message;
+        //                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: Error in Directory outside ForEach");
+        //                            }
+        //                            catch (Exception ex)
+        //                            {
+        //                                ErrorCount++;
+        //                                StatusMessage = ex.Message;
+        //                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: Error in Directory outside ForEach");
+        //                            }
+        //                            #endregion
+
+        //                            PathLenghtCrawl.POCO.Duration currentDuration = new PathLenghtCrawl.POCO.Duration() { Name = CurrentDirectory.FullName + " (+ Folders)", Time = ValidatorRunningTimePer };
+        //                            DurationList.Add(currentDuration);
+        //                        }
+        //                    }
+        //                }
+        //                #region "Catches"
+        //                catch (ArgumentNullException ex)
+        //                {
+        //                    ErrorCount++;
+        //                    StatusMessage = ex.Message;
+        //                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: Error while gathering directories");
+        //                }
+        //                catch (System.IO.DirectoryNotFoundException ex)
+        //                {
+        //                    ErrorCount++;
+        //                    StatusMessage = ex.Message;
+        //                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: Error while gathering directories");
+        //                }
+        //                catch (System.IO.PathTooLongException ex)
+        //                {
+        //                    ErrorCount++;
+        //                    StatusMessage = ex.Message;
+        //                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: Error while gathering directories");
+        //                }
+        //                catch (System.IO.IOException ex)
+        //                {
+        //                    ErrorCount++;
+        //                    StatusMessage = ex.Message;
+        //                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: Error while gathering directories");
+        //                }
+        //                catch (System.Security.SecurityException ex)
+        //                {
+        //                    ErrorCount++;
+        //                    StatusMessage = ex.Message;
+        //                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: Error while gathering directories");
+        //                }
+        //                catch (UnauthorizedAccessException ex)
+        //                {
+        //                    ErrorCount++;
+        //                    StatusMessage = ex.Message;
+        //                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: Error while gathering directories");
+        //                }
+        //                catch (ArgumentException ex)
+        //                {
+        //                    ErrorCount++;
+        //                    StatusMessage = ex.Message;
+        //                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: Error while gathering directories");
+        //                }
+        //                catch (Exception ex)
+        //                {
+        //                    ErrorCount++;
+        //                    StatusMessage = ex.Message;
+        //                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: Error while gathering directories");
+        //                }
+        //                #endregion
+        //                finally
+        //                {
+        //                    //StatusMessage = "Creating Reports...";
+
+        //                    //string fileNamePath = CurrentDirectory.FullName.Substring(2).Replace("\\", "_");
+        //                    //using (System.IO.StreamWriter resultsFile = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Folders_" + fileNamePath + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + "lpfn.csv", false, Encoding.Unicode))
+        //                    //{
+        //                    //    try
+        //                    //    {
+        //                    //        foreach (UNCObject path in UNCObjectFolderList)
+        //                    //        {
+        //                    //            resultsFile.WriteLine(path.Count + "," + path.CharacterCount + "," + path.NameUNC);
+        //                    //        }
+        //                    //    }
+        //                    //    catch (Exception ex)
+        //                    //    {
+        //                    //        StatusMessage = ex.Message;
+        //                    //        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Error while writing log (folders)");
+        //                    //    }
+        //                    //}
+        //                    //string masterFileNameWOXtension = System.IO.Path.GetFileNameWithoutExtension(PathFileImportTxt);
+        //                    //using (System.IO.StreamWriter resultsFile = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + masterFileNameWOXtension + "_" + DateGuid + "_" + "lpfn.csv", true, Encoding.Unicode))
+        //                    //{
+        //                    //    try
+        //                    //    {
+        //                    //        foreach (UNCObject path in UNCObjectFolderList)
+        //                    //        {
+        //                    //            resultsFile.WriteLine(path.Count + "," + path.CharacterCount + "," + path.NameUNC);
+        //                    //        }
+        //                    //    }
+        //                    //    catch (Exception ex)
+        //                    //    {
+        //                    //        StatusMessage = ex.Message;
+        //                    //        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Error while writing master log (folders)");
+        //                    //    }
+        //                    //}
+        //                }
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            ErrorCount++;
+        //            StatusMessage = ex.Message;
+        //            PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "General error in ExecuteLPFNBulkList_Linq()");
+        //        }
+        //        finally
+        //        { PathCurrentlyCounting = "N/A"; }
 
 
-        private ICommand executeLPFNListCommand;
-        public ICommand ExecuteLPFNListCommand
-        {
-            get
-            {
-                return executeLPFNListCommand ?? (executeLPFNListCommand = new CommandHandler(() => ExecuteLPFNList(), _canExecute));
-            }
-        }
-        private async void ExecuteLPFNList()
-        {
-            await Task.Run(() =>
-            {
-                CopyAsCSVEnabled = false;
-                SaveAsCSVEnabled = false;
+        //    }
+        //    if (ErrorCount > 0)
+        //    {
+        //        success = false;
+        //        StatusMessage = "Check Error Logs";
 
-                ObjectCount = 0;
-                FolderCount = 0;
-                FileCount = 0;
-                ObjectCountTotal = 0;
-                FolderCountTotal = 0;
-                FileCountTotal = 0;
+        //    }
+        //    else
+        //    {
+        //        StatusMessage = "Ready";
+        //    }
+        //    return success;
+        //}
+
+        //private void ExecuteLPFNBulkList()
+        //{
+
+        //    bool alreadyUNC = false;
+        //    if (CurrentDirectory.FullName.StartsWith("\\")) { alreadyUNC = true; }
+        //    try
+        //    {
+        //        dtRunningPer.Tick += new EventHandler(dtRunningPer_Tick);
+        //        dtRunningPer.Interval = new TimeSpan(0, 0, 0, 0, 1);
+
+        //        StatusMessage = "Gathering Information (Files)...";
+        //        System.IO.FileInfo[] fileInfos = CurrentDirectory.GetFiles();
+        //        IEnumerable<System.IO.FileInfo> fileList = CurrentDirectory.GetFiles("*.*", System.IO.SearchOption.AllDirectories);
+        //        StatusMessage = "Processing Files...";
+
+        //        try
+        //        {
+        //            foreach (System.IO.FileInfo fi in fileInfos)
+        //            {
+        //                string fiInUNC = String.Empty;
+        //                if (!alreadyUNC)
+        //                {
+        //                    try
+        //                    {
+        //                        fiInUNC = MappedDriveResolver.ResolveToUNC(fi.FullName);
+        //                    }
+        //                    catch (Exception)
+        //                    {
+        //                        throw;
+        //                    }
+
+        //                }
+        //                else
+        //                {
+        //                    fiInUNC = fi.FullName;
+        //                }
+        //                try
+        //                {
+
+        //                    int fileLenght = fiInUNC.Length;
+        //                    if (fileLenght > MinPathLength)
+        //                    {
+        //                        UNCObject uncObject = new UNCObject() { CharacterCount = fileLenght, NameUNC = fiInUNC };
+        //                        ObjectCount++;
+        //                        FileCount++;
+        //                        UNCObjectFileLst.Add(uncObject);
+        //                    }
+        //                }
+        //                catch (Exception)
+        //                {
+
+        //                    throw;
+        //                }
+        //            }
+        //        }
+        //        catch (Exception)
+        //        {
+
+        //            throw;
+        //        }
+        //        StatusMessage = "Gathering Information (Folders)...";
+        //        System.IO.DirectoryInfo[] directoryInfos = CurrentDirectory.GetDirectories("*.*", System.IO.SearchOption.AllDirectories);
+        //        StatusMessage = "Processing Folders...";
+        //        try
+        //        {
+
+
+        //            foreach (System.IO.DirectoryInfo di in directoryInfos)
+        //            {
+        //                string diInUNC = String.Empty;
+        //                if (!alreadyUNC)
+        //                {
+        //                    try
+        //                    {
+        //                        diInUNC = MappedDriveResolver.ResolveToUNC(di.FullName);
+        //                    }
+        //                    catch (Exception)
+        //                    {
+        //                        throw;
+        //                    }
+
+        //                }
+        //                else
+        //                {
+        //                    diInUNC = di.FullName;
+        //                }
 
 
 
-                App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                {
-                    UNCObjectLst.Clear();
-                });
-                try
-                {
-                    //FileCountTotal = System.IO.Directory.EnumerateFiles(CurrentDirectory.FullName, "*.*", System.IO.SearchOption.AllDirectories).Count();
-                    //FolderCountTotal = System.IO.Directory.EnumerateDirectories(CurrentDirectory.FullName, "*", System.IO.SearchOption.AllDirectories).Count();
-                    //ObjectCountTotal = FileCountTotal + FolderCountTotal;
+        //                int directoryLenght = diInUNC.Length;
+        //                if (directoryLenght > MinPathLength)
+        //                {
+        //                    try
+        //                    {
+        //                        UNCObject uncObject = new UNCObject() { CharacterCount = directoryLenght, NameUNC = diInUNC };
+        //                        ObjectCount++;
+        //                        FolderCount++;
+        //                        UNCObjectFileLst.Add(uncObject);
+        //                    }
+        //                    catch (Exception)
+        //                    {
+        //                        throw;
+        //                    }
 
-                    //System.Collections.ObjectModel.ObservableCollection<UNCObject> uncObjectList = new System.Collections.ObjectModel.ObservableCollection<UNCObject>();
-                    foreach (System.IO.FileInfo fi in CurrentDirectory.GetFiles())
-                    {
-                        if (MappedDriveResolver.ResolveToUNC(fi.FullName).Length > MinPathLength)
-                        {
-                            UNCObject uncObject = new UNCObject() { CharacterCount = MappedDriveResolver.ResolveToUNC(fi.FullName).Length, NameUNC = MappedDriveResolver.ResolveToUNC(fi.FullName) };
-                            App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                            {
-                                UNCObjectLst.Add(uncObject);
-                                ObjectCount++;
-                                FileCount++;
-                            });
-                        }
-                    }
+        //                }
+        //                try
+        //                {
+        //                    System.IO.FileInfo[] fileInfos1;
+        //                    try
+        //                    {
+        //                        fileInfos1 = di.GetFiles();
+        //                    }
+        //                    catch (Exception ex)
+        //                    {
 
-                    foreach (System.IO.DirectoryInfo di in CurrentDirectory.GetDirectories("*.*", System.IO.SearchOption.AllDirectories))
-                    {
-                        if (MappedDriveResolver.ResolveToUNC(di.FullName).Length > MinPathLength)
-                        {
-                            UNCObject uncObject = new UNCObject() { CharacterCount = MappedDriveResolver.ResolveToUNC(di.FullName).Length, NameUNC = MappedDriveResolver.ResolveToUNC(di.FullName) };
-                            App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                            {
-                                UNCObjectLst.Add(uncObject);
-                                FolderCount++;
-                                ObjectCount++;
-                            });
-                        }
-                        foreach (System.IO.FileInfo fi in di.GetFiles())
-                        {
-                            if (MappedDriveResolver.ResolveToUNC(fi.FullName).Length > MinPathLength)
-                            {
-                                UNCObject uncObject = new UNCObject() { CharacterCount = MappedDriveResolver.ResolveToUNC(fi.FullName).Length, NameUNC = MappedDriveResolver.ResolveToUNC(fi.FullName) };
-                                App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                                {
-                                    UNCObjectLst.Add(uncObject);
-                                    FileCount++;
-                                    ObjectCount++;
-                                });
-                            }
-                        }
-                    }
-                }
-                catch (UnauthorizedAccessException uae)
-                {
-                    StatusMessage = "Unauthorized Access";
-                    //success = false;
-                }
-                catch (Exception ex)
-                {
-                    StatusMessage = "Problem detected";
-                    //success = false;
-                }
+        //                        throw;
+        //                    }
 
-                CopyAsCSVEnabled = true;
-                SaveAsCSVEnabled = true;
-            });
-        }
+        //                    foreach (System.IO.FileInfo fi in fileInfos1)
+        //                    {
+        //                        try
+        //                        {
+
+
+        //                            string fiInUNC = String.Empty;
+        //                            if (!alreadyUNC)
+        //                            {
+        //                                try
+        //                                {
+        //                                    fiInUNC = MappedDriveResolver.ResolveToUNC(fi.FullName);
+        //                                }
+        //                                catch (Exception ex)
+        //                                {
+
+        //                                    throw;
+        //                                }
+
+        //                            }
+        //                            else
+        //                            {
+        //                                fiInUNC = fi.FullName;
+        //                            }
+        //                            try
+        //                            {
+        //                                int fileLenght = fiInUNC.Length;
+        //                                if (fileLenght > MinPathLength)
+        //                                {
+        //                                    UNCObject uncObject = new UNCObject() { CharacterCount = fileLenght, NameUNC = fiInUNC };
+        //                                    ObjectCount++;
+        //                                    FileCount++;
+        //                                    UNCObjectFileLst.Add(uncObject);
+
+        //                                }
+        //                            }
+        //                            catch (Exception ex)
+        //                            {
+
+        //                                throw;
+        //                            }
+        //                        }
+        //                        catch (Exception ex)
+        //                        {
+        //                            throw;
+        //                        }
+        //                    }
+        //                }
+        //                catch (Exception es)
+        //                {
+        //                    //break was here the last time
+        //                    throw;
+        //                }
+        //            }
+        //        }
+        //        catch (Exception)
+        //        {
+
+        //            throw;
+        //        }
+        //    }
+        //    catch (UnauthorizedAccessException uae)
+        //    {
+        //        StatusMessage = "Unauthorized Access";
+        //        //success = false;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        StatusMessage = "Problem detected";
+        //        //success = false;
+        //    }
+        //    StatusMessage = "Ready";
+        //}
+
+
+        //private ICommand executeLPFNListCommand;
+        //public ICommand ExecuteLPFNListCommand
+        //{
+        //    get
+        //    {
+        //        return executeLPFNListCommand ?? (executeLPFNListCommand = new CommandHandler(() => ExecuteLPFNList(), _canExecute));
+        //    }
+        //}
+        //private async void ExecuteLPFNList()
+        //{
+        //    await Task.Run(() =>
+        //    {
+        //        CopyAsCSVEnabled = false;
+        //        SaveAsCSVEnabled = false;
+
+        //        ObjectCount = 0;
+        //        FolderCount = 0;
+        //        FileCount = 0;
+        //        ObjectCountTotal = 0;
+        //        FolderCountTotal = 0;
+        //        FileCountTotal = 0;
+
+
+
+        //        App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+        //        {
+        //            UNCObjectLst.Clear();
+        //        });
+        //        try
+        //        {
+        //            //FileCountTotal = System.IO.Directory.EnumerateFiles(CurrentDirectory.FullName, "*.*", System.IO.SearchOption.AllDirectories).Count();
+        //            //FolderCountTotal = System.IO.Directory.EnumerateDirectories(CurrentDirectory.FullName, "*", System.IO.SearchOption.AllDirectories).Count();
+        //            //ObjectCountTotal = FileCountTotal + FolderCountTotal;
+
+        //            //System.Collections.ObjectModel.ObservableCollection<UNCObject> uncObjectList = new System.Collections.ObjectModel.ObservableCollection<UNCObject>();
+        //            foreach (System.IO.FileInfo fi in CurrentDirectory.GetFiles())
+        //            {
+        //                if (MappedDriveResolver.ResolveToUNC(fi.FullName).Length > MinPathLength)
+        //                {
+        //                    UNCObject uncObject = new UNCObject() { CharacterCount = MappedDriveResolver.ResolveToUNC(fi.FullName).Length, NameUNC = MappedDriveResolver.ResolveToUNC(fi.FullName) };
+        //                    App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+        //                    {
+        //                        UNCObjectLst.Add(uncObject);
+        //                        ObjectCount++;
+        //                        FileCount++;
+        //                    });
+        //                }
+        //            }
+
+        //            foreach (System.IO.DirectoryInfo di in CurrentDirectory.GetDirectories("*.*", System.IO.SearchOption.AllDirectories))
+        //            {
+        //                if (MappedDriveResolver.ResolveToUNC(di.FullName).Length > MinPathLength)
+        //                {
+        //                    UNCObject uncObject = new UNCObject() { CharacterCount = MappedDriveResolver.ResolveToUNC(di.FullName).Length, NameUNC = MappedDriveResolver.ResolveToUNC(di.FullName) };
+        //                    App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+        //                    {
+        //                        UNCObjectLst.Add(uncObject);
+        //                        FolderCount++;
+        //                        ObjectCount++;
+        //                    });
+        //                }
+        //                foreach (System.IO.FileInfo fi in di.GetFiles())
+        //                {
+        //                    if (MappedDriveResolver.ResolveToUNC(fi.FullName).Length > MinPathLength)
+        //                    {
+        //                        UNCObject uncObject = new UNCObject() { CharacterCount = MappedDriveResolver.ResolveToUNC(fi.FullName).Length, NameUNC = MappedDriveResolver.ResolveToUNC(fi.FullName) };
+        //                        App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+        //                        {
+        //                            UNCObjectLst.Add(uncObject);
+        //                            FileCount++;
+        //                            ObjectCount++;
+        //                        });
+        //                    }
+        //                }
+        //            }
+        //        }
+        //        catch (UnauthorizedAccessException uae)
+        //        {
+        //            StatusMessage = "Unauthorized Access";
+        //            //success = false;
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            StatusMessage = "Problem detected";
+        //            //success = false;
+        //        }
+
+        //        CopyAsCSVEnabled = true;
+        //        SaveAsCSVEnabled = true;
+        //    });
+        //}
+
+
+        #region "Comparisons"
+
         private ICommand compareUserListsCommand;
         public ICommand CompareUserListsCommand
         {
@@ -3325,6 +3308,8 @@ namespace NavigatorTemplate.Models
             int s = 9;
         }
 
+        #endregion
+
         public void SetCurrentUNCObject()
         {
             UNCObject xUNCObject = new UNCObject();
@@ -3335,6 +3320,7 @@ namespace NavigatorTemplate.Models
             xUNCObject.NameNetwork = CurrentDirectory.FullName;
             CurrentUNCObject = xUNCObject;
         }
+
         public bool GetDirectoryFiles()
         {
             FileCount = 0;
@@ -3407,31 +3393,35 @@ namespace NavigatorTemplate.Models
             return success;
         }
 
-        private ICommand setUNCObjectCommand;
-        public ICommand SetUNCObjectCommand
-        {
-            get
-            {
-                return setUNCObjectCommand ?? (setUNCObjectCommand = new CommandHandler(() => SetUNCObject(), _canExecute));
-            }
-        }
-        private void SetUNCObject()
-        {
-            SetCurrentUNCObject();
-        }
 
-        private ICommand addSinglePathCommand;
-        public ICommand AddSinglePathCommand
-        {
-            get
-            {
-                return addSinglePathCommand ?? (addSinglePathCommand = new CommandHandler(() => AddSinglePath(), _canExecute));
-            }
-        }
-        private void AddSinglePath()
-        {
+        //private ICommand setUNCObjectCommand;
+        //public ICommand SetUNCObjectCommand
+        //{
+        //    get
+        //    {
+        //        return setUNCObjectCommand ?? (setUNCObjectCommand = new CommandHandler(() => SetUNCObject(), _canExecute));
+        //    }
+        //}
+        //private void SetUNCObject()
+        //{
+        //    SetCurrentUNCObject();
+        //}
 
-        }
+
+        //private ICommand addSinglePathCommand;
+        //public ICommand AddSinglePathCommand
+        //{
+        //    get
+        //    {
+        //        return addSinglePathCommand ?? (addSinglePathCommand = new CommandHandler(() => AddSinglePath(), _canExecute));
+        //    }
+        //}
+        //private void AddSinglePath()
+        //{
+
+        //}
+
+
         #endregion
 
         #region "************************************************************************************************* OI Functions"
@@ -4052,7 +4042,7 @@ namespace NavigatorTemplate.Models
 
         #endregion
 
-
+        #region "Magik Copy"
 
         private ICommand magikCopyCommand;
         public ICommand MagikCopyCommand
@@ -4099,5 +4089,7 @@ namespace NavigatorTemplate.Models
             finally
             { }
         }
+
+        #endregion
     }
 }
