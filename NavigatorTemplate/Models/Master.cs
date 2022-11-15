@@ -55,7 +55,7 @@ namespace NavigatorTemplate.Models
             dtRunning.Start();
         }
 
-        #region "************************************************************************************************* Global Properties"
+        #region "Global Properties"
         //NDSSamePathAsAbove
         private bool ndsSamePathAsAbove = PathLenghtCrawl.Properties.Settings.Default.NDSSamePathAsAbove;
 
@@ -468,113 +468,7 @@ namespace NavigatorTemplate.Models
                 }
             }
         }
-        #region "NDS Processing"
-
-        public bool NDSSamePathAsAbove
-        {
-            get
-            {
-                return ndsSamePathAsAbove;
-            }
-            set
-            {
-                if (ndsSamePathAsAbove != value)
-                {
-                    ndsSamePathAsAbove = value;
-                    if (value)
-                    {
-                        NDSLogDestination = System.IO.Path.GetDirectoryName(NDSLog2Process);
-                    }
-                    else
-                    {
-                        NDSLogDestination = string.Empty;
-                    }
-                    PathLenghtCrawl.Properties.Settings.Default.NDSSamePathAsAbove = value;
-                    SaveProperties();
-                    NotifyPropertyChanged("NDSSamePathAsAbove");
-                }
-            }
-        }
-
-        private bool ndsLogFolderType = PathLenghtCrawl.Properties.Settings.Default.NDSLogFolderType;
-        public bool NDSLogFolderType
-        {
-            get
-            {
-                return ndsLogFolderType;
-            }
-            set
-            {
-                if (ndsLogFolderType != value)
-                {
-                    ndsLogFolderType = value;
-                    PathLenghtCrawl.Properties.Settings.Default.NDSLogFolderType = value;
-                    SaveProperties();
-                    NotifyPropertyChanged("NDSLogFolderType");
-                }
-            }
-        }
-        //NDSLogFileType
-        private bool ndsLogFileType = PathLenghtCrawl.Properties.Settings.Default.NDSLogFileType;
-        public bool NDSLogFileType
-        {
-            get
-            {
-                return ndsLogFileType;
-            }
-            set
-            {
-                if (ndsLogFileType != value)
-                {
-                    ndsLogFileType = value;
-                    PathLenghtCrawl.Properties.Settings.Default.NDSLogFileType = value;
-                    SaveProperties();
-                    NotifyPropertyChanged("NDSLogFileType");
-                }
-            }
-        }
-        private string ndsLogDestination = PathLenghtCrawl.Properties.Settings.Default.NDSLogDestination;
-        public string NDSLogDestination
-        {
-            get
-            {
-                return ndsLogDestination;
-            }
-            set
-            {
-                if (ndsLogDestination != value)
-                {
-                    ndsLogDestination = value;
-                    PathLenghtCrawl.Properties.Settings.Default.NDSLogDestination = value;
-                    SaveProperties();
-                    NotifyPropertyChanged("NDSLogDestination");
-                }
-            }
-        }
-        private string ndsLog2Process = PathLenghtCrawl.Properties.Settings.Default.NDSLog2Process;
-        public string NDSLog2Process
-        {
-            get
-            {
-                return ndsLog2Process;
-            }
-            set
-            {
-                if (ndsLog2Process != value)
-                {
-                    ndsLog2Process = value;
-                    if (NDSSamePathAsAbove)
-                    {
-                        NDSLogDestination = System.IO.Path.GetDirectoryName(value);
-                    }
-                    PathLenghtCrawl.Properties.Settings.Default.NDSLog2Process = value;
-                    SaveProperties();
-                    NotifyPropertyChanged("NDSLog2Process");
-                }
-            }
-        }
-
-        #endregion
+      
         private string magikFileSource = PathLenghtCrawl.Properties.Settings.Default.MagikFileSource;
         public string MagikFileSource
         {
@@ -1155,6 +1049,222 @@ namespace NavigatorTemplate.Models
 
         #endregion
 
+        #region "NDS Processing"
+
+        public bool NDSSamePathAsAbove
+        {
+            get
+            {
+                return ndsSamePathAsAbove;
+            }
+            set
+            {
+                if (ndsSamePathAsAbove != value)
+                {
+                    ndsSamePathAsAbove = value;
+                    if (value)
+                    {
+                        NDSLogDestination = System.IO.Path.GetDirectoryName(NDSLog2Process);
+                    }
+                    else
+                    {
+                        NDSLogDestination = string.Empty;
+                    }
+                    PathLenghtCrawl.Properties.Settings.Default.NDSSamePathAsAbove = value;
+                    SaveProperties();
+                    NotifyPropertyChanged("NDSSamePathAsAbove");
+                }
+            }
+        }
+
+        private bool ndsLogFolderType = PathLenghtCrawl.Properties.Settings.Default.NDSLogFolderType;
+        public bool NDSLogFolderType
+        {
+            get
+            {
+                return ndsLogFolderType;
+            }
+            set
+            {
+                if (ndsLogFolderType != value)
+                {
+                    ndsLogFolderType = value;
+                    PathLenghtCrawl.Properties.Settings.Default.NDSLogFolderType = value;
+                    SaveProperties();
+                    NotifyPropertyChanged("NDSLogFolderType");
+                }
+            }
+        }
+        //NDSLogFileType
+        private bool ndsLogFileType = PathLenghtCrawl.Properties.Settings.Default.NDSLogFileType;
+        public bool NDSLogFileType
+        {
+            get
+            {
+                return ndsLogFileType;
+            }
+            set
+            {
+                if (ndsLogFileType != value)
+                {
+                    ndsLogFileType = value;
+                    PathLenghtCrawl.Properties.Settings.Default.NDSLogFileType = value;
+                    SaveProperties();
+                    NotifyPropertyChanged("NDSLogFileType");
+                }
+            }
+        }
+        private string ndsLogDestination = PathLenghtCrawl.Properties.Settings.Default.NDSLogDestination;
+        public string NDSLogDestination
+        {
+            get
+            {
+                return ndsLogDestination;
+            }
+            set
+            {
+                if (ndsLogDestination != value)
+                {
+                    ndsLogDestination = value;
+                    PathLenghtCrawl.Properties.Settings.Default.NDSLogDestination = value;
+                    SaveProperties();
+                    NotifyPropertyChanged("NDSLogDestination");
+                }
+            }
+        }
+        private string ndsLog2Process = PathLenghtCrawl.Properties.Settings.Default.NDSLog2Process;
+        public string NDSLog2Process
+        {
+            get
+            {
+                return ndsLog2Process;
+            }
+            set
+            {
+                if (ndsLog2Process != value)
+                {
+                    ndsLog2Process = value;
+                    if (NDSSamePathAsAbove)
+                    {
+                        NDSLogDestination = System.IO.Path.GetDirectoryName(value);
+                    }
+                    PathLenghtCrawl.Properties.Settings.Default.NDSLog2Process = value;
+                    SaveProperties();
+                    NotifyPropertyChanged("NDSLog2Process");
+                }
+            }
+        }
+        private ICommand processNDSLogCommand;
+        public ICommand ProcessNDSLogCommand
+        {
+            get
+            {
+                return processNDSLogCommand ?? (processNDSLogCommand = new CommandHandler(() => ProcessNDSLog(), _canExecute));
+            }
+        }
+        private async void ProcessNDSLog()
+        {
+            await Task.Run(() =>
+            {
+                CSVReadCount = 0;
+                CSVWriteCount = 0;
+                if (NDSLogFileType)
+                {
+                    List<string> fileNames = new List<string>();
+                    string fileName = string.Empty;
+                    string sourceFolder = string.Empty;
+                    string destinationFolder = string.Empty;
+
+                    using (var reader = new System.IO.StreamReader(NDSLog2Process))
+                    {
+                        while (!reader.EndOfStream)
+                        {
+                            string line = reader.ReadLine();
+                            List<int> guillements = WhateverExtensions.ExtensionsAreMe.AllIndexesOf(line, "\"");
+                            if (guillements.Count > 0)
+                            {
+                                CSVReadCount++;
+                                fileName = line.Substring(guillements[0] + 1, guillements[1] - guillements[0] - 1);
+                                sourceFolder = line.Substring(guillements[2] + 1, guillements[3] - guillements[2] - 1);
+                                destinationFolder = line.Substring(guillements[4] + 1, guillements[5] - guillements[4] - 1);
+                                string fullFileName = sourceFolder + System.IO.Path.DirectorySeparatorChar + fileName;
+                                string lskdjfsdf = "\\\\?\\UNC";
+                                string lskdjfsddf = @"\\?\UNC";
+                                string lsksdjfsdf = @"\*";
+                                string lskadjfsdf = "\\*";
+                                string fullFileNameV2 = fullFileName.Replace(@"\\?\UNC", @"\");
+                                fileNames.Add(fullFileNameV2);
+                            }
+
+                        }
+                    }
+                    //using (System.IO.StreamWriter writetext = new System.IO.StreamWriter((NDSLogDestination + @"_Star_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".csv"), true, Encoding.Unicode))
+                    string logName = System.IO.Path.GetFileNameWithoutExtension(ndsLog2Process);
+                    using (System.IO.StreamWriter writetext = new System.IO.StreamWriter(NDSLogDestination + System.IO.Path.DirectorySeparatorChar + logName + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".txt", false, Encoding.Unicode))
+                    {
+                        foreach (string fnItem in fileNames)
+                        {
+                            writetext.WriteLine(fnItem.Length.ToString() + "*" + fnItem);
+                            CSVWriteCount++;
+                        }
+
+                    }
+                    StatusMessage = "Completed";
+                }
+                else //folder
+                {
+                    List<string> folderNames = new List<string>();
+                    string folderName = string.Empty;
+                    string sourceFolder = string.Empty;
+                    string destinationFolder = string.Empty;
+
+                    using (var reader = new System.IO.StreamReader(NDSLog2Process))
+                    {
+                        while (!reader.EndOfStream)
+                        {
+
+                            string line = reader.ReadLine();
+                            //string lskdjfsdf = "\\\\?\\UNC";
+                            string theFrontOne = @"\\?\UNC";
+                            //string lsksdjfsdf = @"\*";
+                            //string lskadjfsdf = "\\*";
+                            int theFrontOneIndex = line.IndexOf(theFrontOne);
+                            string theBackOne = @"\*:";
+                            int theBackOneIndex = line.IndexOf(theBackOne);
+                            if ((theFrontOneIndex > -1) && ((theBackOneIndex > -1)))
+                            {
+                                //int indexOfTheThingyAtTheFront = line.IndexOf(@"\\?\UNC");
+                                //int indexOfTheThingyAtTheBack = line.IndexOf(\"\*");
+                                int testCnt = line.Length;
+                                string eeee = line.Substring(0, theBackOneIndex);
+                                string eeeqwww = line.Substring(theFrontOneIndex);
+
+                                string whatever = line.Substring(theFrontOneIndex, theBackOneIndex - theFrontOneIndex);
+                                string whateverV2 = whatever.Replace(@"\\?\UNC", @"\");
+
+                                CSVReadCount++;
+                                folderNames.Add(whateverV2);
+                            }
+                        }
+                    }
+                    string logName = System.IO.Path.GetFileNameWithoutExtension(ndsLog2Process);
+                    using (System.IO.StreamWriter writetext = new System.IO.StreamWriter(NDSLogDestination + System.IO.Path.DirectorySeparatorChar + logName + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".txt", false, Encoding.Unicode))
+                    {
+                        foreach (string fnItem in folderNames)
+                        {
+                            writetext.WriteLine(fnItem.Length.ToString() + "*" + fnItem);
+                            CSVWriteCount++;
+                        }
+
+                    }
+                }
+                StatusMessage = "Completed";
+            });
+
+        }
+
+        #endregion
+
         #region "LPFN Process"
 
         //private ICommand importPathFileCommand;
@@ -1592,6 +1702,39 @@ namespace NavigatorTemplate.Models
             #endregion
 
         }
+
+        private ICommand clearStatisticsCommand;
+        public ICommand ClearStatisticsCommand
+        {
+            get
+            {
+                return clearStatisticsCommand ?? (clearStatisticsCommand = new CommandHandler(() => ClearStatistics(), _canExecute));
+            }
+        }
+        private void ClearStatistics()
+        {
+            UNCObjectFileLst.Clear();
+            UNCObjectFolderLst.Clear();
+            ObjectCount = 0;
+            FolderCount = 0;
+            FileCount = 0;
+            ObjectCountTotal = 0;
+            FolderCountTotal = 0;
+            FileCountTotal = 0;
+
+            ErrorCount = 0;
+            WarningCount = 0;
+            PathProcessedCount = 0;
+            PathProcessedCountTotal = 0;
+            PathImportedCount = 0;
+            PathImportedCountTotal = 0;
+            PathCurrentlyCounting = "N/A";
+            PathCurrentlyProcessing = "N/A";
+            ResetTimerPer();
+            SelectBulkFile2ProcessButtonEnabled = true;
+            ImportProcessBulkFileButtonEnabled = true;
+        }
+
         private void EvaluatePath(string path)
         {
             try
@@ -1674,7 +1817,7 @@ namespace NavigatorTemplate.Models
                 else
                 {
                     ErrorCount++;
-                    StatusMessage = "Directory(Path) does not exist";
+                    StatusMessage = path + " does not exist";
                     PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, path + " does not exist", "EvaluatePath()", DateGuid);
                 }
             }
@@ -1685,39 +1828,8 @@ namespace NavigatorTemplate.Models
                 PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Exception: EvaluatePath()", DateGuid);
             }
         }
+    
 
-
-        private ICommand clearStatisticsCommand;
-        public ICommand ClearStatisticsCommand
-        {
-            get
-            {
-                return clearStatisticsCommand ?? (clearStatisticsCommand = new CommandHandler(() => ClearStatistics(), _canExecute));
-            }
-        }
-        private void ClearStatistics()
-        {
-            UNCObjectFileLst.Clear();
-            UNCObjectFolderLst.Clear();
-            ObjectCount = 0;
-            FolderCount = 0;
-            FileCount = 0;
-            ObjectCountTotal = 0;
-            FolderCountTotal = 0;
-            FileCountTotal = 0;
-
-            ErrorCount = 0;
-            WarningCount = 0;
-            PathProcessedCount = 0;
-            PathProcessedCountTotal = 0;
-            PathImportedCount = 0;
-            PathImportedCountTotal = 0;
-            PathCurrentlyCounting = "N/A";
-            PathCurrentlyProcessing = "N/A";
-            ResetTimerPer();
-            SelectBulkFile2ProcessButtonEnabled = true;
-            ImportProcessBulkFileButtonEnabled = true;
-        }
         private ICommand fetchLPFNsInFolderCommand;
         public ICommand FetchLPFNsInFolderCommand
         {
@@ -1790,9 +1902,9 @@ namespace NavigatorTemplate.Models
                     }
                     SelectBulkFile2ProcessButtonEnabled = true;
                     ImportProcessBulkFileButtonEnabled = true;
-                    
+
                     StatusMessage = "Completed";
-                    if (ErrorCount > 0) 
+                    if (ErrorCount > 0)
                     {
                         StatusMessage += " with errors.  See Logs.";
                     }
@@ -2303,117 +2415,7 @@ namespace NavigatorTemplate.Models
 
         #endregion
 
-        #region "Checker vs Crawler Path Compare"
-        private ICommand processNDSLogCommand;
-        public ICommand ProcessNDSLogCommand
-        {
-            get
-            {
-                return processNDSLogCommand ?? (processNDSLogCommand = new CommandHandler(() => ProcessNDSLog(), _canExecute));
-            }
-        }
-        private async void ProcessNDSLog()
-        {
-            await Task.Run(() =>
-            {
-                CSVReadCount = 0;
-                CSVWriteCount = 0;
-                if (NDSLogFileType)
-                {
-                    List<string> fileNames = new List<string>();
-                    string fileName = string.Empty;
-                    string sourceFolder = string.Empty;
-                    string destinationFolder = string.Empty;
 
-                    using (var reader = new System.IO.StreamReader(NDSLog2Process))
-                    {
-                        while (!reader.EndOfStream)
-                        {
-                            string line = reader.ReadLine();
-                            List<int> guillements = WhateverExtensions.ExtensionsAreMe.AllIndexesOf(line, "\"");
-                            if (guillements.Count > 0)
-                            {
-                                CSVReadCount++;
-                                fileName = line.Substring(guillements[0] + 1, guillements[1] - guillements[0] - 1);
-                                sourceFolder = line.Substring(guillements[2] + 1, guillements[3] - guillements[2] - 1);
-                                destinationFolder = line.Substring(guillements[4] + 1, guillements[5] - guillements[4] - 1);
-                                string fullFileName = sourceFolder + System.IO.Path.DirectorySeparatorChar + fileName;
-                                string lskdjfsdf = "\\\\?\\UNC";
-                                string lskdjfsddf = @"\\?\UNC";
-                                string lsksdjfsdf = @"\*";
-                                string lskadjfsdf = "\\*";
-                                string fullFileNameV2 = fullFileName.Replace(@"\\?\UNC", @"\");
-                                fileNames.Add(fullFileNameV2);
-                            }
-
-                        }
-                    }
-                    //using (System.IO.StreamWriter writetext = new System.IO.StreamWriter((NDSLogDestination + @"_Star_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".csv"), true, Encoding.Unicode))
-                    string logName = System.IO.Path.GetFileNameWithoutExtension(ndsLog2Process);
-                    using (System.IO.StreamWriter writetext = new System.IO.StreamWriter(NDSLogDestination + System.IO.Path.DirectorySeparatorChar + logName + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".csv", false, Encoding.Unicode))
-                    {
-                        foreach (string fnItem in fileNames)
-                        {
-                            writetext.WriteLine(fnItem.Length.ToString() + "*" + fnItem);
-                            CSVWriteCount++;
-                        }
-
-                    }
-                    StatusMessage = "Completed";
-                }
-                else //folder
-                {
-                    List<string> folderNames = new List<string>();
-                    string folderName = string.Empty;
-                    string sourceFolder = string.Empty;
-                    string destinationFolder = string.Empty;
-
-                    using (var reader = new System.IO.StreamReader(NDSLog2Process))
-                    {
-                        while (!reader.EndOfStream)
-                        {
-
-                            string line = reader.ReadLine();
-                            //string lskdjfsdf = "\\\\?\\UNC";
-                            string theFrontOne = @"\\?\UNC";
-                            //string lsksdjfsdf = @"\*";
-                            //string lskadjfsdf = "\\*";
-                            int theFrontOneIndex = line.IndexOf(theFrontOne);
-                            string theBackOne = @"\*:";
-                            int theBackOneIndex = line.IndexOf(theBackOne);
-                            if ((theFrontOneIndex > -1) && ((theBackOneIndex > -1)))
-                            {
-                                //int indexOfTheThingyAtTheFront = line.IndexOf(@"\\?\UNC");
-                                //int indexOfTheThingyAtTheBack = line.IndexOf(\"\*");
-                                int testCnt = line.Length;
-                                string eeee = line.Substring(0, theBackOneIndex);
-                                string eeeqwww = line.Substring(theFrontOneIndex);
-
-                                string whatever = line.Substring(theFrontOneIndex, theBackOneIndex - theFrontOneIndex);
-                                string whateverV2 = whatever.Replace(@"\\?\UNC", @"\");
-
-                                CSVReadCount++;
-                                folderNames.Add(whateverV2);
-                            }
-                        }
-                    }
-                    string logName = System.IO.Path.GetFileNameWithoutExtension(ndsLog2Process);
-                    using (System.IO.StreamWriter writetext = new System.IO.StreamWriter(NDSLogDestination + System.IO.Path.DirectorySeparatorChar + logName + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".csv", false, Encoding.Unicode))
-                    {
-                        foreach (string fnItem in folderNames)
-                        {
-                            writetext.WriteLine(fnItem.Length.ToString() + "*" + fnItem);
-                            CSVWriteCount++;
-                        }
-
-                    }
-                }
-                StatusMessage = "Completed";
-            });
-
-        }
-
-        #endregion
 
         //private bool ExecuteLPFNBulkList_Linq(string DateGuid)
         //{
@@ -3254,7 +3256,7 @@ namespace NavigatorTemplate.Models
         //    });
         //}
 
-        #region "Comparisons"
+        #region "Checker vs Crawler Path Compare"
 
         private ICommand compareUserListsCommand;
         public ICommand CompareUserListsCommand
@@ -3613,7 +3615,7 @@ namespace NavigatorTemplate.Models
 
         //}
 
-        #region "************************************************************************************************* OI Functions"
+        #region "OI Functions"
 
         private void SaveProperties()
         {
@@ -3839,7 +3841,7 @@ namespace NavigatorTemplate.Models
         }
         #endregion
 
-        #region "************************************************************************************************* SQLite Functions"
+        #region "SQLite Functions"
 
         private ICommand inventDatabaseNameCommand;
         public ICommand InventDatabaseNameCommand
@@ -4051,7 +4053,7 @@ namespace NavigatorTemplate.Models
         }
         #endregion
 
-        #region "************************************************************************************************* StopWatch"
+        #region "StopWatch"
 
         private double currentAverageRunningTimePer = 0;
         public double CurrentAverageRunningTimePer
@@ -4208,7 +4210,7 @@ namespace NavigatorTemplate.Models
 
         #endregion
 
-        #region "************************************************************************************************* View Life Cycle"
+        #region "View Life Cycle"
 
         private bool _isLoaded = false;
 
