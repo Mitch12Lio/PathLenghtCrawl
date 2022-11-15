@@ -1790,7 +1790,12 @@ namespace NavigatorTemplate.Models
                     }
                     SelectBulkFile2ProcessButtonEnabled = true;
                     ImportProcessBulkFileButtonEnabled = true;
+                    
                     StatusMessage = "Completed";
+                    if (ErrorCount > 0) 
+                    {
+                        StatusMessage += StatusMessage + " with errors.  See Logs.";
+                    }
                 }
             }
             #region "Catches"
@@ -1951,6 +1956,10 @@ namespace NavigatorTemplate.Models
                     SelectBulkFile2ProcessButtonEnabled = true;
                     ImportProcessBulkFileButtonEnabled = true;
                     StatusMessage = "Completed";
+                    if (ErrorCount > 0)
+                    {
+                        StatusMessage += StatusMessage + " with errors.  See Logs.";
+                    }
                 }
                 else
                 {
