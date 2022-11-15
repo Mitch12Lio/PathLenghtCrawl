@@ -1675,14 +1675,14 @@ namespace NavigatorTemplate.Models
                 {
                     ErrorCount++;
                     StatusMessage = "Directory(Path) does not exist";
-                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, "Directory(Path) does not exist", "FetchLPFNs()", DateGuid);
+                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, path + " does not exist", "EvaluatePath()", DateGuid);
                 }
             }
             catch (Exception ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Exception: FetchLPFNs()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Exception: EvaluatePath()", DateGuid);
             }
         }
 
@@ -1798,49 +1798,49 @@ namespace NavigatorTemplate.Models
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: WhateverStartLongWay()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: FetchLPFNsInFolder()", DateGuid);
             }
             catch (System.IO.DirectoryNotFoundException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: WhateverStartLongWay()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: FetchLPFNsInFolder()", DateGuid);
             }
             catch (System.IO.PathTooLongException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: WhateverStartLongWay()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: FetchLPFNsInFolder()", DateGuid);
             }
             catch (System.IO.IOException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: WhateverStartLongWay()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: FetchLPFNsInFolder()", DateGuid);
             }
             catch (System.Security.SecurityException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: WhateverStartLongWay()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: FetchLPFNsInFolder()", DateGuid);
             }
             catch (UnauthorizedAccessException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: WhateverStartLongWay()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: FetchLPFNsInFolder()", DateGuid);
             }
             catch (ArgumentException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: WhateverStartLongWay()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: FetchLPFNsInFolder()", DateGuid);
             }
             catch (Exception ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: WhateverStartLongWay()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: FetchLPFNsInFolder()", DateGuid);
             }
             #endregion
         }
@@ -1962,49 +1962,49 @@ namespace NavigatorTemplate.Models
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: WhateverStartLongWay()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: FetchLPFNsFromFile()", DateGuid);
             }
             catch (System.IO.DirectoryNotFoundException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: WhateverStartLongWay()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: FetchLPFNsFromFile()", DateGuid);
             }
             catch (System.IO.PathTooLongException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: WhateverStartLongWay()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: FetchLPFNsFromFile()", DateGuid);
             }
             catch (System.IO.IOException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: WhateverStartLongWay()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: FetchLPFNsFromFile()", DateGuid);
             }
             catch (System.Security.SecurityException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: WhateverStartLongWay()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: FetchLPFNsFromFile()", DateGuid);
             }
             catch (UnauthorizedAccessException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: WhateverStartLongWay()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: FetchLPFNsFromFile()", DateGuid);
             }
             catch (ArgumentException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: WhateverStartLongWay()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: FetchLPFNsFromFile()", DateGuid);
             }
             catch (Exception ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: WhateverStartLongWay()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: FetchLPFNsFromFile()", DateGuid);
             }
             #endregion
         }
