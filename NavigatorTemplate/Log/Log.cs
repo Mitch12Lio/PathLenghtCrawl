@@ -18,10 +18,10 @@ namespace PathLenghtCrawl.Log
         {
             using (System.IO.StreamWriter logFile = new System.IO.StreamWriter(path + System.IO.Path.DirectorySeparatorChar + "LogErrors_" + dateGuid + ".log", true, Encoding.UTF8))
             {
-                logFile.WriteLine(dateTime.ToString());
-                logFile.WriteLine(errorMessage);
-                logFile.WriteLine(pathCausingError);
-                logFile.WriteLine(Environment.NewLine);
+                logFile.WriteLine(dateTime.ToString() + "," + pathCausingError + "," + errorMessage);
+                //logFile.WriteLine(errorMessage);
+                //logFile.WriteLine(pathCausingError);
+                //logFile.WriteLine(Environment.NewLine);
             }
         }
 

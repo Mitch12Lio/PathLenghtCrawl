@@ -1794,7 +1794,7 @@ namespace NavigatorTemplate.Models
                     StatusMessage = "Completed";
                     if (ErrorCount > 0) 
                     {
-                        StatusMessage += StatusMessage + " with errors.  See Logs.";
+                        StatusMessage += " with errors.  See Logs.";
                     }
                 }
             }
@@ -1958,7 +1958,7 @@ namespace NavigatorTemplate.Models
                     StatusMessage = "Completed";
                     if (ErrorCount > 0)
                     {
-                        StatusMessage += StatusMessage + " with errors.  See Logs.";
+                        StatusMessage += " with errors.  See Logs.";
                     }
                 }
                 else
