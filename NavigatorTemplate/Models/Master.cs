@@ -42,7 +42,6 @@ namespace NavigatorTemplate.Models
         string currentRunningTime = string.Empty;
         string currentRunningTimePer = string.Empty;
 
-
         public Master()
         {
             SetFileCommand = new RelayCommand(SetFile, param => this._canExecute);
@@ -1136,10 +1135,6 @@ namespace NavigatorTemplate.Models
 
 
         #endregion
-
-
-
-        #region "************************************************************************************************* Bread & Butter"
 
         #region "LPFN Process"
         
@@ -3060,7 +3055,6 @@ namespace NavigatorTemplate.Models
         //    });
         //}
 
-
         #region "Comparisons"
 
         private ICommand compareUserListsCommand;
@@ -3393,7 +3387,6 @@ namespace NavigatorTemplate.Models
             return success;
         }
 
-
         //private ICommand setUNCObjectCommand;
         //public ICommand SetUNCObjectCommand
         //{
@@ -3420,9 +3413,6 @@ namespace NavigatorTemplate.Models
         //{
 
         //}
-
-
-        #endregion
 
         #region "************************************************************************************************* OI Functions"
 
