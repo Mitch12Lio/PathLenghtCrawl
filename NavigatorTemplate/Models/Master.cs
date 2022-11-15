@@ -861,6 +861,25 @@ namespace NavigatorTemplate.Models
             }
         }
 
+        private string pathFolder2Evalulate = PathLenghtCrawl.Properties.Settings.Default.PathFolder2Evalulate;
+        public string PathFolder2Evalulate
+        {
+            get
+            {
+                return pathFolder2Evalulate;
+            }
+            set
+            {
+                if (pathFolder2Evalulate != value)
+                {
+                    pathFolder2Evalulate = value;
+                    PathLenghtCrawl.Properties.Settings.Default.PathFolder2Evalulate = value;
+                    SaveProperties();
+                    NotifyPropertyChanged("PathFolder2Evalulate");
+                }
+            }
+        }
+
         private string databaseValLocationPath = PathLenghtCrawl.Properties.Settings.Default.DatabaseValLocationPath;
         public string DatabaseValLocationPath
         {
@@ -1137,7 +1156,7 @@ namespace NavigatorTemplate.Models
         #endregion
 
         #region "LPFN Process"
-        
+
         //private ICommand importPathFileCommand;
         //public ICommand ImportPathFileCommand
         //{
@@ -1328,7 +1347,7 @@ namespace NavigatorTemplate.Models
             return retval;
         }
 
-    
+
 
         private ICommand quitLoopCommand;
         public ICommand QuitLoopCommand
@@ -1361,6 +1380,8 @@ namespace NavigatorTemplate.Models
         {
             try
             {
+                int x = System.IO.Directory.EnumerateFiles(currentDI).Count();
+                //if (System.IO.Directory.EnumerateFiles(currentDI).Count)
                 IEnumerable<string> fiList = System.IO.Directory.EnumerateFiles(currentDI).Where(x => x.Length > MinPathLength);
                 int lkj = fiList.Count();
 
@@ -1395,7 +1416,7 @@ namespace NavigatorTemplate.Models
                     {
                         ErrorCount++;
                         StatusMessage = ex.Message;
-                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Exception: WhateverCheckFilesLongWay().ForEach", DateGuid);
+                        PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Exception: LoopFiles().ForEach", DateGuid);
                     }
                 }
             }
@@ -1404,49 +1425,49 @@ namespace NavigatorTemplate.Models
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: WhateverCheckFilesLongWay()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: LoopFiles()", DateGuid);
             }
             catch (System.IO.FileNotFoundException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "FileNotFoundException: WhateverCheckFilesLongWay()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "FileNotFoundException: LoopFiles()", DateGuid);
             }
             catch (System.IO.PathTooLongException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: WhateverCheckFilesLongWay()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: LoopFiles()", DateGuid);
             }
             catch (System.IO.IOException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: WhateverCheckFilesLongWay()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: LoopFiles()", DateGuid);
             }
             catch (System.Security.SecurityException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: WhateverCheckFilesLongWay()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: LoopFiles()", DateGuid);
             }
             catch (UnauthorizedAccessException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: WhateverCheckFilesLongWay()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: LoopFiles()", DateGuid);
             }
             catch (ArgumentException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: WhateverCheckFilesLongWay()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: LoopFiles()", DateGuid);
             }
             catch (Exception ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: WhateverCheckFilesLongWay()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: LoopFiles()", DateGuid);
             }
             #endregion
 
@@ -1457,7 +1478,7 @@ namespace NavigatorTemplate.Models
             try
             {
                 System.IO.Directory.CreateDirectory(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Details");
-                bool success = true;
+                //bool success = true;
 
                 if (Details)
                 {
@@ -1509,7 +1530,7 @@ namespace NavigatorTemplate.Models
                             {
                                 ErrorCount++;
                                 StatusMessage = ex.Message;
-                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Exception: WhateverLongWay().ForEach", DateGuid);
+                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Exception: LoopDirectories().ForEach", DateGuid);
                             }
                         }
                     }
@@ -1524,66 +1545,277 @@ namespace NavigatorTemplate.Models
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: WhateverLongWay()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: LoopDirectories()", DateGuid);
             }
             catch (System.IO.DirectoryNotFoundException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: WhateverLongWay()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: LoopDirectories()", DateGuid);
             }
             catch (System.IO.PathTooLongException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: WhateverLongWay()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: LoopDirectories()", DateGuid);
             }
             catch (System.IO.IOException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: WhateverLongWay()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: LoopDirectories()", DateGuid);
             }
             catch (System.Security.SecurityException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: WhateverLongWay()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: LoopDirectories()", DateGuid);
             }
             catch (UnauthorizedAccessException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: WhateverLongWay()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: LoopDirectories()", DateGuid);
             }
             catch (ArgumentException ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: WhateverLongWay()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: LoopDirectories()", DateGuid);
             }
             catch (Exception ex)
             {
                 ErrorCount++;
                 StatusMessage = ex.Message;
-                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: WhateverLongWay()", DateGuid);
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: LoopDirectories()", DateGuid);
             }
             #endregion
 
         }
+        private void EvaluatePath(string path)
+        {
+            try
+            {
+                if (Quit) { return; }
+                Skip = false;
+                if (Details)
+                {
+                    UNCObjectFileList.Clear();
+                    UNCObjectFolderList.Clear();
 
-        /// <summary>
-        /// Being Used in BULK tab
-        /// </summary>
-        private ICommand fetchLPFNsCommand;
-        public ICommand FetchLPFNsCommand
+                    App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+                    {
+                        UNCObjectFileLst.Clear();
+                        UNCObjectFolderLst.Clear();
+                    });
+
+                    ObjectCountTotal = 0;
+                    FolderCountTotal = 0;
+                    FileCountTotal = 0;
+
+                    dtRunningPer.Start();
+                    ResetTimerPer();
+                    StartTimerPer();
+
+                    CurrentDirectory = new System.IO.DirectoryInfo(path);
+                    PathCurrentlyProcessing = path;
+                }
+                if (CurrentDirectory.Exists)
+                {
+                    LoopDirectories(path);
+
+                    if (Details)
+                    {
+                        StopTimerPer();
+                        dtRunningPer.Stop();
+
+                        PathProcessedCount++;
+                    }
+                    PathLenghtCrawl.POCO.Duration currentDuration = new PathLenghtCrawl.POCO.Duration() { Time = ValidatorRunningTimePer, Name = CurrentDirectory.FullName };
+                    DurationList.Add(currentDuration);
+
+                    if (Details)
+                    {
+                        string fileNamePath = CurrentDirectory.FullName.Substring(2).Replace("\\", "_");
+
+                        string logFileName = "Files_" + fileNamePath + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + "lpfn.txt";
+                        using (System.IO.StreamWriter resultsFileByPathType = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Details" + System.IO.Path.DirectorySeparatorChar + logFileName, false, Encoding.Unicode))
+                        {
+                            foreach (UNCObject uncFileObject in UNCObjectFileList)
+                            {
+                                resultsFileByPathType.WriteLine(uncFileObject.Count + "," + uncFileObject.CharacterCount + "," + uncFileObject.NameUNC);
+                            }
+                        }
+
+                        string logFolderName = "Folders" + fileNamePath + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + "lpfn.txt";
+                        using (System.IO.StreamWriter resultsFolderByPathType = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Details" + System.IO.Path.DirectorySeparatorChar + logFolderName, false, Encoding.Unicode))
+                        {
+                            foreach (UNCObject uncFolderObject in UNCObjectFolderList)
+                            {
+                                resultsFolderByPathType.WriteLine(uncFolderObject.Count + "," + uncFolderObject.CharacterCount + "," + uncFolderObject.NameUNC);
+                            }
+                        }
+                    }
+
+                    string masterFileNameWOXtension = System.IO.Path.GetFileNameWithoutExtension(PathFileImportTxt);
+                    string masterFileLogName = masterFileNameWOXtension + "_" + DateGuid + "_" + "lpfn.txt";
+                    using (System.IO.StreamWriter resultsFileGlobal = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + masterFileLogName, true, Encoding.Unicode))
+                    {
+                        foreach (UNCObject uncFileObject in UNCObjectFileList)
+                        {
+                            resultsFileGlobal.WriteLine(uncFileObject.Count + "," + uncFileObject.CharacterCount + "," + uncFileObject.NameUNC);
+                        }
+                        foreach (UNCObject uncFolderObject in UNCObjectFolderList)
+                        {
+                            resultsFileGlobal.WriteLine(uncFolderObject.Count + "," + uncFolderObject.CharacterCount + "," + uncFolderObject.NameUNC);
+                        }
+                    }
+                }
+                else
+                {
+                    ErrorCount++;
+                    StatusMessage = "Directory(Path) does not exist";
+                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, "Directory(Path) does not exist", "FetchLPFNs()", DateGuid);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorCount++;
+                StatusMessage = ex.Message;
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Exception: FetchLPFNs()", DateGuid);
+            }
+        }
+        private ICommand fetchLPFNsInFolderCommand;
+        public ICommand FetchLPFNsInFolderCommand
         {
             get
             {
-                return fetchLPFNsCommand ?? (fetchLPFNsCommand = new CommandHandler(() => FetchLPFNs(), _canExecute));
+                return fetchLPFNsInFolderCommand ?? (fetchLPFNsInFolderCommand = new CommandHandler(() => FetchLPFNsInFolder(), _canExecute));
             }
         }
-        private async void FetchLPFNs()
+        private async void FetchLPFNsInFolder()
+        {
+            string DateGuid = DateTime.Now.ToString("yyyyMMddHHmmssffff");
+            try
+            {
+                if (System.IO.File.Exists(PathFileImportTxt))
+                {
+                    StatusMessage = "Processing...";
+
+                    ObjectCount = 0;
+                    FolderCount = 0;
+                    FileCount = 0;
+                    ObjectCountTotal = 0;
+                    FolderCountTotal = 0;
+                    FileCountTotal = 0;
+
+                    ErrorCount = 0;
+                    WarningCount = 0;
+                    PathProcessedCount = 0;
+                    PathImportedCount = 0;
+                    PathCurrentlyCounting = "N/A";
+                    PathCurrentlyProcessing = "N/A";
+
+                    SelectBulkFile2ProcessButtonEnabled = false;
+                    ImportProcessBulkFileButtonEnabled = false;
+
+                    if (Details)
+                    {
+                        PathProcessedCountTotal = 1;
+                    }
+                    DurationList.Clear();
+                    await Task.Run(() =>
+                    {
+                        EvaluatePath(PathFolder2Evalulate);
+                    }); UNCObjectFileLst.Clear();
+                    UNCObjectFolderLst.Clear();
+                    //});
+
+                    ObjectCountTotal = 0;
+                    FolderCountTotal = 0;
+                    FileCountTotal = 0;
+
+                    Quit = false;
+                    if (Details)
+                    {
+                        using (System.IO.StreamWriter resultsFile = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Statistics_" + DateGuid + ".txt", true, Encoding.Unicode))
+                        {
+                            foreach (PathLenghtCrawl.POCO.Duration duration in DurationList)
+                            {
+                                resultsFile.WriteLine(duration.Name + "," + duration.Time);
+                            }
+                        }
+                        PathCurrentlyProcessing = "N/A";
+                        PathCurrentlyCounting = "N/A";
+                        ResetTimerPer();
+                    }
+                    SelectBulkFile2ProcessButtonEnabled = true;
+                    ImportProcessBulkFileButtonEnabled = true;
+                    StatusMessage = "Completed";
+                }
+            }
+            #region "Catches"
+            catch (ArgumentNullException ex)
+            {
+                ErrorCount++;
+                StatusMessage = ex.Message;
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: WhateverStartLongWay()", DateGuid);
+            }
+            catch (System.IO.DirectoryNotFoundException ex)
+            {
+                ErrorCount++;
+                StatusMessage = ex.Message;
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: WhateverStartLongWay()", DateGuid);
+            }
+            catch (System.IO.PathTooLongException ex)
+            {
+                ErrorCount++;
+                StatusMessage = ex.Message;
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: WhateverStartLongWay()", DateGuid);
+            }
+            catch (System.IO.IOException ex)
+            {
+                ErrorCount++;
+                StatusMessage = ex.Message;
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: WhateverStartLongWay()", DateGuid);
+            }
+            catch (System.Security.SecurityException ex)
+            {
+                ErrorCount++;
+                StatusMessage = ex.Message;
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: WhateverStartLongWay()", DateGuid);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                ErrorCount++;
+                StatusMessage = ex.Message;
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: WhateverStartLongWay()", DateGuid);
+            }
+            catch (ArgumentException ex)
+            {
+                ErrorCount++;
+                StatusMessage = ex.Message;
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: WhateverStartLongWay()", DateGuid);
+            }
+            catch (Exception ex)
+            {
+                ErrorCount++;
+                StatusMessage = ex.Message;
+                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: WhateverStartLongWay()", DateGuid);
+            }
+            #endregion
+        }
+
+
+        private ICommand fetchLPFNsFromFileCommand;
+        public ICommand FetchLPFNsFromFileCommand
+        {
+            get
+            {
+                return fetchLPFNsFromFileCommand ?? (fetchLPFNsFromFileCommand = new CommandHandler(() => FetchLPFNsFromFile(), _canExecute));
+            }
+        }
+        private async void FetchLPFNsFromFile()
         {
             string DateGuid = DateTime.Now.ToString("yyyyMMddHHmmssffff");
             try
@@ -1610,7 +1842,7 @@ namespace NavigatorTemplate.Models
                     ImportProcessBulkFileButtonEnabled = false;
 
                     List<string> uncPathsToScan = new List<string>();
-                    string currentDI = CurrentDirectory.FullName;
+                    //string currentDI = CurrentDirectory.FullName;
 
                     System.IO.FileInfo fi = new System.IO.FileInfo(PathFileImportTxt);
                     if (Details)
@@ -1649,88 +1881,7 @@ namespace NavigatorTemplate.Models
                     {
                         foreach (String path in uncPathsToScan)
                         {
-                            try
-                            {
-                                if (Quit) { break; }
-                                Skip = false;
-                                if (Details)
-                                {
-                                    UNCObjectFileList.Clear();
-                                    UNCObjectFolderList.Clear();
-
-                                    App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                                    {
-                                        UNCObjectFileLst.Clear();
-                                        UNCObjectFolderLst.Clear();
-                                    });
-
-                                    ObjectCountTotal = 0;
-                                    FolderCountTotal = 0;
-                                    FileCountTotal = 0;
-
-                                    dtRunningPer.Start();
-                                    ResetTimerPer();
-                                    StartTimerPer();
-
-                                    CurrentDirectory = new System.IO.DirectoryInfo(path);
-                                    PathCurrentlyProcessing = path;
-                                }
-                                //Whatever(@"\\HOGA_HOGUC1S\HOGUC1\Users\JHamrlik");
-                                LoopDirectories(path);
-
-                                if (Details)
-                                {
-                                    StopTimerPer();
-                                    dtRunningPer.Stop();
-
-                                    PathProcessedCount++;
-                                }
-                                PathLenghtCrawl.POCO.Duration currentDuration = new PathLenghtCrawl.POCO.Duration() { Time = ValidatorRunningTimePer, Name = CurrentDirectory.FullName };
-                                DurationList.Add(currentDuration);
-
-                                if (Details)
-                                {
-                                    string fileNamePath = CurrentDirectory.FullName.Substring(2).Replace("\\", "_");
-
-                                    string logFileName = "Files_" + fileNamePath + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + "lpfn.txt";
-                                    using (System.IO.StreamWriter resultsFileByPathType = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Details" + System.IO.Path.DirectorySeparatorChar + logFileName, false, Encoding.Unicode))
-                                    {
-                                        foreach (UNCObject uncFileObject in UNCObjectFileList)
-                                        {
-                                            resultsFileByPathType.WriteLine(uncFileObject.Count + "," + uncFileObject.CharacterCount + "," + uncFileObject.NameUNC);
-                                        }
-                                    }
-
-                                    string logFolderName = "Folders" + fileNamePath + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + "lpfn.txt";
-                                    using (System.IO.StreamWriter resultsFolderByPathType = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + "Details" + System.IO.Path.DirectorySeparatorChar + logFolderName, false, Encoding.Unicode))
-                                    {
-                                        foreach (UNCObject uncFolderObject in UNCObjectFolderList)
-                                        {
-                                            resultsFolderByPathType.WriteLine(uncFolderObject.Count + "," + uncFolderObject.CharacterCount + "," + uncFolderObject.NameUNC);
-                                        }
-                                    }
-                                }
-
-                                string masterFileNameWOXtension = System.IO.Path.GetFileNameWithoutExtension(PathFileImportTxt);
-                                string masterFileLogName = masterFileNameWOXtension + "_" + DateGuid + "_" + "lpfn.txt";
-                                using (System.IO.StreamWriter resultsFileGlobal = new System.IO.StreamWriter(LogLocationTxt + System.IO.Path.DirectorySeparatorChar + masterFileLogName, true, Encoding.Unicode))
-                                {
-                                    foreach (UNCObject uncFileObject in UNCObjectFileList)
-                                    {
-                                        resultsFileGlobal.WriteLine(uncFileObject.Count + "," + uncFileObject.CharacterCount + "," + uncFileObject.NameUNC);
-                                    }
-                                    foreach (UNCObject uncFolderObject in UNCObjectFolderList)
-                                    {
-                                        resultsFileGlobal.WriteLine(uncFolderObject.Count + "," + uncFolderObject.CharacterCount + "," + uncFolderObject.NameUNC);
-                                    }
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                ErrorCount++;
-                                StatusMessage = ex.Message;
-                                PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Exception: WhateverStartLongWay().ForEach", DateGuid);
-                            }
+                            EvaluatePath(path);
                         }
                     });
 
@@ -1820,7 +1971,7 @@ namespace NavigatorTemplate.Models
         }
 
 
-      
+
 
 
         //private void WhateverCheckFiles(string currentDI)
@@ -3461,6 +3612,10 @@ namespace NavigatorTemplate.Models
                     }
                     break;
                 case "PathFileImportTxt":
+                    //openFD.ValidateNames = false;
+                    //openFD.CheckFileExists = false;
+                    //openFD.CheckPathExists = true;
+                    //openFD.FileName = "Folders Included";
                     openFD.Filter = "csv files (*.csv)|*.csv|All files (*.*)|*.*";
                     //handles empty strings
                     if (System.IO.Directory.Exists(System.IO.Path.GetDirectoryName(PathFileImportTxt)))
@@ -3597,6 +3752,12 @@ namespace NavigatorTemplate.Models
                         folderBrowserDialog.SelectedPath = NDSLogDestination;
                     }
                     break;
+                case "PathFolder2Evalulate":
+                    if (PathFolder2Evalulate != string.Empty)
+                    {
+                        folderBrowserDialog.SelectedPath = PathFolder2Evalulate;
+                    }
+                    break;
                 default:
                     break;
             }
@@ -3618,6 +3779,9 @@ namespace NavigatorTemplate.Models
                         break;
                     case "NDSLogDestination":
                         NDSLogDestination = pathName;
+                        break;
+                    case "PathFolder2Evalulate":
+                        PathFolder2Evalulate = pathName;
                         break;
                     default:
                         StatusMessage = "Save Incomplete.";

@@ -334,5 +334,17 @@ namespace PathLenghtCrawl.Properties {
                 this["NDSSamePathAsAbove"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string PathFolder2Evalulate {
+            get {
+                return ((string)(this["PathFolder2Evalulate"]));
+            }
+            set {
+                this["PathFolder2Evalulate"] = value;
+            }
+        }
     }
 }
