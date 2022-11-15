@@ -477,6 +477,7 @@
                                         <ColumnDefinition Width="50"/>
                                         <ColumnDefinition Width="50"/>
                                         <ColumnDefinition Width="50"/>
+                                        <ColumnDefinition Width="50"/>
                                     </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"></RowDefinition>
@@ -484,6 +485,7 @@
                                     <Button Grid.Row="0" Grid.Column="1" Content="Skip" Command="{Binding Master.SkipPathCommand}"></Button>
                                     <Button Grid.Row="0" Grid.Column="2" Content="Pause" Command="{Binding Master.PauseCommand}" IsEnabled="False"></Button>
                                     <Button Grid.Row="0" Grid.Column="3" Content="Quit" Command="{Binding Master.QuitLoopCommand}"></Button>
+                                    <Button Grid.Row="0" Grid.Column="4" Content="Clear" Command="{Binding Master.ClearStatisticsCommand}"></Button>
                                 </Grid>
                             </Grid>
                         </Grid>

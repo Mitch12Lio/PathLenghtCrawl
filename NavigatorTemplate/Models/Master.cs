@@ -1685,6 +1685,39 @@ namespace NavigatorTemplate.Models
                 PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Exception: FetchLPFNs()", DateGuid);
             }
         }
+
+
+        private ICommand clearStatisticsCommand;
+        public ICommand ClearStatisticsCommand
+        {
+            get
+            {
+                return clearStatisticsCommand ?? (clearStatisticsCommand = new CommandHandler(() => ClearStatistics(), _canExecute));
+            }
+        }
+        private void ClearStatistics()
+        {
+            UNCObjectFileLst.Clear();
+            UNCObjectFolderLst.Clear();
+            ObjectCount = 0;
+            FolderCount = 0;
+            FileCount = 0;
+            ObjectCountTotal = 0;
+            FolderCountTotal = 0;
+            FileCountTotal = 0;
+
+            ErrorCount = 0;
+            WarningCount = 0;
+            PathProcessedCount = 0;
+            PathProcessedCountTotal = 0;
+            PathImportedCount = 0;
+            PathImportedCountTotal = 0;
+            PathCurrentlyCounting = "N/A";
+            PathCurrentlyProcessing = "N/A";
+            ResetTimerPer();
+            SelectBulkFile2ProcessButtonEnabled = true;
+            ImportProcessBulkFileButtonEnabled = true;
+        }
         private ICommand fetchLPFNsInFolderCommand;
         public ICommand FetchLPFNsInFolderCommand
         {
@@ -1722,18 +1755,24 @@ namespace NavigatorTemplate.Models
                     if (Details)
                     {
                         PathProcessedCountTotal = 1;
+
+                        dtRunningPer.Tick += new EventHandler(dtRunningPer_Tick);
+                        dtRunningPer.Interval = new TimeSpan(0, 0, 0, 0, 1);
                     }
+                    else
+                    { ExpandOptionsStatsBool = false; }
                     DurationList.Clear();
                     await Task.Run(() =>
                     {
                         EvaluatePath(PathFolder2Evalulate);
-                    }); UNCObjectFileLst.Clear();
-                    UNCObjectFolderLst.Clear();
+                    });
+                    //UNCObjectFileLst.Clear();
+                    //UNCObjectFolderLst.Clear();
                     //});
 
-                    ObjectCountTotal = 0;
-                    FolderCountTotal = 0;
-                    FileCountTotal = 0;
+                    //ObjectCountTotal = 0;
+                    //FolderCountTotal = 0;
+                    //FileCountTotal = 0;
 
                     Quit = false;
                     if (Details)
@@ -1745,9 +1784,9 @@ namespace NavigatorTemplate.Models
                                 resultsFile.WriteLine(duration.Name + "," + duration.Time);
                             }
                         }
-                        PathCurrentlyProcessing = "N/A";
-                        PathCurrentlyCounting = "N/A";
-                        ResetTimerPer();
+                        //PathCurrentlyProcessing = "N/A";
+                        //PathCurrentlyCounting = "N/A";
+                        //ResetTimerPer();
                     }
                     SelectBulkFile2ProcessButtonEnabled = true;
                     ImportProcessBulkFileButtonEnabled = true;
