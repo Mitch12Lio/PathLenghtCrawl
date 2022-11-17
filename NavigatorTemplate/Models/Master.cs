@@ -468,7 +468,7 @@ namespace NavigatorTemplate.Models
                 }
             }
         }
-      
+
         private string magikFileSource = PathLenghtCrawl.Properties.Settings.Default.MagikFileSource;
         public string MagikFileSource
         {
@@ -1828,7 +1828,7 @@ namespace NavigatorTemplate.Models
                 PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Exception: EvaluatePath()", DateGuid);
             }
         }
-    
+
 
         private ICommand fetchLPFNsInFolderCommand;
         public ICommand FetchLPFNsInFolderCommand
@@ -2377,39 +2377,93 @@ namespace NavigatorTemplate.Models
                 StatusMessage = "Ready";
                 CSVReadCount = 0;
                 CSVWriteCount = 0;
-
-                List<string> destinationStrings = new List<string>();
-
-                using (var reader = new System.IO.StreamReader(FileToStarTxt))
+                try
                 {
-                    while (!reader.EndOfStream)
-                    {
-                        string oneS = reader.ReadLine();
-                        int twoI = oneS.IndexOf(',');
-                        string threeS = oneS.Substring(twoI + 1);
-                        int fourI = threeS.IndexOf(',');
-                        string fiveS = threeS.Substring(0, fourI);
-                        string sixS = threeS.Substring(fourI + 1);
-                        string sevenS = fiveS + "*" + sixS;
+                    List<string> destinationStrings = new List<string>();
 
-                        destinationStrings.Add(sixS);
-                        CSVReadCount++;
+                    using (var reader = new System.IO.StreamReader(FileToStarTxt))
+                    {
+                        while (!reader.EndOfStream)
+                        {
+                            string oneS = reader.ReadLine();
+                            int twoI = oneS.IndexOf(',');
+                            string threeS = oneS.Substring(twoI + 1);
+                            int fourI = threeS.IndexOf(',');
+                            string fiveS = threeS.Substring(0, fourI);
+                            string sixS = threeS.Substring(fourI + 1);
+                            string sevenS = fiveS + "*" + sixS;
+
+                            destinationStrings.Add(sixS);
+                            CSVReadCount++;
+                        }
+                    }
+
+                    using (System.IO.StreamWriter writetext = new System.IO.StreamWriter(FileToStarTxt + @"_Star_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".txt"))
+                    {
+                        int cnt = 2;
+                        writetext.WriteLine("Length*Path");
+                        foreach (string s in destinationStrings)
+                        {
+                            writetext.WriteLine("=LEN(B" + cnt.ToString() + ")*" + s);
+                            cnt++;
+                            CSVWriteCount++;
+                        }
                     }
                 }
-
-                using (System.IO.StreamWriter writetext = new System.IO.StreamWriter(FileToStarTxt + @"_Star_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".txt"))
+                #region "Catches"
+                catch (ArgumentNullException ex)
                 {
-                    int cnt = 2;
-                    writetext.WriteLine("Length*Path");
-                    foreach (string s in destinationStrings)
-                    {
-                        writetext.WriteLine("=LEN(B" + cnt.ToString() + ")*" + s);
-                        cnt++;
-                        CSVWriteCount++;
-                    }
+                    ErrorCount++;
+                    StatusMessage = ex.Message;
+                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: Morph2Star()", DateGuid);
                 }
-
-                StatusMessage = "Complete";
+                catch (System.IO.DirectoryNotFoundException ex)
+                {
+                    ErrorCount++;
+                    StatusMessage = ex.Message;
+                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: Morph2Star()", DateGuid);
+                }
+                catch (System.IO.PathTooLongException ex)
+                {
+                    ErrorCount++;
+                    StatusMessage = ex.Message;
+                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: Morph2Star()", DateGuid);
+                }
+                catch (System.IO.IOException ex)
+                {
+                    ErrorCount++;
+                    StatusMessage = ex.Message;
+                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: Morph2Star()", DateGuid);
+                }
+                catch (System.Security.SecurityException ex)
+                {
+                    ErrorCount++;
+                    StatusMessage = ex.Message;
+                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: Morph2Star()", DateGuid);
+                }
+                catch (UnauthorizedAccessException ex)
+                {
+                    ErrorCount++;
+                    StatusMessage = ex.Message;
+                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: Morph2Star()", DateGuid);
+                }
+                catch (ArgumentException ex)
+                {
+                    ErrorCount++;
+                    StatusMessage = ex.Message;
+                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: Morph2Star()", DateGuid);
+                }
+                catch (Exception ex)
+                {
+                    ErrorCount++;
+                    StatusMessage = ex.Message;
+                    PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: Morph2Star()", DateGuid);
+                }
+                #endregion
+                if (StatusMessage.StartsWith("Ready"))
+                {
+                    StatusMessage = "Complete";
+                }
             });
         }
 
