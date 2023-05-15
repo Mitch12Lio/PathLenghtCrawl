@@ -1188,10 +1188,10 @@ namespace NavigatorTemplate.Models
                                 sourceFolder = line.Substring(guillements[2] + 1, guillements[3] - guillements[2] - 1);
                                 destinationFolder = line.Substring(guillements[4] + 1, guillements[5] - guillements[4] - 1);
                                 string fullFileName = sourceFolder + System.IO.Path.DirectorySeparatorChar + fileName;
-                                string lskdjfsdf = "\\\\?\\UNC";
-                                string lskdjfsddf = @"\\?\UNC";
-                                string lsksdjfsdf = @"\*";
-                                string lskadjfsdf = "\\*";
+                                //string lskdjfsdf = "\\\\?\\UNC";
+                                //string lskdjfsddf = @"\\?\UNC";
+                                //string lsksdjfsdf = @"\*";
+                                //string lskadjfsdf = "\\*";
                                 string fullFileNameV2 = fullFileName.Replace(@"\\?\UNC", @"\");
                                 fileNames.Add(fullFileNameV2);
                             }
@@ -1207,7 +1207,6 @@ namespace NavigatorTemplate.Models
                             writetext.WriteLine(fnItem.Length.ToString() + "*" + fnItem);
                             CSVWriteCount++;
                         }
-
                     }
                     StatusMessage = "Completed";
                 }
@@ -1843,8 +1842,8 @@ namespace NavigatorTemplate.Models
             string DateGuid = DateTime.Now.ToString("yyyyMMddHHmmssffff");
             try
             {
-                if (System.IO.File.Exists(PathFileImportTxt))
-                {
+                //if (System.IO.File.Exists(PathFileImportTxt))
+                //{
                     StatusMessage = "Processing...";
 
                     ObjectCount = 0;
@@ -1908,7 +1907,7 @@ namespace NavigatorTemplate.Models
                     {
                         StatusMessage += " with errors.  See Logs.";
                     }
-                }
+                //}
             }
             #region "Catches"
             catch (ArgumentNullException ex)
@@ -2375,6 +2374,7 @@ namespace NavigatorTemplate.Models
             await Task.Run(() =>
             {
                 StatusMessage = "Ready";
+                bool error = false;
                 CSVReadCount = 0;
                 CSVWriteCount = 0;
                 try
@@ -2398,7 +2398,10 @@ namespace NavigatorTemplate.Models
                         }
                     }
 
-                    using (System.IO.StreamWriter writetext = new System.IO.StreamWriter(FileToStarTxt + @"_Star_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".txt"))
+                    string est1 = System.IO.Path.GetFileNameWithoutExtension(FileToStarTxt);
+                    string est2 = System.IO.Path.GetFileNameWithoutExtension(FileToStarTxt) + @"_Star_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".txt";
+
+                    using (System.IO.StreamWriter writetext = new System.IO.StreamWriter(System.IO.Path.GetDirectoryName(FileToStarTxt) + System.IO.Path.DirectorySeparatorChar + System.IO.Path.GetFileNameWithoutExtension(FileToStarTxt) + @"_Star_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".txt"))
                     {
                         int cnt = 2;
                         writetext.WriteLine("Length*Path");
@@ -2414,53 +2417,54 @@ namespace NavigatorTemplate.Models
                 catch (ArgumentNullException ex)
                 {
                     ErrorCount++;
+                    error = true;
                     StatusMessage = ex.Message;
                     PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentNullException: Morph2Star()", DateGuid);
                 }
                 catch (System.IO.DirectoryNotFoundException ex)
                 {
-                    ErrorCount++;
+                    ErrorCount++; error = true;
                     StatusMessage = ex.Message;
                     PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "DirectoryNotFoundException: Morph2Star()", DateGuid);
                 }
                 catch (System.IO.PathTooLongException ex)
                 {
-                    ErrorCount++;
+                    ErrorCount++; error = true;
                     StatusMessage = ex.Message;
                     PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "PathTooLongException: Morph2Star()", DateGuid);
                 }
                 catch (System.IO.IOException ex)
                 {
-                    ErrorCount++;
+                    ErrorCount++; error = true;
                     StatusMessage = ex.Message;
                     PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "IOException: Morph2Star()", DateGuid);
                 }
                 catch (System.Security.SecurityException ex)
                 {
-                    ErrorCount++;
+                    ErrorCount++; error = true;
                     StatusMessage = ex.Message;
                     PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "SecurityException: Morph2Star()", DateGuid);
                 }
                 catch (UnauthorizedAccessException ex)
                 {
-                    ErrorCount++;
+                    ErrorCount++; error = true;
                     StatusMessage = ex.Message;
                     PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "UnauthorizedAccessException: Morph2Star()", DateGuid);
                 }
                 catch (ArgumentException ex)
                 {
-                    ErrorCount++;
+                    ErrorCount++; error = true;
                     StatusMessage = ex.Message;
                     PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "ArgumentException: Morph2Star()", DateGuid);
                 }
                 catch (Exception ex)
                 {
-                    ErrorCount++;
+                    ErrorCount++; error = true;
                     StatusMessage = ex.Message;
                     PathLenghtCrawl.Log.Log.Write2ErrorLog(LogLocationTxt, DateTime.Now, ex.Message, "Generic Exception: Morph2Star()", DateGuid);
                 }
                 #endregion
-                if (StatusMessage.StartsWith("Ready"))
+                if (!error)
                 {
                     StatusMessage = "Complete";
                 }
@@ -3740,6 +3744,12 @@ namespace NavigatorTemplate.Models
                         openFD.InitialDirectory = System.IO.Path.GetDirectoryName(NDSLog2Process);
                     }
                     break;
+                case "RENDSLog2Process":
+                    if (System.IO.Directory.Exists(System.IO.Path.GetDirectoryName(RENDSLog2Process)))
+                    {
+                        openFD.InitialDirectory = System.IO.Path.GetDirectoryName(RENDSLog2Process);
+                    }
+                    break;
                 default:
                     break;
             }
@@ -3773,6 +3783,9 @@ namespace NavigatorTemplate.Models
                         break;
                     case "NDSLog2Process":
                         NDSLog2Process = pathName;
+                        break;
+                    case "RENDSLog2Process":
+                        RENDSLog2Process = pathName;
                         break;
                     default:
                         StatusMessage = "Save Incomplete.";
@@ -3862,6 +3875,12 @@ namespace NavigatorTemplate.Models
                         folderBrowserDialog.SelectedPath = PathFolder2Evalulate;
                     }
                     break;
+                case "RENDSLogDestination":
+                    if (RENDSLogDestination != string.Empty)
+                    {
+                        folderBrowserDialog.SelectedPath = RENDSLogDestination;
+                    }
+                    break;
                 default:
                     break;
             }
@@ -3886,6 +3905,9 @@ namespace NavigatorTemplate.Models
                         break;
                     case "PathFolder2Evalulate":
                         PathFolder2Evalulate = pathName;
+                        break;
+                    case "RENDSLogDestination":
+                        RENDSLogDestination = pathName;
                         break;
                     default:
                         StatusMessage = "Save Incomplete.";
@@ -4346,6 +4368,281 @@ namespace NavigatorTemplate.Models
             }
             finally
             { }
+        }
+
+        #endregion
+
+        #region "Rename Expert"
+
+        private int reCSVReadCount = 0;
+        public int RECSVReadCount
+        {
+            get
+            {
+                return reCSVReadCount;
+            }
+            set
+            {
+                if (reCSVReadCount != value)
+                {
+                    reCSVReadCount = value;
+                    NotifyPropertyChanged("RECSVReadCount");
+                }
+            }
+        }
+
+        private int reCSVWriteCount = 0;
+        public int RECSVWriteCount
+        {
+            get
+            {
+                return reCSVWriteCount;
+            }
+            set
+            {
+                if (reCSVWriteCount != value)
+                {
+                    reCSVWriteCount = value;
+                    NotifyPropertyChanged("RECSVWriteCount");
+                }
+            }
+        }
+
+        private bool reNDSSamePathAsAbove = PathLenghtCrawl.Properties.Settings.Default.RENDSSamePathAsAbove;
+        public bool RENDSSamePathAsAbove
+        {
+            get
+            {
+                return reNDSSamePathAsAbove;
+            }
+            set
+            {
+                if (reNDSSamePathAsAbove != value)
+                {
+                    reNDSSamePathAsAbove = value;
+                    if (value)
+                    {
+                        RENDSLogDestination = System.IO.Path.GetDirectoryName(RENDSLog2Process);
+                    }
+                    else
+                    {
+                        RENDSLogDestination = string.Empty;
+                    }
+                    PathLenghtCrawl.Properties.Settings.Default.RENDSSamePathAsAbove = value;
+                    SaveProperties();
+                    NotifyPropertyChanged("RENDSSamePathAsAbove");
+                }
+            }
+        }
+
+        private bool reNDSLogFolderType = PathLenghtCrawl.Properties.Settings.Default.RENDSLogFolderType;
+        public bool RENDSLogFolderType
+        {
+            get
+            {
+                return reNDSLogFolderType;
+            }
+            set
+            {
+                if (reNDSLogFolderType != value)
+                {
+                    reNDSLogFolderType = value;
+                    PathLenghtCrawl.Properties.Settings.Default.RENDSLogFolderType = value;
+                    SaveProperties();
+                    NotifyPropertyChanged("RENDSLogFolderType");
+                }
+            }
+        }
+
+        private bool reNDSLogFileType = PathLenghtCrawl.Properties.Settings.Default.RENDSLogFileType;
+        public bool RENDSLogFileType
+        {
+            get
+            {
+                return reNDSLogFileType;
+            }
+            set
+            {
+                if (reNDSLogFileType != value)
+                {
+                    reNDSLogFileType = value;
+                    PathLenghtCrawl.Properties.Settings.Default.RENDSLogFileType = value;
+                    SaveProperties();
+                    NotifyPropertyChanged("RENDSLogFileType");
+                }
+            }
+        }
+        private string reNDSLogDestination = PathLenghtCrawl.Properties.Settings.Default.RENDSLogDestination;
+        public string RENDSLogDestination
+        {
+            get
+            {
+                return reNDSLogDestination;
+            }
+            set
+            {
+                if (reNDSLogDestination != value)
+                {
+                    reNDSLogDestination = value;
+                    PathLenghtCrawl.Properties.Settings.Default.RENDSLogDestination = value;
+                    SaveProperties();
+                    NotifyPropertyChanged("RENDSLogDestination");
+                }
+            }
+        }
+        private string reNDSLog2Process = PathLenghtCrawl.Properties.Settings.Default.RENDSLog2Process;
+        public string RENDSLog2Process
+        {
+            get
+            {
+                return reNDSLog2Process;
+            }
+            set
+            {
+                if (reNDSLog2Process != value)
+                {
+                    reNDSLog2Process = value;
+                    if (RENDSSamePathAsAbove)
+                    {
+                        RENDSLogDestination = System.IO.Path.GetDirectoryName(value);
+                    }
+                    PathLenghtCrawl.Properties.Settings.Default.RENDSLog2Process = value;
+                    SaveProperties();
+                    NotifyPropertyChanged("RENDSLog2Process");
+                }
+            }
+        }
+        private ICommand reProcessNDSLogCommand;
+        public ICommand REProcessNDSLogCommand
+        {
+            get
+            {
+                return reProcessNDSLogCommand ?? (reProcessNDSLogCommand = new CommandHandler(() => REProcessNDSLog(), _canExecute));
+            }
+        }
+        private async void REProcessNDSLog()
+        {
+            await Task.Run(() =>
+            {
+                RECSVReadCount = 0;
+                RECSVWriteCount = 0;
+                if (RENDSLogFileType)
+                {
+                    List<string> fileNames = new List<string>();
+                    string fileName = string.Empty;
+                    string sourceFolder = string.Empty;
+                    string destinationFolder = string.Empty;
+
+                    using (var reader = new System.IO.StreamReader(RENDSLog2Process))
+                    {
+                        while (!reader.EndOfStream)
+                        {
+                            string line = reader.ReadLine();
+                            List<int> guillements = WhateverExtensions.ExtensionsAreMe.AllIndexesOf(line, "\"");
+                            if (guillements.Count > 0)
+                            {
+                                RECSVReadCount++;
+                                fileName = line.Substring(guillements[0] + 1, guillements[1] - guillements[0] - 1);
+                                sourceFolder = line.Substring(guillements[2] + 1, guillements[3] - guillements[2] - 1);
+                                destinationFolder = line.Substring(guillements[4] + 1, guillements[5] - guillements[4] - 1);
+                                string fullFileName = sourceFolder + System.IO.Path.DirectorySeparatorChar + fileName;
+                                //string lskdjfsdf = "\\\\?\\UNC";
+                                //string lskdjfsddf = @"\\?\UNC";
+                                //string lsksdjfsdf = @"\*";
+                                //string lskadjfsdf = "\\*";
+                                string fullFileNameV2 = fullFileName.Replace(@"\\?\UNC", @"\");
+                                fileNames.Add(fullFileNameV2);
+                            }
+                        }
+                    }
+                    if (fileNames.Count > 0)
+                    {
+                        WriteResultLog(fileNames);
+                    }
+
+                    //using (System.IO.StreamWriter writetext = new System.IO.StreamWriter((NDSLogDestination + @"_Star_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".csv"), true, Encoding.Unicode))
+                    //string logName = System.IO.Path.GetFileNameWithoutExtension(RENDSLog2Process);
+                    //using (System.IO.StreamWriter writetext = new System.IO.StreamWriter(RENDSLogDestination + System.IO.Path.DirectorySeparatorChar + logName + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".txt", false, Encoding.Unicode))
+                    //{
+                    //    foreach (string fnItem in fileNames)
+                    //    {
+                    //        writetext.WriteLine(fnItem);
+                    //        RECSVWriteCount++;
+                    //    }
+
+                    //}
+                    StatusMessage = "Completed";
+                }
+                else //folder
+                {
+                    List<string> folderNames = new List<string>();
+                    string folderName = string.Empty;
+                    string sourceFolder = string.Empty;
+                    string destinationFolder = string.Empty;
+
+                    using (var reader = new System.IO.StreamReader(RENDSLog2Process))
+                    {
+                        while (!reader.EndOfStream)
+                        {
+                            string line = reader.ReadLine();
+                            //string lskdjfsdf = "\\\\?\\UNC";
+                            string theFrontOne = @"\\?\UNC";
+                            //string lsksdjfsdf = @"\*";
+                            //string lskadjfsdf = "\\*";
+                            int theFrontOneIndex = line.IndexOf(theFrontOne);
+                            string theBackOne = @"\*:";
+                            int theBackOneIndex = line.IndexOf(theBackOne);
+                            if ((theFrontOneIndex > -1) && ((theBackOneIndex > -1)))
+                            {
+                                //int indexOfTheThingyAtTheFront = line.IndexOf(@"\\?\UNC");
+                                //int indexOfTheThingyAtTheBack = line.IndexOf(\"\*");
+                                int testCnt = line.Length;
+                                string eeee = line.Substring(0, theBackOneIndex);
+                                string eeeqwww = line.Substring(theFrontOneIndex);
+
+                                string whatever = line.Substring(theFrontOneIndex, theBackOneIndex - theFrontOneIndex);
+                                string whateverV2 = whatever.Replace(@"\\?\UNC", @"\");
+
+                                RECSVReadCount++;
+                                folderNames.Add(whateverV2);
+                            }
+                        }
+                    }
+
+                    if (folderNames.Count > 0)
+                    {
+                        WriteResultLog(folderNames);
+                    }
+
+                    //string logName = System.IO.Path.GetFileNameWithoutExtension(RENDSLog2Process);
+                    //using (System.IO.StreamWriter writetext = new System.IO.StreamWriter(RENDSLogDestination + System.IO.Path.DirectorySeparatorChar + logName + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".txt", false, Encoding.Unicode))
+                    //{
+                    //    foreach (string fnItem in folderNames)
+                    //    {
+                    //        writetext.WriteLine(fnItem);
+                    //        RECSVWriteCount++;
+                    //    }
+
+                    //}
+                }
+                StatusMessage = "Completed";
+            });
+
+        }
+
+        private void WriteResultLog(List<string> results) 
+        {
+            string logName = System.IO.Path.GetFileNameWithoutExtension(RENDSLog2Process);
+            using (System.IO.StreamWriter writetext = new System.IO.StreamWriter(RENDSLogDestination + System.IO.Path.DirectorySeparatorChar + logName + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".txt", false, Encoding.Unicode))
+            {
+                foreach (string item in results)
+                {
+                    writetext.WriteLine(item);
+                    RECSVWriteCount++;
+                }
+
+            }
+
         }
 
         #endregion

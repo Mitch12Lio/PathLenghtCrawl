@@ -346,5 +346,65 @@ namespace PathLenghtCrawl.Properties {
                 this["PathFolder2Evalulate"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string RENDSLog2Process {
+            get {
+                return ((string)(this["RENDSLog2Process"]));
+            }
+            set {
+                this["RENDSLog2Process"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string RENDSLogDestination {
+            get {
+                return ((string)(this["RENDSLogDestination"]));
+            }
+            set {
+                this["RENDSLogDestination"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool RENDSLogFileType {
+            get {
+                return ((bool)(this["RENDSLogFileType"]));
+            }
+            set {
+                this["RENDSLogFileType"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool RENDSLogFolderType {
+            get {
+                return ((bool)(this["RENDSLogFolderType"]));
+            }
+            set {
+                this["RENDSLogFolderType"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool RENDSSamePathAsAbove {
+            get {
+                return ((bool)(this["RENDSSamePathAsAbove"]));
+            }
+            set {
+                this["RENDSSamePathAsAbove"] = value;
+            }
+        }
     }
 }

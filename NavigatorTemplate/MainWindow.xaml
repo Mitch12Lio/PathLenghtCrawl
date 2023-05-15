@@ -548,6 +548,127 @@
                     </TabItem>
                 </TabControl>
             </TabItem>
+            <TabItem Header="RE">
+                <TabControl>
+                    <TabItem Header="Instruction">
+                        <Grid DockPanel.Dock="Bottom">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" FontWeight="DemiBold" Content="INITIAL"></Label>
+                            <Label Grid.Row="1" Grid.Column="0" Content="1.  Process NDS Logs (QUEST)"></Label>
+                            <Label Grid.Row="2" Grid.Column="0" Content="2.  Extract full names as .txt from Quest/NDS (CODE)"></Label>
+                            <Label Grid.Row="3" Grid.Column="0" Content="3.  Import list into Rename Expert (RE)"></Label>
+                            <Label Grid.Row="4" Grid.Column="0" Content="3.  Import list into Rename Expert (RE)"></Label>
+                            <Label Grid.Row="5" Grid.Column="0" Content="4.  Truncate/Shorten/Rename object names in Rename Expert (RE)"></Label>
+                            <Label Grid.Row="6" Grid.Column="0" Content="5a. Export Old Names as .txt (CODE)"></Label>
+                            <Label Grid.Row="7" Grid.Column="0" Content="5b. Export New Names as .txt (CODE)"></Label>
+                            <Label Grid.Row="8" Grid.Column="0" Content="6.  Concatenate both full names as Action .csv (CODE?RE?)"></Label>
+                            <Label Grid.Row="9" Grid.Column="0" Content="7.  Send to IM team to Signoff"></Label>
+
+                            <Label Grid.Row="0" Grid.Column="1" FontWeight="DemiBold" Content="ONGOING/LOOP"></Label>
+                            <Label Grid.Row="1" Grid.Column="1" Content="1.  Process NDS Logs (QUEST)"></Label>
+                            <Label Grid.Row="2" Grid.Column="1" Content="2.  Extract full names as .txt from Quest/NDS (CODE)"></Label>
+                            <Label Grid.Row="3" Grid.Column="1" Content="3.  Remove paths' that no longer exists in Action .csv (CODE)"></Label>
+                            <Label Grid.Row="4" Grid.Column="1" Content="4.  Action .csv in Rename Expert (RE)"></Label>
+                            <Label Grid.Row="5" Grid.Column="1" Content="5.  Import new .txt (RE)"></Label>
+                            <Label Grid.Row="6" Grid.Column="1" Content="6.  Truncate/Shorten/Rename disapproved/remaining object (RE)"></Label>
+                            <Label Grid.Row="7" Grid.Column="1" Content="7.  Send to IM team to Signoff"></Label>
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="Step 1">
+                        <DockPanel LastChildFill="True">
+                            <Grid DockPanel.Dock="Bottom">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Content="Read:"></Label>
+                                <Label Grid.Row="0" Grid.Column="1" Content="{Binding Master.RECSVReadCount}"></Label>
+                                <Label Grid.Row="0" Grid.Column="2" Content="Write:"></Label>
+                                <Label Grid.Row="0" Grid.Column="3" Content="{Binding Master.RECSVWriteCount}"></Label>
+                            </Grid>
+                            <GroupBox BorderThickness="3" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Visibility="{Binding Master.ExpandOptionsStats}">
+                                <GroupBox.Header>
+                                    <Span FontWeight="DemiBold">NDS Log</Span>
+                                </GroupBox.Header>
+                                <StackPanel>
+                                    <GroupBox>
+                                        <StackPanel>
+                                            <RadioButton Content="Files" GroupName="RENDSLogType" IsChecked="{Binding Master.RENDSLogFileType}"></RadioButton>
+                                            <RadioButton Content="Folders" GroupName="RENDSLogType" IsChecked="{Binding Master.RENDSLogFolderType}"></RadioButton>
+                                        </StackPanel>
+                                    </GroupBox>
+
+                                    <Label Content="Log to process:"></Label>
+                                    <TextBox Text="{Binding Master.RENDSLog2Process}"></TextBox>
+                                    <Button Content="Select..." CommandParameter="RENDSLog2Process" Command="{Binding Master.SetFileCommand}"></Button>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Label Grid.Row="0" Grid.Column="0" Content="Destination"></Label>
+                                        <CheckBox Grid.Row="0" Grid.Column="1" Content="Same path as above" IsChecked="{Binding Master.RENDSSamePathAsAbove}"></CheckBox>
+                                    </Grid>
+                                    <TextBox Text="{Binding Master.RENDSLogDestination}"></TextBox>
+                                    <Button Content="Save To..." CommandParameter="RENDSLogDestination" Command="{Binding Master.SetFolderCommand}"></Button>
+                                    <Separator></Separator>
+                                    <Button Content="Process" Command="{Binding Master.REProcessNDSLogCommand}"></Button>
+
+                                </StackPanel>
+                            </GroupBox>
+                        </DockPanel>
+                    </TabItem>
+                    <TabItem Header="Checker vs Crawler Path Compare">
+                        <StackPanel>
+                            <Button Content="Compare" Command="{Binding Master.ComparePathCommand}"></Button>
+                        </StackPanel>
+                    </TabItem>
+                    <TabItem Header="UserList Compare">
+                        <StackPanel>
+                            <Button Content="Compare" Command="{Binding Master.CompareUserListsCommand}"></Button>
+                        </StackPanel>
+                    </TabItem>
+                    <TabItem Header="Magik Code">
+                        <StackPanel>
+                            <Label Content="Source"></Label>
+                            <TextBox Text="{Binding Master.MagikFileSource}"></TextBox>
+                            <Button Content="File..." CommandParameter="MagikFileSource" Command="{Binding Master.SetFileCommand}"></Button>
+                            <Separator></Separator>
+                            <Label Content="Destination"></Label>
+                            <TextBox Text="{Binding Master.MagikFolderDestination}"></TextBox>
+                            <Button Content="Folder..." CommandParameter="MagikFolderDestination" Command="{Binding Master.SetFolderCommand}"></Button>
+                            <Separator></Separator>
+                            <Button Content="Copy" Command="{Binding Master.MagikCopyCommand}"></Button>
+                            <Separator></Separator>
+                            <Label Content="Status"></Label>
+                            <Label Content="N/A"></Label>
+                        </StackPanel>
+                    </TabItem>
+                </TabControl>
+            </TabItem>
             <TabItem Header="Other">
                 <TabControl>
                     <TabItem Header="Report from NDS Process">
